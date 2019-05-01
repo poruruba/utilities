@@ -66,6 +66,11 @@ var vue_options = {
         array_pattern: [],
         base_array: '',
         array_length: 0,
+        gengou_era_name: '令和',
+        gengou_era_other: '',
+        gengou_era_year: 1,
+        gengou_anno_year: 2019,
+        gengou_list: gengou_list,
     },
     computed: {
         date_unix: function(){
@@ -323,6 +328,62 @@ var vue_options = {
             this.clip_data = JSON.parse(JSON.stringify(this.clip_data));
         },
 
+        /* 元号 */
+        gengou_search_era: function(era){
+            for( var i = 0 ; i < this.gengou_list.length ; i++ ){
+                if( this.gengou_list[i].name == era )
+                    return this.gengou_list[i];
+            }
+
+            return null;
+        },
+        gengou_search_anno: function(anno){
+            for( var i = 0 ; i < this.gengou_list.length ; i++ ){
+                if( this.gengou_list[i].start <= anno && (this.gengou_list[i].end ? anno <= this.gengou_list[i].end : true ))
+                    return this.gengou_list[i];
+            }
+
+            return null;
+        },
+        gengou_to_anno: function(){
+            var era_name = (this.gengou_era_name == 'その他') ? this.gengou_era_other : this.gengou_era_name;
+            var gengou = this.gengou_search_era(era_name);
+            if( !gengou ){
+                alert('入力が不正です。');
+                return;
+            }
+        
+            var year = Number(this.gengou_era_year);
+            if( year <= 0 ){
+                alert('入力が不正です。');
+                return;
+            }
+
+            var anno_year = gengou.start + year - 1;
+            if( gengou.end && anno_year > gengou.end ){
+                alert('入力が不正です。');
+                return;
+            }
+            this.gengou_anno_year = anno_year;
+        },
+        gengou_to_era: function(){
+            var year = Number(this.gengou_anno_year);
+            var gengou = this.gengou_search_anno(year);
+            if( !gengou ){
+                alert('入力が不正です。');
+                return;
+            }
+
+            if( gengou.name == '令和' || gengou.name == '平成' || gengou.name == '昭和' || gengou.name == '大正' || gengou.name == '明治' ){
+                this.gengou_era_name = gengou.name;
+            }else{
+                this.gengou_era_name = 'その他';
+                this.gengou_era_other = gengou.name;
+            }
+
+            this.gengou_era_year = year - gengou.start + 1;
+        },
+        
         /* スクレイピング */
         scraping_keikyu: function(){
             var body = {
