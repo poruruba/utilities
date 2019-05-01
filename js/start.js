@@ -70,7 +70,7 @@ var vue_options = {
         gengou_era_other: '',
         gengou_era_year: 1,
         gengou_anno_year: 2019,
-        gengou_list: gengou_list,
+        gengou_list: gengou_list.reverse(),
     },
     computed: {
         date_unix: function(){
