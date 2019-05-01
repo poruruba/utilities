@@ -1,9 +1,9 @@
 const gengou_list = [
     {"name":"大化","yomi":"たいか","start":645,"end":650,"extra":""},
     {"name":"白雉","yomi":"はくち","start":650,"end":654,"extra":""},
-    {"name":"(孝徳天皇）","yomi":"","start":654,"end":686,"extra":"孝徳天皇"},
+    {"name":"(孝徳天皇)","yomi":"","start":654,"end":686,"extra":"孝徳天皇"},
     {"name":"朱鳥","yomi":"しゅちょう（すちょう）","start":686,"end":686,"extra":""},
-    {"name":"（天武天皇）","yomi":"","start":686,"end":701,"extra":"天武天皇"},
+    {"name":"(天武天皇)","yomi":"","start":686,"end":701,"extra":"天武天皇"},
     {"name":"大宝","yomi":"たいほう（だいほう）","start":701,"end":704,"extra":""},
     {"name":"慶雲","yomi":"けいうん（きょううん）","start":704,"end":708,"extra":""},
     {"name":"和銅","yomi":"わどう","start":708,"end":715,"extra":""},
