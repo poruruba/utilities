@@ -45,6 +45,7 @@
             <li role="presentation"><a href="#cardinal" data-toggle="tab">基数</a></li>
             <li role="presentation"><a href="#clip" data-toggle="tab">クリップ</a></li>
             <li role="presentation"><a href="#arrange" data-toggle="tab">整形</a></li>
+            <li role="presentation"><a href="#gengou" data-toggle="tab">元号</a></li>
             <li role="presentation"><a href="#scraping" data-toggle="tab">スクレイピング</a></li>
             <li role="presentation"><a href="#notify" data-toggle="tab">通知</a></li>
             <li role="presentation"><a href="#qiita" data-toggle="tab">Qiita</a></li>
@@ -338,6 +339,41 @@
                 <textarea id="clip_data_id_6" class="form-control" rows="5" v-model="clip_data[6]"></textarea>
             </div>
 
+            <div id="gengou" class="tab-pane fade in">
+                <h2 class="page-header">元号</h2>
+                <div class="form-inline">
+                <label>和暦</label>
+                    <select class="form-control" v-model="gengou_era_name">
+                        <option value="令和">令和</option>
+                        <option value="平成">平成</option>
+                        <option value="昭和">昭和</option>
+                        <option value="大正">大正</option>
+                        <option value="明治">明治</option>
+                        <option value="その他">その他</option>
+                    </select>
+                    <input type="text" class="form-control" size="5" v-model="gengou_era_other" v-if="gengou_era_name=='その他'">
+                    <label>年</label>
+                    <input type="text" class="form-control" size="4" v-model="gengou_era_year">
+                    <button class="btn btn-primary" v-on:click="gengou_to_anno()">変換</button><br>
+                </div>
+                <div class="form-inline">
+                    <label>西暦</label>
+                    <input type="text" class="form-control" v-model="gengou_anno_year">
+                    <button class="btn btn-primary" v-on:click="gengou_to_era()">変換</button><br>
+                </div>
+                <hr>
+                <table class="table table-striped">
+                    <thead>
+                        <tr><th>元号</th><th>読み</th><th>始期</th><th></th><th>終期</th><th>備考</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in gengou_list">
+                            <td>{{item.name}}</td><td>{{item.yomi}}</td><td>{{item.start}}</td><td>～</td><td>{{item.end}}</td><td>{{item.extra}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div id="scraping" class="tab-pane fade in">
                 <h2 class="page-header">スクレイピング</h2>
                 <p>
@@ -490,5 +526,6 @@
         </div>
     </div>
 
+    <script src="js/gengou.js"></script>
     <script src="js/start.js"></script>
 </body>
