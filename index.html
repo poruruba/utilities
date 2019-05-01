@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src * 'unsafe-inline'; media-src *; img-src * data: content: blob:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <title>ユーティリティ</title>
+
+    <script src="js/methods_utils.js"></script>
+    <script src="js/vue_utils.js"></script>
+
+    <script src="dist/js/vconsole.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+
+    <script src="dist/js/qrcode.min.js"></script>
+    <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-css.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-html.js"></script>
+</head>
+<body>
+    <div id="top" class="container">
+        <ul class="nav nav-tabs">
+            <li role="presentation" class="active"><a href="#qrcode" data-toggle="tab">QRコード</a></li>
+            <li role="presentation"><a href="#encode" data-toggle="tab">エンコード</a></li>
+            <li role="presentation"><a href="#passwd" data-toggle="tab">パスワード</a></li>
+            <li role="presentation"><a href="#array" data-toggle="tab">バイト配列</a></li>
+            <li role="presentation"><a href="#date" data-toggle="tab">日時</a></li>
+            <li role="presentation"><a href="#cardinal" data-toggle="tab">基数</a></li>
+            <li role="presentation"><a href="#clip" data-toggle="tab">クリップ</a></li>
+            <li role="presentation"><a href="#arrange" data-toggle="tab">整形</a></li>
+            <li role="presentation"><a href="#scraping" data-toggle="tab">スクレイピング</a></li>
+            <li role="presentation"><a href="#notify" data-toggle="tab">通知</a></li>
+            <li role="presentation"><a href="#qiita" data-toggle="tab">Qiita</a></li>
+        </ul>
+
+        <div class="tab-content">
+
+            <div id="qrcode" class="tab-pane fade in active">
+                <h2 class="page-header">QRコード</h2>
+                <label>入力</label>
+                <input type="text" class="form-control" v-model="qrcode_input">
+                <button class="btn btn-primary" v-on:click="qrcode_create()">生成</button><br>
+                <div id="qrcode_area"></div>
+            </div>
+
+            <div id="encode" class="tab-pane fade in">
+                <h2 class="page-header">エンコーディング</h2>
+                <h3>Base64エンコード</h3>
+                <label>入力</label>
+                <textarea class="form-control" rows="5" v-model="base64_input"></textarea>
+                <button class="btn btn-primary" v-on:click="base64_encode(true)">エンコード</button>
+                <button class="btn btn-primary" v-on:click="base64_encode(false)">デコード</button><br>
+                <label>出力</label><br>
+                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#base64_output"></button>
+                <textarea id="base64_output" class="form-control" rows="5" v-model="base64_output" readonly></textarea>
+
+                <h3>URLエンコード</h3>
+                <label>入力</label>
+                <input type="text" class="form-control" v-model="url_input">
+                <button class="btn btn-primary" v-on:click="url_encode(true)">エンコード</button>
+                <button class="btn btn-primary" v-on:click="url_encode(false)">デコード</button><br>
+                <label>出力</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#url_output"></button>
+                    </span>
+                    <input id="url_output" type="text" class="form-control" v-model="url_output" readonly>
+                </div>
+
+                <h3>HTMLエンティティエンコード</h3>
+                <label>入力</label>
+                <input type="text" class="form-control" v-model="html_input">
+                <button class="btn btn-primary" v-on:click="html_encode(encode_html_space)">エンコード</button>
+                <input type="checkbox" v-model="encode_html_space">半角スペース<br>
+                <label>出力</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#html_output"></button>
+                    </span>
+                    <input id="html_output" type="text" class="form-control" v-model="html_output" readonly>
+                </div>
+            </div>
+
+            <div id="passwd" class="tab-pane fade in">
+                <h2 class="page-header">パスワード</h2>
+                <div class="form-inline">
+                    <label>パスワード文字数</label>
+                    <input type="text" class="form-control" size="2" v-model="passwd_num">文字
+                </div>
+                <div class="form-inline">
+                    <input type="checkbox" v-model="passwd_check_lower_letter">小文字　
+                    <input type="checkbox" v-model="passwd_check_upper_letter">大文字 　
+                    <input type="checkbox" v-model="passwd_check_number">数字
+                    <input type="text" class="form-control" size="2" v-model="passwd_number_num">個　
+                    <input type="checkbox" v-model="passwd_check_symbol">記号
+                    <select class="form-control" v-model="passwd_symbol_pattern">
+                        <option value="-+*/_">-+*/_</option>
+                        <option value="=-+*/;,._">=-+*/;,._</option>
+                        <option value="@#$%&?!">@#$%&?!</option>
+                        <option value="!#$%&()=-\@+*/?'^~|`;,._[]{}">!#$%&()=-\@+*/?'^~|`;,._[]{}</option>
+                    </select>
+                    <input type="text" class="form-control" size="2" v-model="passwd_symbol_num">個　
+                </div>
+                <button class="btn btn-primary" v-on:click="passwd_create()">生成</button><br>
+                <br>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#passwd_password"></button>
+                    </span>
+                    <input id="passwd_password" type="text" class="form-control" v-model="passwd_password" readonly>
+                </div>
+            </div> 
+
+            <div id="array" class="tab-pane fade in">
+                <h2 class="page-header">バイト配列</h2>
+                <label>長さ</label> {{array_length}}
+                <br>
+                <button class="btn btn-default" v-on:click="array_set(0)">変換</button>
+                <label>(例) 0011aabb</label>
+                <input type="text" class="form-control data-block" v-model="array_pattern[0]">
+                <br>
+                <button class="btn btn-default" v-on:click="array_set(1)">変換</button>
+                <label>(例) 00 11 aa bb</label>
+                <input type="text" class="form-control data-block" v-model="array_pattern[1]">
+                <br>
+                <button class="btn btn-default" v-on:click="array_set(2)">変換</button>
+                <label>(例) 0x00, 0x11, 0xaa, 0xbb</label>
+                <input type="text" class="form-control data-block" v-model="array_pattern[2]">
+                <br>
+                <button class="btn btn-default" v-on:click="array_set(3)">変換</button>
+                <label>(例) (byte)0x00, (byte)0x11, (byte)0xaa, (byte)0xbb</label>
+                <input type="text" class="form-control data-block" v-model="array_pattern[3]">
+            </div>
+
+            <div id="date" class="tab-pane fade in">
+                <h2 class="page-header">日時</h2>
+                <button class="btn btn-primary" v-on:click="date_get_now()">現在時間</button>
+                <button class="btn btn-primary" v-on:click="date_set()">手動設定</button><br>
+                <label>UNIX時間(msec)</label>
+                <input type="text" class="form-control" v-model="date_unix">
+                <label>ISO-8601(UTC)</label>
+                <input type="text" class="form-control" v-model="date_iso">
+                <label>ISO-8601(JST)</label>
+                <input type="text" class="form-control" v-model="date_iso2">
+                <label>Locale</label>
+                <input type="text" class="form-control" v-model="date_locale">
+                <br>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">Duration
+                        <button class="btn btn-default btn-sm" v-on:click="date_reset_duration()">リセット</button></div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-inline">
+                            <div class="form-inline">
+                                <label>年</label>
+                                <input type="text" class="form-control" size="4" v-model="duration_year">&nbsp;&nbsp;
+                                <label>月</label>
+                                <input type="text" class="form-control" size="4" v-model="duration_month">&nbsp;&nbsp;
+                                <label>日</label>
+                                <input type="text" class="form-control" size="4" v-model="duration_day">&nbsp;&nbsp;
+                                <br>
+                                <label>時</label>
+                                <input type="text" class="form-control" size="4" v-model="duration_hour">&nbsp;&nbsp;
+                                <label>分</label>
+                                <input type="text" class="form-control" size="4" v-model="duration_minute">&nbsp;&nbsp;
+                                <label>秒</label>
+                                <input type="text" class="form-control" size="4" v-model="duration_second">&nbsp;&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button class="btn btn-primary" v-on:click="date_process()">変換</button>
+                    </div>
+                </div>
+                <h3>演算後</h3>
+                <label>UNIX時間(msec)</label>
+                <input type="text" class="form-control" v-model="date_unix_after" readonly>
+                <label>ISO-8601</label>
+                <input type="text" class="form-control" v-model="date_iso_after" readonly>
+                <label>ISO-8601</label>
+                <input type="text" class="form-control" v-model="date_iso2_after" readonly>
+                <label>Locale</label>
+                <input type="text" class="form-control" v-model="date_locale_after" readonly>
+            </div>
+
+            <div id="cardinal" class="tab-pane fade in">
+                <h2 class="page-header">基数</h2>
+                <label>10進数</label>
+                <div class="form-inline">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#cardinal_decimal_copy"></button>
+                        </span>
+                        <input type="text" id="cardinal_decimal_copy" size="40" class="form-control text-right" v-model="cardinal_decimal">
+                    </div>
+                    <button class="btn btn-default" v-on:click="cardinal_convart('decimal')">セット</button>&nbsp;&nbsp;
+                    <div class="btn-group">
+                        <button class="btn btn-default" v-on:click="cardinal_shift('decimal', 'left')">&lt;&lt;</button>
+                        <button class="btn btn-default" v-on:click="cardinal_shift('decimal', 'right')">&gt;&gt;</button>&nbsp;&nbsp;
+                    </div>
+                </div>
+                <br>
+                <label>2進数</label>
+                <div class="form-inline">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#cardinal_binary_copy"></button>
+                        </span>
+                        <input type="text" id="cardinal_binary_copy" size="40" class="form-control text-right" v-model="cardinal_binary">
+                    </div>
+                    <button class="btn btn-default" v-on:click="cardinal_convart('binary')">セット</button>&nbsp;&nbsp;
+                    <div class="btn-group">
+                        <button class="btn btn-default" v-on:click="cardinal_shift('binary', 'left')">&lt;&lt;</button>
+                        <button class="btn btn-default" v-on:click="cardinal_shift('binary', 'right')">&gt;&gt;</button>&nbsp;&nbsp;
+                    </div>
+                    <input type="checkbox" v-model="cardinal_check_binary">0埋め
+                    <input type="text" class="form-control" size="2" v-model="cardinal_binary_num">桁&nbsp;
+                </div>
+                <br>
+                <label>8進数</label>
+                <div class="form-inline">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#cardinal_octet_copy"></button>
+                        </span>
+                        <input type="text" id="cardinal_octet_copy" size="40" class="form-control text-right" v-model="cardinal_octet">
+                    </div>
+                    <button class="btn btn-default" v-on:click="cardinal_convart('octet')">セット</button>&nbsp;&nbsp;
+                    <div class="btn-group">
+                        <button class="btn btn-default" v-on:click="cardinal_shift('octet', 'left')">&lt;&lt;</button>
+                        <button class="btn btn-default" v-on:click="cardinal_shift('octet', 'right')">&gt;&gt;</button>&nbsp;&nbsp;
+                    </div>
+                    <input type="checkbox" v-model="cardinal_check_octet">0埋め
+                    <input type="text" class="form-control" size="2" v-model="cardinal_octet_num">桁&nbsp;
+                </div>
+                <br>
+                <label>16進数</label>
+                <div class="form-inline">
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#cardinal_hexadecimal_copy"></button>
+                        </span>
+                        <input type="text" id="cardinal_hexadecimal_copy" size="40" class="form-control text-right" v-model="cardinal_hexadecimal">
+                    </div>
+                    <button class="btn btn-default" v-on:click="cardinal_convart('hexadecimal')">セット</button>&nbsp;&nbsp;
+                    <div class="btn-group">
+                        <button class="btn btn-default" v-on:click="cardinal_shift('hexadecimal', 'left')">&lt;&lt;</button>
+                        <button class="btn btn-default" v-on:click="cardinal_shift('hexadecimal', 'right')">&gt;&gt;</button>&nbsp;&nbsp;
+                    </div>
+                    <input type="checkbox" v-model="cardinal_check_hexadecimal">0埋め
+                    <input type="text" class="form-control" size="2" v-model="cardinal_hexadecimal_num">桁&nbsp;
+                </div>
+            </div>
+
+            <div id="clip" class="tab-pane fade in">
+                <h2 class="page-header">クリップ</h2>
+                <span class="glyphicon glyphicon-erase">消去</span>&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-floppy-disk">保存</span>&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-paperclip">コピー</span>&nbsp;&nbsp;
+                <br><br>
+                <button class="btn btn-default" v-on:click="clip_clearall()">全消去</button><br>
+                <label>入力0</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(0)"></button>
+                        <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(0)"></button>
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_0"></button>
+                    </span>
+                    <input id="clip_data_id_0" type="text" class="form-control" v-model="clip_data[0]">
+                </div>
+                <label>入力1</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(1)"></button>
+                        <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(1)"></button>
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_1"></button>
+                    </span>
+                    <input id="clip_data_id_1" type="text" class="form-control" v-model="clip_data[1]">
+                </div>
+                <label>入力2</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(2)"></button>
+                        <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(2)"></button>
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_2"></button>
+                    </span>
+                    <input id="clip_data_id_2" type="text" class="form-control" v-model="clip_data[2]">
+                </div>
+                <label>入力3</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(3)"></button>
+                        <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(3)"></button>
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_3"></button>
+                    </span>
+                    <input id="clip_data_id_3" type="text" class="form-control" v-model="clip_data[3]">
+                </div>
+                <label>入力4</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(4)"></button>
+                        <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(4)"></button>
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_4"></button>
+                    </span>
+                    <input id="clip_data_id_4" type="text" class="form-control" v-model="clip_data[4]">
+                </div>
+                <label>入力5</label>
+                <span class="input-group-btn">
+                    <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(5)"></button>
+                    <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(5)"></button>
+                    <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_5"></button>
+                </span>
+                <textarea id="clip_data_id_5" class="form-control" rows="2" v-model="clip_data[5]"></textarea>
+                <label>入力6</label>
+                <span class="input-group-btn">
+                    <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(6)"></button>
+                    <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(6)"></button>
+                    <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_6"></button>
+                </span>
+                <textarea id="clip_data_id_6" class="form-control" rows="5" v-model="clip_data[6]"></textarea>
+            </div>
+
+            <div id="scraping" class="tab-pane fade in">
+                <h2 class="page-header">スクレイピング</h2>
+                <p>
+                    ※動作させるにはサーバが必要です。
+                </p>
+                <div class="form-inline">
+                    <label>ApiKey</label>
+                    <input type="password" class="form-control" v-model="scraping_apikey">
+                </div>
+                <label>URL</label>
+                <input type="text" class="form-control" v-model="scraping_url">
+                <hr>
+                <h3>京急運行情報</h3>
+                <button class="btn btn-primary" v-on:click="scraping_keikyu()">更新</button><br>
+                <label>受信日時</label>{{scraping_keikyu_received_date}}
+                <textarea class="form-control" rows="4" v-model="scraping_keikyu_message" readonly></textarea>
+                <hr>
+            </div>
+    
+            <div id="arrange" class="tab-pane fade in">
+                <h2 class="page-header">整形</h2>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="panel-title"><a data-toggle="collapse" href="#json_arrange_panel">JSON</a></div>
+                    </div>
+                    <div class="panel-collapse collapse" id="json_arrange_panel">
+                        <div class="panel-body">
+                            <button class="btn btn-default" v-on:click="arrange_process('json')">整形</button><br>
+                            <label>入出力</label>
+                            <textarea class="form-control" rows="20" v-model="json_inout"></textarea>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-default" data-toggle="collapse" href="#json_arrange_panel">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="panel-title"><a data-toggle="collapse" href="#js_arrange_panel">Javascript</a></div>
+                    </div>
+                    <div class="panel-collapse collapse" id="js_arrange_panel">
+                        <div class="panel-body">
+                            <button class="btn btn-default" v-on:click="arrange_process('javascript')">整形</button><br>
+                            <label>入出力</label>
+                            <textarea class="form-control" rows="20" v-model="js_inout"></textarea>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-default" data-toggle="collapse" href="#js_arrange_panel">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="panel-title"><a data-toggle="collapse" href="#html_arrange_panel">HTML</a></div>
+                    </div>
+                    <div class="panel-collapse collapse" id="html_arrange_panel">
+                        <div class="panel-body">
+                            <button class="btn btn-default" v-on:click="arrange_process('html')">整形</button><br>
+                            <label>入出力</label>
+                            <textarea class="form-control" rows="20" v-model="html_inout"></textarea>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-default" data-toggle="collapse" href="#html_arrange_panel">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="panel-title"><a data-toggle="collapse" href="#css_arrange_panel">CSS</a></div>
+                    </div>
+                    <div class="panel-collapse collapse" id="css_arrange_panel">
+                        <div class="panel-body">
+                            <button class="btn btn-default" v-on:click="arrange_process('css')">整形</button><br>
+                            <label>入出力</label>
+                            <textarea class="form-control" rows="20" v-model="css_inout"></textarea>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-default" data-toggle="collapse" href="#css_arrange_panel">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="notify" class="tab-pane fade in">
+                <h2 class="page-header">通知</h2>
+                <p>
+                    ※動作させるにはサーバが必要です。
+                </p>
+                <div class="form-inline">
+                    <label>ApiKey</label>
+                    <input type="password" class="form-control" v-model="notify_apikey">
+                </div>
+                <label>URL</label>
+                <input type="text" class="form-control" v-model="notify_url">
+                <hr>
+                <h3>Gmail送信</h3>
+                <label>メールアドレス</label>
+                <input type="text" class="form-control" v-model="notify_gmail_address">
+                <label>メッセージ</label>
+                <textarea class="form-control" rows="2" v-model="notify_gmail_message"></textarea>
+                <button class="btn btn-primary" v-on:click="notify_gmail()">送信</button><br>
+                <hr>
+                <h3>LINE通知</h3>
+                <label>メッセージ</label>
+                <textarea class="form-control" rows="2" v-model="notify_line_message"></textarea>
+                <button class="btn btn-primary" v-on:click="notify_line()">通知</button><br>
+            </div>
+
+            <div id="qiita" class="tab-pane fade in">
+                <h2 class="page-header">Qiita</h2>
+                <p>
+                    ※動作させるにはサーバが必要です。
+                </p>
+                <div class="form-inline">
+                    <label>ApiKey</label>
+                    <input type="password" class="form-control" v-model="qiita_apikey">
+                </div>
+                <label>URL</label>
+                <input type="text" class="form-control" v-model="qiita_url">
+                <button class="btn btn-primary" v-on:click="qiita_items()">取得</button><br>
+                <label>受信日時</label>{{qiita_items_received_date}}
+                <table class="table table-striped">
+                    <thead>
+                        <tr><th>#</th><th>タイトル</th><th>いいね数</th><th>View数</th><th>平均View数</th><th>経過日数</th><th>作成日</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in qiita_item_list">
+                            <td>{{index + 1}}</td><td><a v-bind:href="item.url" target="_blank">{{item.title}}</td></a><td>{{item.likes}}</td><td>{{item.views}}</td><td>{{item.average}}</td><td>{{item.elapsed_days}}</td><td>{{item.created_at}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+            </div>
+    
+        </div>
+        <br>
+
+
+        <div class="modal fade" id="progress">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">{{progress_title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <center><progress max="100" /></center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/start.js"></script>
+</body>
