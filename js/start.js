@@ -55,14 +55,11 @@ var vue_options = {
         base_decimal: 0,
         cardinal_decimal: 0,
         cardinal_binary: 0,
-        cardinal_octet: 0,
         cardinal_hexadecimal: 0,
         cardinal_hexadecimal_num: 2,
         cardinal_check_hexadecimal: false,
         cardinal_binary_num: 2,
         cardinal_check_binary: false,
-        cardinal_octet_num: 2,
-        cardinal_check_octet: false,
         array_pattern: [],
         base_array: '',
         array_length: 0,
@@ -260,33 +257,24 @@ var vue_options = {
         },
 
         /* 基数 */
-        cardinal_convart: function(cardinal){
+        cardinal_convart: function(radix){
             var base = 0;
-            if( cardinal == 'decimal'){
+            if( radix == 10){
                 base = parseInt(this.cardinal_decimal, 10);
-            }else if( cardinal == 'binary'){
+            }else if( radix == 2){
                 base = parseInt(this.cardinal_binary, 2);
-            }else if( cardinal == 'octet'){
-                base = parseInt(this.cardinal_octet, 8);
-            }else if( cardinal == 'hexadecimal'){
+            }else if( radix == 16){
                 base = parseInt(this.cardinal_hexadecimal, 16);
             }
             this.base_decimal = Math.floor(base);
 
             this.cardinal_update();
         },
-        cardinal_shift(cardinal, shift){
-            var mult = 1;
-            switch( cardinal ){
-                case 'binary': mult = 2; break;
-                case 'decimal': mult = 10; break;
-                case 'octet': mult = 8; break;
-                case 'hexadecimal': mult = 16; break;
-            }
+        cardinal_shift(radix, shift){
             if( shift == 'right' )
-                this.base_decimal = Math.floor(this.base_decimal / mult);
+                this.base_decimal = Math.floor(this.base_decimal / radix);
             else
-                this.base_decimal = Math.floor(this.base_decimal * mult);
+                this.base_decimal = Math.floor(this.base_decimal * radix);
 
             this.cardinal_update();
         },
