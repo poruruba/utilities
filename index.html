@@ -212,10 +212,10 @@
                         </span>
                         <input type="text" id="cardinal_decimal_copy" size="40" class="form-control text-right" v-model="cardinal_decimal">
                     </div>
-                    <button class="btn btn-default" v-on:click="cardinal_convart('decimal')">セット</button>&nbsp;&nbsp;
+                    <button class="btn btn-default" v-on:click="cardinal_convart(10)">セット</button>&nbsp;&nbsp;
                     <div class="btn-group">
-                        <button class="btn btn-default" v-on:click="cardinal_shift('decimal', 'left')">&lt;&lt;</button>
-                        <button class="btn btn-default" v-on:click="cardinal_shift('decimal', 'right')">&gt;&gt;</button>&nbsp;&nbsp;
+                        <button class="btn btn-default" v-on:click="cardinal_shift(10, 'left')">&lt;&lt;</button>
+                        <button class="btn btn-default" v-on:click="cardinal_shift(10, 'right')">&gt;&gt;</button>&nbsp;&nbsp;
                     </div>
                 </div>
                 <br>
@@ -227,30 +227,13 @@
                         </span>
                         <input type="text" id="cardinal_binary_copy" size="40" class="form-control text-right" v-model="cardinal_binary">
                     </div>
-                    <button class="btn btn-default" v-on:click="cardinal_convart('binary')">セット</button>&nbsp;&nbsp;
+                    <button class="btn btn-default" v-on:click="cardinal_convart(2)">セット</button>&nbsp;&nbsp;
                     <div class="btn-group">
-                        <button class="btn btn-default" v-on:click="cardinal_shift('binary', 'left')">&lt;&lt;</button>
-                        <button class="btn btn-default" v-on:click="cardinal_shift('binary', 'right')">&gt;&gt;</button>&nbsp;&nbsp;
+                        <button class="btn btn-default" v-on:click="cardinal_shift(2, 'left')">&lt;&lt;</button>
+                        <button class="btn btn-default" v-on:click="cardinal_shift(2, 'right')">&gt;&gt;</button>&nbsp;&nbsp;
                     </div>
                     <input type="checkbox" v-model="cardinal_check_binary">0埋め
                     <input type="text" class="form-control" size="2" v-model="cardinal_binary_num">桁&nbsp;
-                </div>
-                <br>
-                <label>8進数</label>
-                <div class="form-inline">
-                    <div class="input-group">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#cardinal_octet_copy"></button>
-                        </span>
-                        <input type="text" id="cardinal_octet_copy" size="40" class="form-control text-right" v-model="cardinal_octet">
-                    </div>
-                    <button class="btn btn-default" v-on:click="cardinal_convart('octet')">セット</button>&nbsp;&nbsp;
-                    <div class="btn-group">
-                        <button class="btn btn-default" v-on:click="cardinal_shift('octet', 'left')">&lt;&lt;</button>
-                        <button class="btn btn-default" v-on:click="cardinal_shift('octet', 'right')">&gt;&gt;</button>&nbsp;&nbsp;
-                    </div>
-                    <input type="checkbox" v-model="cardinal_check_octet">0埋め
-                    <input type="text" class="form-control" size="2" v-model="cardinal_octet_num">桁&nbsp;
                 </div>
                 <br>
                 <label>16進数</label>
@@ -261,10 +244,10 @@
                         </span>
                         <input type="text" id="cardinal_hexadecimal_copy" size="40" class="form-control text-right" v-model="cardinal_hexadecimal">
                     </div>
-                    <button class="btn btn-default" v-on:click="cardinal_convart('hexadecimal')">セット</button>&nbsp;&nbsp;
+                    <button class="btn btn-default" v-on:click="cardinal_convart(16)">セット</button>&nbsp;&nbsp;
                     <div class="btn-group">
-                        <button class="btn btn-default" v-on:click="cardinal_shift('hexadecimal', 'left')">&lt;&lt;</button>
-                        <button class="btn btn-default" v-on:click="cardinal_shift('hexadecimal', 'right')">&gt;&gt;</button>&nbsp;&nbsp;
+                        <button class="btn btn-default" v-on:click="cardinal_shift(16, 'left')">&lt;&lt;</button>
+                        <button class="btn btn-default" v-on:click="cardinal_shift(16, 'right')">&gt;&gt;</button>&nbsp;&nbsp;
                     </div>
                     <input type="checkbox" v-model="cardinal_check_hexadecimal">0埋め
                     <input type="text" class="form-control" size="2" v-model="cardinal_hexadecimal_num">桁&nbsp;
