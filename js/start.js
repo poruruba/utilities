@@ -9,6 +9,8 @@ var vue_options = {
     data: {
         progress_title: '',
 
+        server_apikey: '',
+        server_url: '',
         base64_input: '',
         base64_output: '',
         url_input: '',
@@ -20,21 +22,19 @@ var vue_options = {
         js_inout: '',
         css_inout: '',
         html_inout: '',
-        duration_year: 0,
-        duration_month: 0,
-        duration_day: 0,
-        duration_hour: 0,
-        duration_minute: 0,
-        duration_second: 0,
+        date_duration: 0,
+        date_duration_unit: 'year',
         date_moment: moment(),
         date_moment_after: null,
+        date_input_mode: '',
+        date_input_free: null,
+        date_input_date: null,
+        date_input_time: null,
         qrcode_input: '',
         clip_data: [],
         notify_gmail_address: '',
         notify_gmail_message: '',
         notify_line_message: '',
-        notify_apikey: '',
-        notify_url: '',
         passwd_num: 12,
         passwd_check_lower_letter: true,
         passwd_check_upper_letter: true,
@@ -44,12 +44,8 @@ var vue_options = {
         passwd_symbol_pattern: "-+*/_",
         passwd_symbol_num: 1,
         passwd_password: '',
-        scraping_apikey: '',
-        scraping_url: '',
         scraping_keikyu_message: '',
         scraping_keikyu_received_date: '',
-        qiita_apikey: '',
-        qiita_url: '',
         qiita_item_list: [],
         qiita_items_received_date: '',
         base_decimal: 0,
@@ -68,6 +64,8 @@ var vue_options = {
         gengou_era_year: 1,
         gengou_anno_year: 2019,
         gengou_list: gengou_list.reverse(),
+        trend_items_received_date: null,
+        trend_item_list: []
     },
     computed: {
         date_unix: function(){
@@ -225,35 +223,83 @@ var vue_options = {
         },
         
         /* 日時 */
-        date_get_now: function(){
-            this.date_moment = moment();
+        date_get_now: function(target){
+            if( target == 'base')
+                this.date_moment = moment();
+            else
+                this.date_moment_after = moment();
+        },
+        date_input_dialog: function(target){
+            this.date_input_mode = target;
+            var temp;
+            if( target == 'base')
+                temp = moment(this.date_moment);
+            else
+                temp = moment(this.date_moment_after);
+            this.date_input_date = temp.format('YYYY-MM-DD');
+            this.date_input_time = temp.format('HH:mm:ss');
+            this.dialog_open('#date_input_dialog');
         },
         date_process: function(){
             var temp = moment(this.date_moment);
-            temp.add(Number(this.duration_year), 'years');
-            temp.add(Number(this.duration_month), 'months');
-            temp.add(Number(this.duration_day), 'days');
-            temp.add(Number(this.duration_hour), 'hours');
-            temp.add(Number(this.duration_minute), 'minutes');
-            temp.add(Number(this.duration_second), 'seconds');
+            if( this.date_duration_unit == 'year' )
+                temp.add(Number(this.date_duration), 'years');
+            else if( this.date_duration_unit == 'month' )
+                temp.add(Number(this.date_duration), 'months');
+            else if( this.date_duration_unit == 'day' )
+                temp.add(Number(this.date_duration), 'days');
+            else if( this.date_duration_unit == 'hour' )
+                temp.add(Number(this.date_duration), 'hours');
+            else if( this.date_duration_unit == 'minute' )
+                temp.add(Number(this.date_duration), 'minutes');
+            else if( this.date_duration_unit == 'second' )
+                temp.add(Number(this.date_duration), 'seconds');
             this.date_moment_after = temp;
         },
-        date_set: function(){
-            var date = window.prompt("日時を指定してください", "");
-            if(date == null )
-                return;
-            if( !isNaN(date) )
-                this.date_moment = moment(Number(date));
-            else
-                this.date_moment = moment(date);
+        date_input_process: function(target){
+            var date;
+            if( target == 'free'){
+                if( !this.date_input_free ){
+                    alert('入力値が不正です。');
+                    return;
+                }
+                date = this.date_input_free;
+            }else{
+                if( !this.date_input_date || !this.date_input_time ){
+                    alert('入力値が不正です。');
+                    return;
+                }
+                date = this.date_input_date + ' ' + this.date_input_time;
+            }
+
+            if( this.date_input_mode == 'base'){
+                if( !isNaN(date) )
+                    this.date_moment = moment(Number(date));
+                else
+                    this.date_moment = moment(date);
+            }else{
+                if( !isNaN(date) )
+                    this.date_moment_after = moment(Number(date));
+                else
+                    this.date_moment_after = moment(date);
+            }
+            this.dialog_close('#date_input_dialog');
         },
-        date_reset_duration: function(){
-            this.duration_year = 0;
-            this.duration_month = 0;
-            this.duration_day = 0;
-            this.duration_hour = 0;
-            this.duration_minute = 0;
-            this.duration_second = 0;
+        date_elapsed_process: function(){
+            var base = moment(this.date_moment);
+            var after = moment(this.date_moment_after);
+            if( this.date_duration_unit == 'year' )
+                this.date_duration = after.diff(base, 'years');
+            else if(this.date_duration_unit == 'month')
+                this.date_duration = after.diff(base, 'months');
+            else if(this.date_duration_unit == 'day')
+                this.date_duration = after.diff(base, 'days');
+            else if(this.date_duration_unit == 'hour')
+                this.date_duration = after.diff(base, 'hours');
+            else if(this.date_duration_unit == 'minute')
+                this.date_duration = after.diff(base, 'minutes');
+            else if(this.date_duration_unit == 'second')
+                this.date_duration = after.diff(base, 'seconds');
         },
 
         /* 基数 */
@@ -370,16 +416,16 @@ var vue_options = {
         /* スクレイピング */
         scraping_keikyu: function(){
             var body = {
-                apikey: this.scraping_apikey
+                apikey: this.server_apikey
             };
-            do_post(this.scraping_url + '/scraping-keikyu', body)
+            do_post(this.server_url + '/scraping-keikyu', body)
             .then(json =>{
                 if( json.result != 'OK'){
                     alert('失敗しました。');
                     return;
                 }
-                Cookies.set('scraping_apikey', this.scraping_apikey, { expires: 365 });
-                Cookies.set('scraping_url', this.scraping_url, { expires: 365 });
+                Cookies.set('server_apikey', this.server_apikey, { expires: 365 });
+                Cookies.set('server_url', this.server_url, { expires: 365 });
                 this.scraping_keikyu_message = json.message;
                 this.scraping_keikyu_received_date = new Date().toLocaleString();
             })
@@ -404,22 +450,44 @@ var vue_options = {
             }
         },
 
-        /* 通知 */
-        notify_gmail: function(){
+        /* トレンド */
+        trend_get: function(){
             var body = {
-                mail_address : this.notify_gmail_address,
-                message: this.notify_gmail_message,
-                apikey: this.notify_apikey
+                apikey: this.server_apikey
             };
-
-            do_post(this.notify_url + '/notify-gmail', body)
+            do_post(this.server_url + '/trendword', body)
             .then(json =>{
                 if( json.result != 'OK'){
                     alert('失敗しました。');
                     return;
                 }
-                Cookies.set('notify_apikey', this.notify_apikey, { expires: 365 });
-                Cookies.set('notify_url', this.notify_url, { expires: 365 });
+
+                this.trend_item_list = json.trends;
+                this.trend_items_received_date = new Date().toLocaleString();
+                Cookies.set('server_apikey', this.server_apikey, { expires: 365 });
+                Cookies.set('server_url', this.server_url, { expires: 365 });
+            })
+            .catch(error =>{
+                alert(error);
+            });
+        },
+
+        /* 通知 */
+        notify_gmail: function(){
+            var body = {
+                mail_address : this.notify_gmail_address,
+                message: this.notify_gmail_message,
+                apikey: this.server_apikey
+            };
+
+            do_post(this.server_url + '/notify-gmail', body)
+            .then(json =>{
+                if( json.result != 'OK'){
+                    alert('失敗しました。');
+                    return;
+                }
+                Cookies.set('server_apikey', this.server_apikey, { expires: 365 });
+                Cookies.set('server_url', this.server_url, { expires: 365 });
                 Cookies.set('notify_gmail_address', this.notify_gmail_address, { expires: 365 });
                 alert('送信しました。');
             })
@@ -430,29 +498,32 @@ var vue_options = {
         notify_line: function(){
             var body = {
                 message: this.notify_line_message,
-                apikey: this.notify_apikey
+                apikey: this.server_apikey
             };
 
-            do_post(this.notify_url + '/notify-line', body)
+            do_post(this.server_url + '/notify-line', body)
             .then(json =>{
                 if( json.result != 'OK'){
                     alert('失敗しました。');
                     return;
                 }
-                Cookies.set('notify_apikey', this.notify_apikey, { expires: 365 });
+                Cookies.set('server_apikey', this.server_apikey, { expires: 365 });
+                Cookies.set('server_url', this.server_url, { expires: 365 });
                 alert('送信しました。');
             })
             .catch(error =>{
                 alert(error);
             });
         },
+
+        /* Qiita */
         qiita_items: function(){
             var body = {
-                apikey: this.qiita_apikey
+                apikey: this.server_apikey
             };
 
             this.progress_open();
-            do_post(this.qiita_url + '/qiita-items', body)
+            do_post(this.server_url + '/qiita-items', body)
             .then(json =>{
                 this.progress_close();
                 if( json.result != 'OK'){
@@ -461,8 +532,8 @@ var vue_options = {
                 }
                 this.qiita_item_list = json.items;
                 this.qiita_items_received_date = new Date().toLocaleString();
-                Cookies.set('qiita_apikey', this.qiita_apikey, { expires: 365 });
-                Cookies.set('qiita_url', this.qiita_url, { expires: 365 });
+                Cookies.set('server_apikey', this.server_apikey, { expires: 365 });
+                Cookies.set('server_url', this.server_url, { expires: 365 });
             })
             .catch(error =>{
                 this.progress_close();
@@ -480,13 +551,9 @@ var vue_options = {
         for( var i = 0 ; i <= 6 ; i++ ){
             this.clip_data[i] = Cookies.get('clip_data' + i);
         }
-        this.notify_apikey = Cookies.get('notify_apikey');
-        this.notify_url = Cookies.get('notify_url');
+        this.server_apikey = Cookies.get('server_apikey');
+        this.server_url = Cookies.get('server_url');
         this.notify_gmail_address = Cookies.get('notify_gmail_address');
-        this.scraping_apikey = Cookies.get('scraping_apikey');
-        this.scraping_url = Cookies.get('scraping_url');
-        this.qiita_apikey = Cookies.get('qiita_apikey');
-        this.qiita_url = Cookies.get('qiita_url');
     }
 };
 vue_add_methods(vue_options, methods_utils);

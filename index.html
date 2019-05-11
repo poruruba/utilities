@@ -47,6 +47,7 @@
             <li role="presentation"><a href="#arrange" data-toggle="tab">整形</a></li>
             <li role="presentation"><a href="#gengou" data-toggle="tab">元号</a></li>
             <li role="presentation"><a href="#scraping" data-toggle="tab">スクレイピング</a></li>
+            <li role="presentation"><a href="#trend" data-toggle="tab">トレンド</a></li>
             <li role="presentation"><a href="#notify" data-toggle="tab">通知</a></li>
             <li role="presentation"><a href="#qiita" data-toggle="tab">Qiita</a></li>
         </ul>
@@ -152,38 +153,42 @@
 
             <div id="date" class="tab-pane fade in">
                 <h2 class="page-header">日時</h2>
-                <button class="btn btn-primary" v-on:click="date_get_now()">現在時間</button>
-                <button class="btn btn-primary" v-on:click="date_set()">手動設定</button><br>
-                <label>UNIX時間(msec)</label>
-                <input type="text" class="form-control" v-model="date_unix">
-                <label>ISO-8601(UTC)</label>
-                <input type="text" class="form-control" v-model="date_iso">
-                <label>ISO-8601(JST)</label>
-                <input type="text" class="form-control" v-model="date_iso2">
-                <label>Locale</label>
-                <input type="text" class="form-control" v-model="date_locale">
-                <br>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title">Duration
-                        <button class="btn btn-default btn-sm" v-on:click="date_reset_duration()">リセット</button></div>
+                        <div class="panel-title">基準時間
+                            <button class="btn btn-default" v-on:click="date_get_now('base')">現在時間</button>
+                            <button class="btn btn-default" v-on:click="date_input_dialog('base')">手動設定</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <label>UNIX時間(msec)</label>
+                        <input type="text" class="form-control" v-model="date_unix" readonly>
+                        <label>ISO-8601(UTC)</label>
+                        <input type="text" class="form-control" v-model="date_iso" readonly>
+                        <label>ISO-8601(JST)</label>
+                        <input type="text" class="form-control" v-model="date_iso2" readonly>
+                        <label>Locale</label>
+                        <input type="text" class="form-control" v-model="date_locale" readonly>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">経過期間
+                            <button class="btn btn-default btn-sm" v-on:click="date_duration=0">リセット</button>
+                        </div>
                     </div>
                     <div class="panel-body">
                         <div class="form-inline">
                             <div class="form-inline">
-                                <label>年</label>
-                                <input type="text" class="form-control" size="4" v-model="duration_year">&nbsp;&nbsp;
-                                <label>月</label>
-                                <input type="text" class="form-control" size="4" v-model="duration_month">&nbsp;&nbsp;
-                                <label>日</label>
-                                <input type="text" class="form-control" size="4" v-model="duration_day">&nbsp;&nbsp;
-                                <br>
-                                <label>時</label>
-                                <input type="text" class="form-control" size="4" v-model="duration_hour">&nbsp;&nbsp;
-                                <label>分</label>
-                                <input type="text" class="form-control" size="4" v-model="duration_minute">&nbsp;&nbsp;
-                                <label>秒</label>
-                                <input type="text" class="form-control" size="4" v-model="duration_second">&nbsp;&nbsp;
+                                <select class="form-control" v-model="date_duration_unit">
+                                    <option value="year">年</option>
+                                    <option value="month">月</option>
+                                    <option value="day">日</option>
+                                    <option value="hour">時</option>
+                                    <option value="minute">分</option>
+                                    <option value="second">秒</option>
+                                </select>
+                                <input type="text" class="form-control" v-model="date_duration">&nbsp;&nbsp;
                             </div>
                         </div>
                     </div>
@@ -191,15 +196,27 @@
                         <button class="btn btn-primary" v-on:click="date_process()">変換</button>
                     </div>
                 </div>
-                <h3>演算後</h3>
-                <label>UNIX時間(msec)</label>
-                <input type="text" class="form-control" v-model="date_unix_after" readonly>
-                <label>ISO-8601</label>
-                <input type="text" class="form-control" v-model="date_iso_after" readonly>
-                <label>ISO-8601</label>
-                <input type="text" class="form-control" v-model="date_iso2_after" readonly>
-                <label>Locale</label>
-                <input type="text" class="form-control" v-model="date_locale_after" readonly>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">経過日時
+                            <button class="btn btn-default" v-on:click="date_get_now('elapsed')">現在時間</button>
+                            <button class="btn btn-default" v-on:click="date_input_dialog('elapsed')">手動設定</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <label>UNIX時間(msec)</label>
+                        <input type="text" class="form-control" v-model="date_unix_after" readonly>
+                        <label>ISO-8601</label>
+                        <input type="text" class="form-control" v-model="date_iso_after" readonly>
+                        <label>ISO-8601(JST)</label>
+                        <input type="text" class="form-control" v-model="date_iso2_after" readonly>
+                        <label>Locale</label>
+                        <input type="text" class="form-control" v-model="date_locale_after" readonly>
+                    </div>
+                    <div class="panel-footer">
+                        <button class="btn btn-primary" v-on:click="date_elapsed_process()">変換</button>
+                    </div>
+                </div>
             </div>
 
             <div id="cardinal" class="tab-pane fade in">
@@ -363,10 +380,10 @@
                 </p>
                 <div class="form-inline">
                     <label>ApiKey</label>
-                    <input type="password" class="form-control" v-model="scraping_apikey">
+                    <input type="password" class="form-control" v-model="server_apikey">
                 </div>
                 <label>URL</label>
-                <input type="text" class="form-control" v-model="scraping_url">
+                <input type="text" class="form-control" v-model="server_url">
                 <hr>
                 <h3>京急運行情報</h3>
                 <button class="btn btn-primary" v-on:click="scraping_keikyu()">更新</button><br>
@@ -446,10 +463,10 @@
                 </p>
                 <div class="form-inline">
                     <label>ApiKey</label>
-                    <input type="password" class="form-control" v-model="notify_apikey">
+                    <input type="password" class="form-control" v-model="server_apikey">
                 </div>
                 <label>URL</label>
-                <input type="text" class="form-control" v-model="notify_url">
+                <input type="text" class="form-control" v-model="server_url">
                 <hr>
                 <h3>Gmail送信</h3>
                 <label>メールアドレス</label>
@@ -471,10 +488,11 @@
                 </p>
                 <div class="form-inline">
                     <label>ApiKey</label>
-                    <input type="password" class="form-control" v-model="qiita_apikey">
+                    <input type="password" class="form-control" v-model="server_apikey">
                 </div>
                 <label>URL</label>
-                <input type="text" class="form-control" v-model="qiita_url">
+                <input type="text" class="form-control" v-model="server_url">
+                <hr>
                 <button class="btn btn-primary" v-on:click="qiita_items()">取得</button><br>
                 <label>受信日時</label>{{qiita_items_received_date}}
                 <table class="table table-striped">
@@ -489,9 +507,62 @@
                 </table>
                 <hr>
             </div>
-    
+
+            <div id="trend" class="tab-pane fade in">
+                <h2 class="page-header">トレンドキーワード</h2>
+                <p>
+                    ※動作させるにはサーバが必要です。
+                </p>
+                <div class="form-inline">
+                    <label>ApiKey</label>
+                    <input type="password" class="form-control" v-model="server_apikey">
+                </div>
+                <label>URL</label>
+                <input type="text" class="form-control" v-model="server_url">
+                <hr>
+                <button class="btn btn-primary" v-on:click="trend_get()">取得</button><br>
+                <label>受信日時</label>{{trend_items_received_date}}
+                <table class="table table-striped">
+                    <thead>
+                        <tr><th>#</th><th>トレンドキーワード</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in trend_item_list">
+                            <td>{{index + 1}}</td><td><a v-bind:href="'https://www.google.com/search?hl=ja&q=' + item" target="_blank">{{item}}</td></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+            </div>
+
+
         </div>
         <br>
+
+        <div class="modal fade" id="date_input_dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">日時の入力</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-inline">
+                            <input type="test" class="form-control" v-model="date_input_free">
+                            <button class="btn btn-primary" v-on:click="date_input_process('free')">入力</button>
+                        </div>
+                        <br>
+                        <div class="form-inline">
+                            <input type="date" class="form-control" v-model="date_input_date">
+                            <input type="time" class="form-control" v-model="date_input_time">
+                            <button class="btn btn-primary" v-on:click="date_input_process('control')">入力</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" v-on:click="dialog_close('#date_input_dialog')">キャンセル</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <div class="modal fade" id="progress">
