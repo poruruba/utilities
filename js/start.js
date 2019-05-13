@@ -189,7 +189,7 @@ var vue_options = {
             }
             if( this.passwd_check_upper_letter ){
                 if( this.passwd_check_ecept_lO )
-                    alpha_pattern += "ABCDEFGHIJKLMNPQRSTUVWXYZ";
+                    alpha_pattern += "ABCDEFGHJKLMNPQRSTUVWXYZ";
                 else
                     alpha_pattern += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             }
