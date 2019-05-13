@@ -39,6 +39,7 @@ var vue_options = {
         passwd_check_lower_letter: true,
         passwd_check_upper_letter: true,
         passwd_check_number: true,
+        passwd_check_ecept_lO: false,
         passwd_number_num: 1,
         passwd_check_symbol: false,
         passwd_symbol_pattern: "-+*/_",
@@ -180,10 +181,18 @@ var vue_options = {
 
             const number_pattern = '0123456789';
             var alpha_pattern = '';
-            if( this.passwd_check_lower_letter )
-                alpha_pattern += "abcdefghijklmnopqrstuvwxyz";
-            if( this.passwd_check_upper_letter )
-                alpha_pattern += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            if( this.passwd_check_lower_letter ){
+                if( this.passwd_check_ecept_lO )
+                    alpha_pattern += "abcdefghijkmnopqrstuvwxyz";
+                else
+                    alpha_pattern += "abcdefghijklmnopqrstuvwxyz";
+            }
+            if( this.passwd_check_upper_letter ){
+                if( this.passwd_check_ecept_lO )
+                    alpha_pattern += "ABCDEFGHIJKLMNPQRSTUVWXYZ";
+                else
+                    alpha_pattern += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            }
 
             var passwd = '';
             for( var i = 0 ; i < kind.length ; i++ ){
