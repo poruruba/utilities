@@ -4,6 +4,9 @@
 
 new ClipboardJS('.clip_btn');
 
+var encoder = new TextEncoder('utf-8');
+var decoder = new TextDecoder('utf-8');
+
 var vue_options = {
     el: "#top",
     data: {
@@ -13,6 +16,17 @@ var vue_options = {
         server_url: '',
         base64_input: '',
         base64_output: '',
+        base64url_input: '',
+        base64url_output: '',
+        string_input: '',
+        string_output: '',
+        hmac_input: '',
+        hmac_secret: '',
+        hmac_output: '',
+        aes_input: '',
+        aes_iv: '',
+        aes_secret: '',
+        aes_output: '',
         url_input: '',
         url_output: '',
         html_input: '',
@@ -113,13 +127,66 @@ var vue_options = {
             new QRCode($("#qrcode_area")[0], this.qrcode_input);
         },
 
-        /* エンコード */
-        base64_encode: function(encode){
+        string_encode: function(encode){
             try{
                 if( encode )
-                    this.base64_output = btoa(this.base64_input);
+                    this.string_output = byteAry2hexStr(encoder.encode(this.string_input));
                 else
-                    this.base64_output = atob(this.base64_input);
+                    this.string_output = decoder.decode(new Uint8Array(hexStr2byteAry(this.string_input)));
+            }catch( error ){
+                alert(error);
+            }
+        },
+
+        /* 暗号化 */
+        crypto_hmac: function(){
+            try{
+                this.hmac_output = byteAry2hexStr(makeHmacSha256(this.chmac_input, this.hmac_secret));
+            }catch( error ){
+                alert(error);
+            }
+        },
+        crypto_aes: function(encrypt){
+            try{
+                var input = CryptoJS.enc.Hex.parse(this.aes_input);
+                var iv = CryptoJS.enc.Hex.parse(this.aes_iv);
+                var key = CryptoJS.enc.Hex.parse(this.aes_secret);
+                if( encrypt ){
+                    var encrypted = CryptoJS.AES.encrypt(input, key, { iv: iv, padding: CryptoJS.pad.NoPadding });
+                    this.aes_output = encrypted.ciphertext.toString(CryptoJS.enc.Hex);
+                }else{
+                    var decrypted = CryptoJS.AES.decrypt(CryptoJS.lib.CipherParams.create({ ciphertext: input }), key, { iv: iv, padding: CryptoJS.pad.NoPadding });
+                    this.aes_output = decrypted.toString(CryptoJS.enc.Hex);
+                }
+        }catch( error ){
+                alert(error);
+            }
+        },
+
+        /* エンコード */
+        base64_encode: function(encode, bin){
+            try{
+                if( !bin ){
+                    if( encode )
+                        this.base64_output = btoa(this.base64_input);
+                    else
+                        this.base64_output = atob(this.base64_input);
+                }else{
+                    if( encode )
+                        this.base64_output = bufferToBase64(hexStr2byteAry(this.base64_input));
+                    else
+                        this.base64_output = byteAry2hexStr(base64ToBuffer(this.base64_input));
+                }
+            }catch( error ){
+                alert(error);
+            }
+        },
+        base64url_encode: function(encode){
+            try{
+                if( encode )
+                    this.base64url_output = base64url.encode(hexStr2byteAry(this.base64url_input));
+                else
+                    this.base64url_output = byteAry2hexStr(base64url.decode(this.base64url_input));
             }catch( error ){
                 alert(error);
             }
@@ -635,9 +702,76 @@ function hexStr2byteAry_2(hexs, sep = '') {
 }
 
 function byteAry2hexStr(bytes, sep = '', pref = '') {
+    if( bytes instanceof ArrayBuffer )
+        bytes = new Uint8Array(bytes);
+    if( bytes instanceof Uint8Array )
+        bytes = Array.from(bytes);
+
     return bytes.map((b) => {
         var s = b.toString(16);
         return pref + (b < 0x10 ? '0'+s : s);
     })
     .join(sep);
+}
+
+function bufferToBase64(buf) {
+    if( buf instanceof ArrayBuffer )
+        buf = new Uint8Array(buf);
+    if( buf instanceof Uint8Array )
+        buf = Array.from(buf);
+
+    var binstr = buf.map(b => String.fromCharCode(b)).join("");
+    return btoa(binstr);
+}
+
+function uint8array_to_wordarray(ba) {
+	var wa = [];
+	for (var i = 0; i < ba.length; i++) {
+		wa[(i / 4) | 0] |= ba[i] << (24 - 8 * i);
+	}
+
+	return CryptoJS.lib.WordArray.create(wa, ba.length);
+}
+
+function wordToByteArray(word, length) {
+	var ba = [];
+	if (length > 0)
+		ba.push(word >>> 24);
+	if (length > 1)
+		ba.push((word >>> 16) & 0xFF);
+	if (length > 2)
+		ba.push((word >>> 8) & 0xFF);
+	if (length > 3)
+		ba.push(word & 0xFF);
+
+	return ba;
+}
+
+function wordarray_to_uint8array(wordArray, length) {
+	if (wordArray.hasOwnProperty("sigBytes") && wordArray.hasOwnProperty("words")) {
+		length = wordArray.sigBytes;
+		wordArray = wordArray.words;
+	}
+
+	var result = [], i = 0;
+	while (length > 0) {
+		var bytes = wordToByteArray(wordArray[i], Math.min(4, length));
+		length -= bytes.length;
+		result.push(bytes);
+		i++;
+    }
+    
+	return Uint8Array.from([].concat.apply([], result));
+}
+
+function base64ToBuffer(b64) {
+    var binstr = atob(b64);
+    var buf = new Uint8Array(binstr.length);
+    Array.from(binstr).forEach((ch, i) => buf[i] = ch.charCodeAt(0));
+    return buf;
+}
+
+function makeHmacSha256(input, secret){
+    var hash = CryptoJS.HmacSHA256(input, secret);
+    return wordarray_to_uint8array(hash);
 }
