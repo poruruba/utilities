@@ -26,6 +26,8 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
 
+    <script src="dist/js/crypto-js.js"></script>
+    <script src="dist/js/base64url-arraybuffer.js"></script>
     <script src="dist/js/qrcode.min.js"></script>
     <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
@@ -39,7 +41,9 @@
         <ul class="nav nav-tabs">
             <li role="presentation" class="active"><a href="#qrcode" data-toggle="tab">QRコード</a></li>
             <li role="presentation"><a href="#encode" data-toggle="tab">エンコード</a></li>
+            <li role="presentation"><a href="#string" data-toggle="tab">文字列</a></li>
             <li role="presentation"><a href="#passwd" data-toggle="tab">パスワード</a></li>
+            <li role="presentation"><a href="#crypto" data-toggle="tab">暗号化</a></li>
             <li role="presentation"><a href="#array" data-toggle="tab">バイト配列</a></li>
             <li role="presentation"><a href="#date" data-toggle="tab">日時</a></li>
             <li role="presentation"><a href="#cardinal" data-toggle="tab">基数</a></li>
@@ -62,16 +66,65 @@
                 <div id="qrcode_area"></div>
             </div>
 
+            <div id="string" class="tab-pane fade in">
+                <h2 class="page-header">文字列</h2>
+                <h3>UTF8 ⇔ バイト配列</h3>
+                <label>入力</label>
+                <textarea class="form-control" rows="3" v-model="string_input"></textarea>
+                <button class="btn btn-primary" v-on:click="string_encode(true)">toバイト配列</button>
+                <button class="btn btn-primary" v-on:click="string_encode(false)">fromバイト配列</button><br>
+                <label>出力</label><br>
+                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#string_output"></button>
+                <textarea id="string_output" class="form-control" rows="3" v-model="string_output" readonly></textarea>
+            </div>
+
+            <div id="crypto" class="tab-pane fade in">
+                <h2 class="page-header">暗号化</h2>
+                <h3>HMAC(SHA256)</h3>
+                <label>入力</label>
+                <textarea class="form-control" rows="2" v-model="hmac_input"></textarea>
+                <label>シークレット</label>
+                <textarea class="form-control" rows="1" v-model="hmac_secret"></textarea>
+                <button class="btn btn-primary" v-on:click="crypto_hmac()">生成</button><br>
+                <label>出力</label><br>
+                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#hmac_output"></button>
+                <textarea id="hmac_output" class="form-control" rows="2" v-model="hmac_output" readonly></textarea>
+
+                <h3>AES</h3>
+                <label>入力</label>
+                <textarea class="form-control" rows="3" v-model="aes_input"></textarea>
+                <label>初期ベクトル</label>
+                <textarea class="form-control" rows="1" v-model="aes_iv"></textarea>
+                <label>シークレット</label>
+                <textarea class="form-control" rows="1" v-model="aes_secret"></textarea>
+                <button class="btn btn-primary" v-on:click="crypto_aes(true)">暗号化</button>
+                <button class="btn btn-primary" v-on:click="crypto_aes(false)">復号化</button><br>
+                <label>出力</label><br>
+                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#aes_output"></button>
+                <textarea id="aes_output" class="form-control" rows="3" v-model="aes_output" readonly></textarea>
+            </div>
+
             <div id="encode" class="tab-pane fade in">
                 <h2 class="page-header">エンコーディング</h2>
                 <h3>Base64エンコード</h3>
                 <label>入力</label>
                 <textarea class="form-control" rows="5" v-model="base64_input"></textarea>
                 <button class="btn btn-primary" v-on:click="base64_encode(true)">エンコード</button>
-                <button class="btn btn-primary" v-on:click="base64_encode(false)">デコード</button><br>
+                <button class="btn btn-primary" v-on:click="base64_encode(false)">デコード</button>&nbsp;&nbsp;
+                <button class="btn btn-primary" v-on:click="base64_encode(true, true)">バイナリエンコード</button>
+                <button class="btn btn-primary" v-on:click="base64_encode(false, true)">バイナリデコード</button><br>
                 <label>出力</label><br>
                 <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#base64_output"></button>
                 <textarea id="base64_output" class="form-control" rows="5" v-model="base64_output" readonly></textarea>
+
+                <h3>Base64URLエンコード</h3>
+                <label>入力</label>
+                <textarea class="form-control" rows="5" v-model="base64url_input"></textarea>
+                <button class="btn btn-primary" v-on:click="base64url_encode(true)">バイナリエンコード</button>
+                <button class="btn btn-primary" v-on:click="base64url_encode(false)">バイナリデコード</button><br>
+                <label>出力</label><br>
+                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#base64url_output"></button>
+                <textarea id="base64url_output" class="form-control" rows="5" v-model="base64url_output" readonly></textarea>
 
                 <h3>URLエンコード</h3>
                 <label>入力</label>
