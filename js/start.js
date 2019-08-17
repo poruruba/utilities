@@ -127,6 +127,7 @@ var vue_options = {
             new QRCode($("#qrcode_area")[0], this.qrcode_input);
         },
 
+        /* 文字列 */
         string_encode: function(encode){
             try{
                 if( encode )
@@ -714,16 +715,6 @@ function byteAry2hexStr(bytes, sep = '', pref = '') {
     .join(sep);
 }
 
-function bufferToBase64(buf) {
-    if( buf instanceof ArrayBuffer )
-        buf = new Uint8Array(buf);
-    if( buf instanceof Uint8Array )
-        buf = Array.from(buf);
-
-    var binstr = buf.map(b => String.fromCharCode(b)).join("");
-    return btoa(binstr);
-}
-
 function uint8array_to_wordarray(ba) {
 	var wa = [];
 	for (var i = 0; i < ba.length; i++) {
@@ -762,6 +753,16 @@ function wordarray_to_uint8array(wordArray, length) {
     }
     
 	return Uint8Array.from([].concat.apply([], result));
+}
+
+function bufferToBase64(buf) {
+    if( buf instanceof ArrayBuffer )
+        buf = new Uint8Array(buf);
+    if( buf instanceof Uint8Array )
+        buf = Array.from(buf);
+
+    var binstr = buf.map(b => String.fromCharCode(b)).join("");
+    return btoa(binstr);
 }
 
 function base64ToBuffer(b64) {
