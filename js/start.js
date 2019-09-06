@@ -72,7 +72,7 @@ var vue_options = {
         cardinal_binary_num: 2,
         cardinal_check_binary: false,
         array_pattern: [],
-        base_array: '',
+        base_array: null,
         array_length: 0,
         gengou_era_name: '令和',
         gengou_era_other: '',
@@ -80,7 +80,10 @@ var vue_options = {
         gengou_anno_year: 2019,
         gengou_list: gengou_list.reverse(),
         trend_items_received_date: null,
-        trend_item_list: []
+        trend_item_list: [],
+        binary_output: '',
+        binary_cr_num: 0,
+        binary_space: false
     },
     computed: {
         date_unix: function(){
@@ -290,6 +293,8 @@ var vue_options = {
                 this.base_array = hexStr2byteAry(this.array_pattern[2], ',');
             }else if( ptn == 3 ){
                 this.base_array = hexStr2byteAry_2(this.array_pattern[3], ',');
+            }else if( ptn == 4 ){
+                this.base_array = hexStr2byteAry_3(this.array_pattern[4], ',');
             }
 
             this.array_length = this.base_array.length;
@@ -297,8 +302,60 @@ var vue_options = {
             this.array_pattern[1] = byteAry2hexStr(this.base_array, ' ');
             this.array_pattern[2] = byteAry2hexStr(this.base_array, ', ', '0x');
             this.array_pattern[3] = byteAry2hexStr(this.base_array, ', ', '(byte)0x');
+            this.array_pattern[4] = this.base_array.join(', ');
         },
-        
+
+        /* バイナリファイル */
+        binary_save: function(){
+            var target = this.binary_output.replace(/\r?\n|\s/g, '');
+			var array = hexStr2byteAry(target);
+            var buffer = new ArrayBuffer(array.length);
+			var dv = new DataView(buffer);
+			for( var i = 0 ; i < array.length ; i++ )
+				dv.setUint8(i, array[i]);
+
+			var blob = new Blob([buffer], {type: "octet/stream"});
+			var url = window.URL.createObjectURL(blob);
+
+			var a = document.createElement("a");
+			a.href = url;
+			a.target = '_blank';
+			a.download = "array.bin";
+			a.click();
+			window.URL.revokeObjectURL(url);
+        },
+        binary_open: function(e){
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.onload = (theFile) =>{
+                this.binary_output = byteAry2hexStr(new Uint8Array(theFile.target.result));
+            };
+            reader.readAsArrayBuffer(file);
+        },
+        binary_click: function(e){
+            e.target.value = '';
+        },
+        binary_cr: function(){
+            var target = this.binary_output.replace(/\r?\n|\s/g, '');
+			var array = hexStr2byteAry(target);
+            var num_of_interval = Number(this.binary_cr_num);
+            if( num_of_interval == 0 ){
+                if( this.binary_space )
+                    this.binary_output = byteAry2hexStr(array, ' ');
+                else
+                    this.binary_output = byteAry2hexStr(array);
+            }else{
+                var str = '';
+                for( var i = 0 ; i < array.length ; i += num_of_interval ){
+                    if( this.binary_space )
+                        str += byteAry2hexStr(array.slice( i, i + num_of_interval ), ' ') + '\n';
+                    else
+                        str += byteAry2hexStr(array.slice( i, i + num_of_interval )) + '\n';
+                }
+                this.binary_output = str;
+            }
+        },
+
         /* 日時 */
         date_get_now: function(target){
             if( target == 'base')
@@ -700,6 +757,13 @@ function hexStr2byteAry_2(hexs, sep = '') {
             return parseInt(h, 16);
         });
     }
+}
+
+function hexStr2byteAry_3(hexs, sep = '') {
+    hexs = hexs.trim(hexs);
+    return hexs.split(sep).map((h) => {
+        return parseInt(h);
+    });
 }
 
 function byteAry2hexStr(bytes, sep = '', pref = '') {
