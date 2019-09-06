@@ -44,6 +44,7 @@
             <li role="presentation"><a href="#string" data-toggle="tab">文字列</a></li>
             <li role="presentation"><a href="#passwd" data-toggle="tab">パスワード</a></li>
             <li role="presentation"><a href="#crypto" data-toggle="tab">暗号化</a></li>
+            <li role="presentation"><a href="#binary" data-toggle="tab">バイナリファイル</a></li>
             <li role="presentation"><a href="#array" data-toggle="tab">バイト配列</a></li>
             <li role="presentation"><a href="#date" data-toggle="tab">日時</a></li>
             <li role="presentation"><a href="#cardinal" data-toggle="tab">基数</a></li>
@@ -95,7 +96,7 @@
                 <textarea class="form-control" rows="3" v-model="aes_input"></textarea>
                 <label>初期ベクトル</label>
                 <textarea class="form-control" rows="1" v-model="aes_iv"></textarea>
-                <label>シークレット</label>
+                <label>暗号鍵</label>
                 <textarea class="form-control" rows="1" v-model="aes_secret"></textarea>
                 <button class="btn btn-primary" v-on:click="crypto_aes(true)">暗号化</button>
                 <button class="btn btn-primary" v-on:click="crypto_aes(false)">復号化</button><br>
@@ -190,9 +191,29 @@
                 </div>
             </div> 
 
+            <div id="binary" class="tab-pane fade in">
+                <h2 class="page-header">バイナリファイル</h2>
+                <input type="file" v-on:change="binary_open" v-on:click="binary_click"><br>
+                <button v-on:click="binary_save()">ファイルに保存</button><br>
+                <br>
+                <div class="form-inline">
+                    <label>改行</label>
+                    <select class="form-control" v-model="binary_cr_num">
+                        <option value="0">無し</option>
+                        <option value="2">2バイト</option>
+                        <option value="4">4バイト</option>
+                        <option value="8">8バイト</option>
+                        <option value="16">16バイト</option>
+                    </select>
+                    <input type="checkbox" v-model="binary_space">空白　
+                    <button class="btn btn-primary" v-on:click="binary_cr()">整形</button><br>
+                </div>
+                <textarea class="form-control" rows="5" v-model="binary_output"></textarea>
+            </div>
+
             <div id="array" class="tab-pane fade in">
                 <h2 class="page-header">バイト配列</h2>
-                <label>長さ</label> {{array_length}}
+                <label>長さ</label> {{array_length}}<br>
                 <br>
                 <button class="btn btn-default" v-on:click="array_set(0)">変換</button>
                 <label>(例) 0011aabb</label>
@@ -209,6 +230,10 @@
                 <button class="btn btn-default" v-on:click="array_set(3)">変換</button>
                 <label>(例) (byte)0x00, (byte)0x11, (byte)0xaa, (byte)0xbb</label>
                 <input type="text" class="form-control data-block" v-model="array_pattern[3]">
+                <br>
+                <button class="btn btn-default" v-on:click="array_set(4)">変換</button>
+                <label>(例) 0, 1, 2, 3, 4</label>
+                <input type="text" class="form-control data-block" v-model="array_pattern[4]">
             </div>
 
             <div id="date" class="tab-pane fade in">
@@ -343,11 +368,11 @@
 
             <div id="clip" class="tab-pane fade in">
                 <h2 class="page-header">クリップ</h2>
-                <span class="glyphicon glyphicon-erase">消去</span>&nbsp;&nbsp;
-                <span class="glyphicon glyphicon-floppy-disk">保存</span>&nbsp;&nbsp;
-                <span class="glyphicon glyphicon-paperclip">コピー</span>&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-erase">クッキーから消去</span>&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-floppy-disk">クッキーに保存</span>&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-paperclip">クリップボードにコピー</span>&nbsp;&nbsp;
                 <br><br>
-                <button class="btn btn-default" v-on:click="clip_clearall()">全消去</button><br>
+                <button class="btn btn-default" v-on:click="clip_clearall()">クッキーから全消去</button><br>
                 <label>入力0</label>
                 <div class="input-group">
                     <span class="input-group-btn">
