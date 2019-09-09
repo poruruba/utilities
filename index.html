@@ -158,7 +158,7 @@
                 <h2 class="page-header">パスワード</h2>
                 <div class="form-inline">
                     <label>パスワード文字数</label>
-                    <input type="number" class="form-control" size="2" v-model="passwd_num">文字
+                    <input type="number" class="form-control" size="2" v-model.number="passwd_num">文字
                 </div>
                 <br>
                 <div class="form-inline">
@@ -168,7 +168,7 @@
                 </div>
                 <div class="form-inline">
                     <input type="checkbox" v-model="passwd_check_number">数字
-                    <input type="number" class="form-control" size="2" v-model="passwd_number_num">個
+                    <input type="number" class="form-control" size="2" v-model.number="passwd_number_num">個
                 </div>
                 <div class="form-inline">
                     <input type="checkbox" v-model="passwd_check_symbol">記号
@@ -179,7 +179,7 @@
                         <option value="!@#$%^&*()_+-=[]{}|">!@#$%^&*()_+-=[]{}|</option>
                         <option value="!#$%&()=-\@+*/?'^~|`;,._[]{}">!#$%&()=-\@+*/?'^~|`;,._[]{}</option>
                     </select>
-                    <input type="number" class="form-control" size="2" v-model="passwd_symbol_num">個　
+                    <input type="number" class="form-control" size="2" v-model.number="passwd_symbol_num">個　
                 </div>
                 <button class="btn btn-primary" v-on:click="passwd_create()">生成</button><br>
                 <br>
@@ -198,7 +198,7 @@
                 <br>
                 <div class="form-inline">
                     <label>改行</label>
-                    <select class="form-control" v-model="binary_cr_num">
+                    <select class="form-control" v-model.number="binary_cr_num">
                         <option value="0">無し</option>
                         <option value="2">2バイト</option>
                         <option value="4">4バイト</option>
@@ -273,7 +273,7 @@
                                     <option value="minute">分</option>
                                     <option value="second">秒</option>
                                 </select>
-                                <input type="number" class="form-control" v-model="date_duration">&nbsp;&nbsp;
+                                <input type="number" class="form-control" v-model.number="date_duration">&nbsp;&nbsp;
                             </div>
                         </div>
                     </div>
@@ -447,12 +447,12 @@
                         <option value="その他">その他</option>
                     </select>
                     <input type="text" class="form-control" size="5" v-model="gengou_era_other" v-if="gengou_era_name=='その他'">
-                    <input type="number" class="form-control" size="4" v-model="gengou_era_year">年
+                    <input type="number" class="form-control" size="4" v-model.number="gengou_era_year">年
                     <button class="btn btn-primary" v-on:click="gengou_to_anno()">変換</button><br>
                 </div>
                 <div class="form-inline">
                     <label>西暦</label>
-                    <input type="number" class="form-control" size="5" v-model="gengou_anno_year">年
+                    <input type="number" class="form-control" size="5" v-model.number="gengou_anno_year">年
                     <button class="btn btn-primary" v-on:click="gengou_to_era()">変換</button><br>
                 </div>
                 <hr>
@@ -642,7 +642,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-inline">
-                            <input type="test" class="form-control" v-model="date_input_free">
+                            <label>フリー入力</label> <input type="text" class="form-control" v-model="date_input_free">
                             <button class="btn btn-primary" v-on:click="date_input_process('free')">入力</button>
                         </div>
                         <br>
