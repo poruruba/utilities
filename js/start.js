@@ -222,9 +222,9 @@ var vue_options = {
 
         /* パスワード */
         passwd_create: function(){
-            var passwd_num = Number(this.passwd_num);
-            var passwd_number_num = this.passwd_check_number ? Number(this.passwd_number_num) : 0;
-            var passwd_symbol_num = this.passwd_check_symbol ? Number(this.passwd_symbol_num) : 0;
+            var passwd_num = this.passwd_num;
+            var passwd_number_num = this.passwd_check_number ? this.passwd_number_num : 0;
+            var passwd_symbol_num = this.passwd_check_symbol ? this.passwd_symbol_num : 0;
             if( passwd_num < 1 || passwd_num < (passwd_number_num + passwd_symbol_num) ){
                 alert('入力が不正です。');
                 return;
@@ -338,7 +338,7 @@ var vue_options = {
         binary_cr: function(){
             var target = this.binary_output.replace(/\r?\n|\s/g, '');
 			var array = hexStr2byteAry(target);
-            var num_of_interval = Number(this.binary_cr_num);
+            var num_of_interval = this.binary_cr_num;
             if( num_of_interval == 0 ){
                 if( this.binary_space )
                     this.binary_output = byteAry2hexStr(array, ' ');
@@ -377,17 +377,17 @@ var vue_options = {
         date_process: function(){
             var temp = moment(this.date_moment);
             if( this.date_duration_unit == 'year' )
-                temp.add(Number(this.date_duration), 'years');
+                temp.add(this.date_duration, 'years');
             else if( this.date_duration_unit == 'month' )
-                temp.add(Number(this.date_duration), 'months');
+                temp.add(this.date_duration, 'months');
             else if( this.date_duration_unit == 'day' )
-                temp.add(Number(this.date_duration), 'days');
+                temp.add(this.date_duration, 'days');
             else if( this.date_duration_unit == 'hour' )
-                temp.add(Number(this.date_duration), 'hours');
+                temp.add(this.date_duration, 'hours');
             else if( this.date_duration_unit == 'minute' )
-                temp.add(Number(this.date_duration), 'minutes');
+                temp.add(this.date_duration, 'minutes');
             else if( this.date_duration_unit == 'second' )
-                temp.add(Number(this.date_duration), 'seconds');
+                temp.add(this.date_duration, 'seconds');
             this.date_moment_after = temp;
         },
         date_input_process: function(target){
@@ -516,7 +516,7 @@ var vue_options = {
                 return;
             }
         
-            var year = Number(this.gengou_era_year);
+            var year = this.gengou_era_year;
             if( year <= 0 ){
                 alert('入力が不正です。');
                 return;
@@ -530,7 +530,7 @@ var vue_options = {
             this.gengou_anno_year = anno_year;
         },
         gengou_to_era: function(){
-            var year = Number(this.gengou_anno_year);
+            var year = this.gengou_anno_year;
             var gengou = this.gengou_search_anno(year);
             if( !gengou ){
                 alert('入力が不正です。');
