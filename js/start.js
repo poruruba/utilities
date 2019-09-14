@@ -233,7 +233,7 @@ var vue_options = {
             this.color_b = this.rgb2hex(this.color_value, "b");
         },
         color_select: function(rgb){
-            this.color_value = rgb;
+            this.color_value = rgb.toLowerCase();
             this.color_change();
         },
 
