@@ -43,6 +43,7 @@
             <li role="presentation"><a href="#encode" data-toggle="tab">エンコード</a></li>
             <li role="presentation"><a href="#string" data-toggle="tab">文字列</a></li>
             <li role="presentation"><a href="#passwd" data-toggle="tab">パスワード</a></li>
+            <li role="presentation"><a href="#color" data-toggle="tab">カラー</a></li>
             <li role="presentation"><a href="#crypto" data-toggle="tab">暗号化</a></li>
             <li role="presentation"><a href="#binary" data-toggle="tab">バイナリファイル</a></li>
             <li role="presentation"><a href="#array" data-toggle="tab">バイト配列</a></li>
@@ -190,6 +191,42 @@
                     <input id="passwd_password" type="text" class="form-control" v-model="passwd_password" readonly>
                 </div>
             </div> 
+
+            <div id="color" class="tab-pane fade in">
+                <h2 class="page-header">カラー</h2>
+                <canvas width="60" height="30" v-bind:style="{ backgroundColor: color_value }"></canvas>
+                <div class="form-inline">
+                    <input type="color" v-on:change="color_change" v-model="color_value">&nbsp;&nbsp;&nbsp;
+                    <label>RGB:</label><input type="text" size="7" class="form-control" v-model="color_value">&nbsp;&nbsp;
+                    <label>R:</label><input type="text" size="2" class="form-control" v-model="color_r" readonly> <label>G:</label><input type="text" size="2" class="form-control" v-model="color_g" readonly> <label>B:</label><input type="text" size="2" class="form-control" v-model="color_b" readonly>
+                </div>
+                <br>
+                <label>基本16色</label>
+                <table class="table table-striped">
+                    <thead>
+                        <tr><th>選択</th><th>カラー</th><th>名称</th><th>RGB</th><th>R</th><th>G</th><th>B</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in color_basic_list">
+                            <td><button class="btn btn-default btn-xs" v-on:click="color_select(item.rgb)">選択</button></td>
+                            <td v-bind:bgcolor="item.rgb"></td><td><label>{{item.name}}</label></td>
+                            <td>{{item.rgb.toLowerCase()}}</td><td>{{rgb2hex(item.rgb, 'r')}}</td><td>{{rgb2hex(item.rgb, 'g')}}</td><td>{{rgb2hex(item.rgb, 'b')}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-striped">
+                    <thead>
+                        <tr><th>選択</th><th>カラー</th><th>名称</th><th>RGB</th><th>R</th><th>G</th><th>B</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in color_list">
+                            <td><button class="btn btn-default btn-xs" v-on:click="color_select(item.rgb)">選択</button></td>
+                            <td v-bind:bgcolor="item.rgb"></td><td><label>{{item.name}}</label></td>
+                            <td>{{item.rgb.toLowerCase()}}</td><td>{{rgb2hex(item.rgb, 'r')}}</td><td>{{rgb2hex(item.rgb, 'g')}}</td><td>{{rgb2hex(item.rgb, 'b')}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <div id="binary" class="tab-pane fade in">
                 <h2 class="page-header">バイナリファイル</h2>
@@ -675,5 +712,6 @@
     </div>
 
     <script src="js/gengou.js"></script>
+    <script src="js/color.js"></script>
     <script src="js/start.js"></script>
 </body>
