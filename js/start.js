@@ -83,7 +83,13 @@ var vue_options = {
         trend_item_list: [],
         binary_output: '',
         binary_cr_num: 0,
-        binary_space: false
+        binary_space: false,
+        color_list: color_list,
+        color_value: "#000000",
+        color_r: "00",
+        color_g: "00",
+        color_b: "00",
+        color_basic_list: color_basic_list,
     },
     computed: {
         date_unix: function(){
@@ -218,6 +224,17 @@ var vue_options = {
             this.html_output = this.html_input.split('').map((entity) => {
                 return html_entities[entity] || entity;
             }).join('');
+        },
+
+        /* カラー */
+        color_change: function(){
+            this.color_r = this.rgb2hex(this.color_value, "r");
+            this.color_g = this.rgb2hex(this.color_value, "g");
+            this.color_b = this.rgb2hex(this.color_value, "b");
+        },
+        color_select: function(rgb){
+            this.color_value = rgb;
+            this.color_change();
         },
 
         /* パスワード */
@@ -673,6 +690,14 @@ var vue_options = {
                 this.progress_close();
                 alert(error);
             });
+        },
+        rgb2hex: function(rgb, sel){
+            if( sel == 'r' )
+                return rgb.slice(1, 3).toLowerCase();
+            else if( sel == 'g' )
+                return rgb.slice(3, 5).toLowerCase();
+            else if( sel == 'b' )
+                return rgb.slice(5, 7).toLowerCase();
         }
     },
     created: function(){
