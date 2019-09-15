@@ -201,9 +201,9 @@
                 <br>
                 <table class="table table-borderless">
                     <td v-bind:bgcolor="color_value">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                    <td><label>R:</label> <input type="range" min="0" max="255" v-model.number="color_r" v-on:change="color_range"><input type="text" class="form-control" v-model.number="color_r" v-on:change="color_range"></td>
-                    <td><label>G:</label> <input type="range" min="0" max="255" v-model.number="color_g" v-on:change="color_range"><input type="text" class="form-control" v-model.number="color_g" v-on:change="color_range"></td>
-                    <td><label>B:</label> <input type="range" min="0" max="255" v-model.number="color_b" v-on:change="color_range"><input type="text" class="form-control" v-model.number="color_b" v-on:change="color_range"></td>
+                    <td><label>R:</label> <input type="range" min="0" max="255" v-model.number="color_r" v-on:input="color_range"><input type="text" class="form-control" v-model.number="color_r" v-on:change="color_range"></td>
+                    <td><label>G:</label> <input type="range" min="0" max="255" v-model.number="color_g" v-on:input="color_range"><input type="text" class="form-control" v-model.number="color_g" v-on:change="color_range"></td>
+                    <td><label>B:</label> <input type="range" min="0" max="255" v-model.number="color_b" v-on:input="color_range"><input type="text" class="form-control" v-model.number="color_b" v-on:change="color_range"></td>
                 </table>
                 <br>
                 <label>基本16色</label>
