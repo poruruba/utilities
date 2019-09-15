@@ -86,9 +86,9 @@ var vue_options = {
         binary_space: false,
         color_list: color_list,
         color_value: "#000000",
-        color_r: "00",
-        color_g: "00",
-        color_b: "00",
+        color_r: 0,
+        color_g: 0,
+        color_b: 0,
         color_basic_list: color_basic_list,
     },
     computed: {
@@ -228,13 +228,17 @@ var vue_options = {
 
         /* カラー */
         color_change: function(){
-            this.color_r = this.rgb2hex(this.color_value, "r");
-            this.color_g = this.rgb2hex(this.color_value, "g");
-            this.color_b = this.rgb2hex(this.color_value, "b");
+            this.color_r = this.rgb2num(this.color_value, "r");
+            this.color_g = this.rgb2num(this.color_value, "g");
+            this.color_b = this.rgb2num(this.color_value, "b");
         },
         color_select: function(rgb){
             this.color_value = rgb.toLowerCase();
             this.color_change();
+        },
+        color_range: function(){
+            var rgb = [this.color_r, this.color_g, this.color_b];
+            this.color_select('#' + byteAry2hexStr(rgb) );
         },
 
         /* パスワード */
@@ -691,14 +695,14 @@ var vue_options = {
                 alert(error);
             });
         },
-        rgb2hex: function(rgb, sel){
+        rgb2num: function(rgb, sel){
             if( sel == 'r' )
-                return rgb.slice(1, 3).toLowerCase();
+                return parseInt(rgb.slice(1, 3), 16);
             else if( sel == 'g' )
-                return rgb.slice(3, 5).toLowerCase();
+                return parseInt(rgb.slice(3, 5), 16);
             else if( sel == 'b' )
-                return rgb.slice(5, 7).toLowerCase();
-        }
+                return parseInt(rgb.slice(5, 7), 16);
+        },
     },
     created: function(){
     },
