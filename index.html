@@ -194,12 +194,17 @@
 
             <div id="color" class="tab-pane fade in">
                 <h2 class="page-header">カラー</h2>
-                <canvas width="60" height="30" v-bind:style="{ backgroundColor: color_value }"></canvas>
                 <div class="form-inline">
-                    <input type="color" v-on:change="color_change" v-model="color_value">&nbsp;&nbsp;&nbsp;
-                    <label>RGB:</label><input type="text" size="7" class="form-control" v-model="color_value">&nbsp;&nbsp;
-                    <label>R:</label><input type="text" size="2" class="form-control" v-model="color_r" readonly> <label>G:</label><input type="text" size="2" class="form-control" v-model="color_g" readonly> <label>B:</label><input type="text" size="2" class="form-control" v-model="color_b" readonly>
+                    <input type="color" v-on:change="color_change" v-model="color_value">
+                    <label>RGB:</label><input type="text" size="7" class="form-control" v-model="color_value">
                 </div>
+                <br>
+                <table class="table table-borderless">
+                    <td v-bind:bgcolor="color_value">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td><label>R:</label> <input type="range" min="0" max="255" v-model.number="color_r" v-on:change="color_range"><input type="text" size="2" class="form-control" v-model.number="color_r" v-on:change="color_range"></td>
+                    <td><label>G:</label> <input type="range" min="0" max="255" v-model.number="color_g" v-on:change="color_range"><input type="text" size="2" class="form-control" v-model.number="color_g" v-on:change="color_range"></td>
+                    <td><label>B:</label> <input type="range" min="0" max="255" v-model.number="color_b" v-on:change="color_range"><input type="text" size="2" class="form-control" v-model.number="color_b" v-on:change="color_range"></td>
+                </table>
                 <br>
                 <label>基本16色</label>
                 <table class="table table-striped">
@@ -210,7 +215,7 @@
                         <tr v-for="(item, index) in color_basic_list">
                             <td><button class="btn btn-default btn-xs" v-on:click="color_select(item.rgb)">選択</button></td>
                             <td v-bind:bgcolor="item.rgb"></td><td><label>{{item.name}}</label></td>
-                            <td>{{item.rgb.toLowerCase()}}</td><td>{{rgb2hex(item.rgb, 'r')}}</td><td>{{rgb2hex(item.rgb, 'g')}}</td><td>{{rgb2hex(item.rgb, 'b')}}</td>
+                            <td>{{item.rgb.toLowerCase()}}</td><td>{{rgb2num(item.rgb, 'r')}}</td><td>{{rgb2num(item.rgb, 'g')}}</td><td>{{rgb2num(item.rgb, 'b')}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -222,7 +227,7 @@
                         <tr v-for="(item, index) in color_list">
                             <td><button class="btn btn-default btn-xs" v-on:click="color_select(item.rgb)">選択</button></td>
                             <td v-bind:bgcolor="item.rgb"></td><td><label>{{item.name}}</label></td>
-                            <td>{{item.rgb.toLowerCase()}}</td><td>{{rgb2hex(item.rgb, 'r')}}</td><td>{{rgb2hex(item.rgb, 'g')}}</td><td>{{rgb2hex(item.rgb, 'b')}}</td>
+                            <td>{{item.rgb.toLowerCase()}}</td><td>{{rgb2num(item.rgb, 'r')}}</td><td>{{rgb2num(item.rgb, 'g')}}</td><td>{{rgb2num(item.rgb, 'b')}}</td>
                         </tr>
                     </tbody>
                 </table>
