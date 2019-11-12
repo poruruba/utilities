@@ -216,7 +216,7 @@
                         <tbody>
                             <tr>
                                 <td><button class="btn btn-default btn-xs" v-on:click="color_select(color_near.rgb)">選択</button></td>
-                                <td v-bind:bgcolor="color_near.rgb"></td><td><label>{{color_near.name}}</label></td>
+                                <td v-bind:bgcolor="color_near.rgb" v-on:click="color_select(color_near.rgb)"></td><td><label>{{color_near.name}}</label></td>
                                 <td>{{color_near.rgb.toLowerCase()}}</td><td>{{rgb2num(color_near.rgb, 'r')}}</td><td>{{rgb2num(color_near.rgb, 'g')}}</td><td>{{rgb2num(color_near.rgb, 'b')}}</td>
                             </tr>
                         </tbody>
@@ -230,7 +230,7 @@
                     <tbody>
                         <tr v-for="(item, index) in color_basic_list">
                             <td><button class="btn btn-default btn-xs" v-on:click="color_select(item.rgb)">選択</button></td>
-                            <td v-bind:bgcolor="item.rgb"></td><td><label>{{item.name}}</label></td>
+                            <td v-bind:bgcolor="item.rgb" v-on:click="color_select(item.rgb)"></td><td><label>{{item.name}}</label></td>
                             <td>{{item.rgb.toLowerCase()}}</td><td>{{rgb2num(item.rgb, 'r')}}</td><td>{{rgb2num(item.rgb, 'g')}}</td><td>{{rgb2num(item.rgb, 'b')}}</td>
                         </tr>
                     </tbody>
