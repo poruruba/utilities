@@ -7,20 +7,12 @@ function proc_load() {
 }
 
 function parse_url_vars(param){
-  if( param.length < 1 )
-      return {};
+    var searchParams = new URLSearchParams(param);
+    var vars = {};
+    for (let p of searchParams)
+        vars[p[0]] = p[1];
 
-  var hash = param;
-  if( hash.slice(0, 1) == '#' || hash.slice(0, 1) == '?' )
-      hash = hash.slice(1);
-  var hashs  = hash.split('&');
-  var vars = {};
-  for( var i = 0 ; i < hashs.length ; i++ ){
-      var array = hashs[i].split('=');
-      vars[array[0]] = array[1];
-  }
-
-  return vars;
+    return vars;
 }
 
 function vue_add_methods(options, funcs){
