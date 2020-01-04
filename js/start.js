@@ -205,9 +205,9 @@ var vue_options = {
         url_encode: function(encode){
             try{
                 if( encode )
-                    this.url_output = encodeURI(this.url_input);
+                    this.url_output = encodeURIComponent(this.url_input);
                 else
-                    this.url_output = decodeURI(this.url_input);
+                    this.url_output = decodeURIComponent(this.url_input);
             }catch( error ){
                 alert(error);
             }
