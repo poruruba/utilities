@@ -181,16 +181,10 @@ var vue_options = {
 
             const code = jsQR(imageData.data, this.qrcode_canvas.width, this.qrcode_canvas.height);
             if( code ){
-                this.qrcode_running = false;
-
-                this.qrcode_video.pause();
-                if( this.qrcode_timer != null ){
-                    clearTimeout(this.qrcode_timer);
-                    this.qrcode_timer = null;
-                }
-
                 this.qrcode_scaned_data = code.data;
                 console.log(code);
+                
+                this.qrcode_forcestop();
 
                 this.qrcode_context.strokeStyle = "blue";
                 this.qrcode_context.lineWidth = 3;
