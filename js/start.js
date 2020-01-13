@@ -7,6 +7,10 @@ new ClipboardJS('.clip_btn');
 var encoder = new TextEncoder('utf-8');
 var decoder = new TextDecoder('utf-8');
 
+const QRCODE_CAMERA_WIDTH = 320;
+const QRCODE_CAMERA_HEIGHT = 320;
+const QRCODE_CANCEL_TIMER = 20000;
+
 var vue_options = {
     el: "#top",
     data: {
@@ -45,6 +49,13 @@ var vue_options = {
         date_input_date: null,
         date_input_time: null,
         qrcode_input: '',
+        qrcode_btn: 'QRスキャン開始',
+        qrcode_video: null,
+        qrcode_canvas: null,
+        qrcode_context: null,
+        qrcode_scaned_data: '',
+        qrcode_running: false,
+        qrcode_timer: null,
         clip_data: [],
         notify_gmail_address: '',
         notify_gmail_message: '',
@@ -93,6 +104,9 @@ var vue_options = {
         color_near: null
     },
     computed: {
+        qrcode_size: function(){
+            return 'width: ' + QRCODE_CAMERA_WIDTH + 'px; height: ' + QRCODE_CAMERA_HEIGHT + 'px;';
+        },
         date_unix: function(){
             var date = this.date_moment.toDate();
             return date.getTime();
@@ -135,6 +149,80 @@ var vue_options = {
         qrcode_create: function(){
             $('#qrcode_area').empty();
             new QRCode($("#qrcode_area")[0], this.qrcode_input);
+        },
+        qrcode_scan: function(){
+            this.qrcode_video = $('#qrcode_camera')[0];
+            this.qrcode_canvas = $('#qrcode_canvas')[0];
+
+            if( this.qrcode_running ){
+                this.qrcode_forcestop();
+                return;
+            }
+
+            this.qrcode_running = true;
+
+            this.qrcode_context = this.qrcode_canvas.getContext('2d');
+            this.qrcode_timer = setTimeout(() =>{
+                this.qrcode_forcestop();
+            }, QRCODE_CANCEL_TIMER);
+
+            return navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
+            .then(stream =>{
+                this.qrcode_video.srcObject = stream;
+                this.qrcode_draw();
+            })
+            .catch(error =>{
+                alert(error);
+            });
+        },
+        qrcode_draw: function(){
+            this.qrcode_context.drawImage(this.qrcode_video, 0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
+            const imageData = this.qrcode_context.getImageData(0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
+
+            const code = jsQR(imageData.data, this.qrcode_canvas.width, this.qrcode_canvas.height);
+            if( code ){
+                this.qrcode_running = false;
+
+                this.qrcode_video.pause();
+                if( this.qrcode_timer != null ){
+                    clearTimeout(this.qrcode_timer);
+                    this.qrcode_timer = null;
+                }
+
+                this.qrcode_scaned_data = code.data;
+                console.log(code);
+
+                this.qrcode_context.strokeStyle = "blue";
+                this.qrcode_context.lineWidth = 3;
+                
+                var pos = code.location;
+                this.qrcode_context.beginPath();
+                this.qrcode_context.moveTo(pos.topLeftCorner.x, pos.topLeftCorner.y);
+                this.qrcode_context.lineTo(pos.topRightCorner.x, pos.topRightCorner.y);
+                this.qrcode_context.lineTo(pos.bottomRightCorner.x, pos.bottomRightCorner.y);
+                this.qrcode_context.lineTo(pos.bottomLeftCorner.x, pos.bottomLeftCorner.y);
+                this.qrcode_context.lineTo(pos.topLeftCorner.x, pos.topLeftCorner.y);
+                this.qrcode_context.stroke();
+
+                this.qrcode_btn = 'QRスキャン開始';
+            }else{
+                if( this.qrcode_running )
+                    requestAnimationFrame(this.qrcode_draw);
+            }
+        },
+        qrcode_forcestop: function(){
+            if( !this.qrcode_running )
+                return;
+
+            this.qrcode_running = false;
+
+            if( this.qrcode_timer != null ){
+                clearTimeout(this.qrcode_timer);
+                this.qrcode_timer = null;
+            }
+
+            this.qrcode_video.pause();
+            this.qrcode_btn = 'QRスキャン開始';
         },
 
         /* 文字列 */
