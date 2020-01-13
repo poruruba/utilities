@@ -198,8 +198,6 @@ var vue_options = {
                 this.qrcode_context.lineTo(pos.bottomLeftCorner.x, pos.bottomLeftCorner.y);
                 this.qrcode_context.lineTo(pos.topLeftCorner.x, pos.topLeftCorner.y);
                 this.qrcode_context.stroke();
-
-                this.qrcode_btn = 'QRスキャン開始';
             }else{
                 if( this.qrcode_running )
                     requestAnimationFrame(this.qrcode_draw);
