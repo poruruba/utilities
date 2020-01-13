@@ -160,6 +160,7 @@ var vue_options = {
             }
 
             this.qrcode_running = true;
+            this.qrcode_btn = 'QRスキャン停止';
 
             this.qrcode_context = this.qrcode_canvas.getContext('2d');
             this.qrcode_timer = setTimeout(() =>{
