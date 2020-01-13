@@ -216,6 +216,7 @@ var vue_options = {
             }
 
             this.qrcode_video.pause();
+            this.qrcode_video.srcObject = null;
             this.qrcode_btn = 'QRスキャン開始';
         },
 
