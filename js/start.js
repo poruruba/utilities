@@ -161,6 +161,7 @@ var vue_options = {
 
             this.qrcode_running = true;
             this.qrcode_btn = 'QRスキャン停止';
+            this.qrcode_scaned_data = "";
 
             this.qrcode_context = this.qrcode_canvas.getContext('2d');
             this.qrcode_timer = setTimeout(() =>{
@@ -181,7 +182,7 @@ var vue_options = {
             const imageData = this.qrcode_context.getImageData(0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
 
             const code = jsQR(imageData.data, this.qrcode_canvas.width, this.qrcode_canvas.height);
-            if( code ){
+            if( code && code.data != ""){
                 this.qrcode_scaned_data = code.data;
                 console.log(code);
                 
