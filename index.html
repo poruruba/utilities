@@ -29,6 +29,7 @@
     <script src="dist/js/crypto-js.js"></script>
     <script src="dist/js/base64url-arraybuffer.js"></script>
     <script src="dist/js/qrcode.min.js"></script>
+    <script src="dist/js/jsQR.js"></script>
     <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.0.6/chroma.min.js"></script>
@@ -63,10 +64,48 @@
 
             <div id="qrcode" class="tab-pane fade in active">
                 <h2 class="page-header">QRコード</h2>
-                <label>入力</label>
-                <input type="text" class="form-control" v-model="qrcode_input">
-                <button class="btn btn-primary" v-on:click="qrcode_create()">生成</button><br>
-                <div id="qrcode_area"></div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="panel-title"><a data-toggle="collapse" href="#qrcode_create_panel">QRコード生成</a></div>
+                    </div>
+                    <div class="panel-collapse collapse in" id="qrcode_create_panel">
+                        <div class="panel-body">
+                            <label>入力</label>
+                            <input type="text" class="form-control" v-model="qrcode_input">
+                            <button class="btn btn-primary" v-on:click="qrcode_create()">生成</button><br>
+                            <br>
+                            <div id="qrcode_area"></div>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-default" data-toggle="collapse" href="#qrcode_create_panel">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="panel-title"><a data-toggle="collapse" href="#qrcode_scan_panel">QRコードスキャン</a></div>
+                    </div>
+                    <div class="panel-collapse collapse" id="qrcode_scan_panel">
+                        <div class="panel-body">
+                            <label>scaned data</label>
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#qrcode_scaned_data"></button>
+                                </span>
+                                <input id="qrcode_scaned_data" type="text" class="form-control" v-model="qrcode_scaned_data" readonly>
+                            </div><br>
+                            <button class="btn btn-primary" v-on:click="qrcode_scan()">{{qrcode_btn}}</button><br>
+                            <div>
+                                <img v-show="!qrcode_running && qrcode_scaned_data==''" id="qrcode_start" src="./img/qr_start.png" v-bind:style="qrcode_size"><br>
+                                <video v-show="qrcode_running" id="qrcode_camera" v-bind:style="qrcode_size" autoplay></video>
+                                <canvas v-show="!qrcode_running && qrcode_scaned_data!=''" id="qrcode_canvas" v-bind:style="qrcode_size"></canvas>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-default" data-toggle="collapse" href="#qrcode_scan_panel">閉じる</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div id="string" class="tab-pane fade in">
