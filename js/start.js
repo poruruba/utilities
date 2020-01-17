@@ -579,7 +579,7 @@ var vue_options = {
         cardinal_update: function(){
             this.cardinal_decimal = this.base_decimal;
             
-            var temp = Math.floor(this.base_decimal.toString(2));
+            var temp = this.base_decimal.toString(2);
             if( this.cardinal_check_binary ){
                 for( var i = temp.length ; i < this.cardinal_binary_num; i++ )
                     temp = '0' + temp;
