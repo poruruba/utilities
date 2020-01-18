@@ -95,6 +95,12 @@ var vue_options = {
         binary_output: '',
         binary_cr_num: 0,
         binary_space: false,
+        binary_format: 'none',
+        binary_type: '',
+        binary_data: null,
+        binary_input: '',
+        binary_dataurl: '',
+        binary_text: '',
         color_list: color_list,
         color_value: "#000000",
         color_r: 0,
@@ -183,7 +189,7 @@ var vue_options = {
             const imageData = this.qrcode_context.getImageData(0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
 
             const code = jsQR(imageData.data, this.qrcode_canvas.width, this.qrcode_canvas.height);
-            if( code && code.data != ""){
+            if( code && code.data != "" ){
                 this.qrcode_scaned_data = code.data;
                 console.log(code);
                 
@@ -447,29 +453,55 @@ var vue_options = {
             var file = e.target.files[0];
             var reader = new FileReader();
             reader.onload = (theFile) =>{
-                this.binary_output = byteAry2hexStr(new Uint8Array(theFile.target.result));
+                this.binary_data = new Uint8Array(theFile.target.result);
+                this.binary_type = file.type ? file.type: 'application/octet-stream';
+                if( this.binary_type.startsWith('text/'))
+                    this.binary_text = decoder.decode(this.binary_data);
+                this.binary_dataurl = "data:" + this.binary_type + ";base64," + bufferToBase64(this.binary_data);
+
+                this.binary_change();
             };
             reader.readAsArrayBuffer(file);
         },
         binary_click: function(e){
+            this.binary_type = '';
+            this.binary_output = '';
+            this.binary_data = null;
+            this.binary_input = '';
+            this.binary_dataurl = '';
+            this.binary_text = '';
+
             e.target.value = '';
         },
+        binary_copy: function(){
+            if( this.binary_data != null )
+                this.binary_input = byteAry2hexStr(this.binary_data);
+        },
+        binary_change: function(){
+            if( this.binary_data != null ){
+                if( this.binary_format == 'none' ){
+                    this.binary_output = byteAry2hexStr(this.binary_data);
+                }else if(this.binary_format == 'cr'){
+                    this.binary_cr();
+                }else if( this.binary_format == 'dataurl'){
+                    this.binary_output = this.binary_dataurl;
+                }
+            }
+        },
         binary_cr: function(){
-            var target = this.binary_output.replace(/\r?\n|\s/g, '');
-			var array = hexStr2byteAry(target);
             var num_of_interval = this.binary_cr_num;
             if( num_of_interval == 0 ){
                 if( this.binary_space )
-                    this.binary_output = byteAry2hexStr(array, ' ');
+                    this.binary_output = byteAry2hexStr(this.binary_data, ' ');
                 else
-                    this.binary_output = byteAry2hexStr(array);
+                    this.binary_output = byteAry2hexStr(this.binary_data);
             }else{
                 var str = '';
-                for( var i = 0 ; i < array.length ; i += num_of_interval ){
+                for( var i = 0 ; i < this.binary_data.length ; i += num_of_interval ){
                     if( this.binary_space )
-                        str += byteAry2hexStr(array.slice( i, i + num_of_interval ), ' ') + '\n';
+                        str += byteAry2hexStr(this.binary_data.slice( i, i + num_of_interval ), ' ') + '\n';
                     else
-                        str += byteAry2hexStr(array.slice( i, i + num_of_interval )) + '\n';
+                        str += byteAry2hexStr(this.binary_data.slice( i, i + num_of_interval )) + '\n';
                 }
                 this.binary_output = str;
             }
