@@ -161,15 +161,15 @@ var vue_options = {
 
             this.qrcode_running = true;
             this.qrcode_btn = 'QRスキャン停止';
-            this.qrcode_scaned_data = "";
 
-            this.qrcode_context = this.qrcode_canvas.getContext('2d');
             this.qrcode_timer = setTimeout(() =>{
                 this.qrcode_forcestop();
             }, QRCODE_CANCEL_TIMER);
 
             return navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
             .then(stream =>{
+                this.qrcode_context = this.qrcode_canvas.getContext('2d');
+                this.qrcode_scaned_data = "";
                 this.qrcode_video.srcObject = stream;
                 this.qrcode_draw();
             })
@@ -178,6 +178,7 @@ var vue_options = {
             });
         },
         qrcode_draw: function(){
+//            console.log(this.qrcode_video.offsetWidth, this.qrcode_video.offsetHeight);
             this.qrcode_context.drawImage(this.qrcode_video, 0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
             const imageData = this.qrcode_context.getImageData(0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
 
