@@ -1,6 +1,6 @@
 var methods_utils = {
-    dialog_open: function(target){
-        $(target).modal({backdrop:'static', keyboard: false});
+    dialog_open: function(target, keyboard = false){
+        $(target).modal({backdrop:'static', keyboard: keyboard});
     },
     dialog_close: function(target){
         $(target).modal('hide');
