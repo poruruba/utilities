@@ -11,11 +11,11 @@ var methods_utils = {
     panel_close: function(target){
         $(target).collapse("hide");
     },
-    progress_open(title = '少々お待ちください。'){
+    progress_open: function(title = '少々お待ちください。'){
         this.progress_title = title;
         this.dialog_open('#progress');
     },
-    progress_close(){
+    progress_close: function(){
         this.dialog_close('#progress');
     }
 };
