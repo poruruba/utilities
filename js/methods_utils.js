@@ -1,6 +1,6 @@
 var methods_utils = {
-    dialog_open: function(target, keyboard = false){
-        $(target).modal({backdrop:'static', keyboard: keyboard});
+    dialog_open: function(target, backdrop = 'static'){
+        $(target).modal({backdrop: backdrop, keyboard: false});
     },
     dialog_close: function(target){
         $(target).modal('hide');
@@ -11,9 +11,9 @@ var methods_utils = {
     panel_close: function(target){
         $(target).collapse("hide");
     },
-    progress_open: function(title = '少々お待ちください。'){
+    progress_open: function(title = '少々お待ちください。', backdrop){
         this.progress_title = title;
-        this.dialog_open('#progress');
+        this.dialog_open('#progress', backdrop);
     },
     progress_close: function(){
         this.dialog_close('#progress');
