@@ -97,9 +97,9 @@
                             </div><br>
                             <button class="btn btn-primary" v-on:click="qrcode_scan()">{{qrcode_btn}}</button><br>
                             <div>
-                                <img v-show="!qrcode_running && qrcode_scaned_data==''" id="qrcode_start" src="./img/qrcode_start.png"><br>
-                                <video v-show="qrcode_running" id="qrcode_camera" autoplay></video>
-                                <canvas v-show="!qrcode_running && qrcode_scaned_data!=''" id="qrcode_canvas"></canvas>
+                                <img class="img-responsive" v-show="!qrcode_running && qrcode_scaned_data==''" id="qrcode_start" src="./img/qrcode_start.png"><br>
+                                <video class="img-responsive" v-show="qrcode_running" id="qrcode_camera" autoplay></video>
+                                <canvas class="img-responsive" v-show="!qrcode_running && qrcode_scaned_data!=''" id="qrcode_canvas"></canvas>
                             </div>
                         </div>
                         <div class="panel-footer">
