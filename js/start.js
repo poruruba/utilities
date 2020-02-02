@@ -171,7 +171,7 @@ var vue_options = {
             .then(stream =>{
                 this.qrcode_scaned_data = "";
                 this.qrcode_video.srcObject = stream;
-                requestAnimationFrame(this.qrcode_draw);
+		this.qrcode_draw();
             })
             .catch(error =>{
                 alert(error);
