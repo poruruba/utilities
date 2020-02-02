@@ -7,8 +7,6 @@ new ClipboardJS('.clip_btn');
 var encoder = new TextEncoder('utf-8');
 var decoder = new TextDecoder('utf-8');
 
-const QRCODE_CAMERA_WIDTH = 320;
-const QRCODE_CAMERA_HEIGHT = 320;
 const QRCODE_CANCEL_TIMER = 20000;
 
 var vue_options = {
@@ -87,8 +85,8 @@ var vue_options = {
         array_length: 0,
         gengou_era_name: '令和',
         gengou_era_other: '',
-        gengou_era_year: 1,
-        gengou_anno_year: 2019,
+        gengou_era_year: 2,
+        gengou_anno_year: 2020,
         gengou_list: gengou_list.reverse(),
         trend_items_received_date: null,
         trend_item_list: [],
@@ -110,9 +108,6 @@ var vue_options = {
         color_near: null
     },
     computed: {
-        qrcode_size: function(){
-            return 'width: ' + QRCODE_CAMERA_WIDTH + 'px; height: ' + QRCODE_CAMERA_HEIGHT + 'px;';
-        },
         date_unix: function(){
             var date = this.date_moment.toDate();
             return date.getTime();
@@ -174,17 +169,27 @@ var vue_options = {
 
             return navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
             .then(stream =>{
-                this.qrcode_context = this.qrcode_canvas.getContext('2d');
                 this.qrcode_scaned_data = "";
                 this.qrcode_video.srcObject = stream;
-                this.qrcode_draw();
+                requestAnimationFrame(this.qrcode_draw);
             })
             .catch(error =>{
                 alert(error);
             });
         },
         qrcode_draw: function(){
-//            console.log(this.qrcode_video.offsetWidth, this.qrcode_video.offsetHeight);
+            console.log(this.qrcode_video.videoWidth, this.qrcode_video.videoHeight);
+            if( this.qrcode_context == null ){
+                if( this.qrcode_video.videoWidth == 0 || this.qrcode_video.videoHeight == 0 ){
+                    if( this.qrcode_running ){
+                        requestAnimationFrame(this.qrcode_draw);
+                        return;
+                    }
+                }
+                this.qrcode_canvas.width = this.qrcode_video.videoWidth;
+                this.qrcode_canvas.height = this.qrcode_video.videoHeight;
+                this.qrcode_context = this.qrcode_canvas.getContext('2d');
+            }
             this.qrcode_context.drawImage(this.qrcode_video, 0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
             const imageData = this.qrcode_context.getImageData(0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
 
@@ -454,7 +459,7 @@ var vue_options = {
             var reader = new FileReader();
             reader.onload = (theFile) =>{
                 this.binary_data = new Uint8Array(theFile.target.result);
-                this.binary_type = file.type ? file.type: 'application/octet-stream';
+                this.binary_type = file.type || 'application/octet-stream';
                 if( this.binary_type.startsWith('text/'))
                     this.binary_text = decoder.decode(this.binary_data);
                 this.binary_dataurl = "data:" + this.binary_type + ";base64," + bufferToBase64(this.binary_data);
@@ -852,23 +857,6 @@ var vue_options = {
 vue_add_methods(vue_options, methods_utils);
 var vue = new Vue( vue_options );
 
-function do_post_token(url, body, token){
-    var data = new URLSearchParams();
-    for( var name in body )
-        data.append(name, body[name]);
-
-    return fetch(url, {
-        method : 'POST',
-        body : data,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization' : 'Bearer ' + token }
-    })
-    .then((response) => {
-        if( response.status != 200 )
-            throw 'status is not 200';
-        return response.json();
-    });
-}
-
 function do_post(url, body){
     const headers = new Headers( { "Content-Type" : "application/json; charset=utf-8" } );
     
@@ -878,14 +866,13 @@ function do_post(url, body){
         headers: headers
     })
     .then((response) => {
-        if( response.status != 200 )
+        if( !response.ok )
             throw 'status is not 200';
         return response.json();
     });
 }
 
-function make_random(max)
-{
+function make_random(max){
 	return Math.floor(Math.random() * (max + 1));
 }
 
