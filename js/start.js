@@ -178,7 +178,7 @@ var vue_options = {
             });
         },
         qrcode_draw: function(){
-            console.log(this.qrcode_video.videoWidth, this.qrcode_video.videoHeight);
+//            console.log(this.qrcode_video.videoWidth, this.qrcode_video.videoHeight);
             if( this.qrcode_context == null ){
                 if( this.qrcode_video.videoWidth == 0 || this.qrcode_video.videoHeight == 0 ){
                     if( this.qrcode_running ){
