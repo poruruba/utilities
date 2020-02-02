@@ -181,10 +181,9 @@ var vue_options = {
 //            console.log(this.qrcode_video.videoWidth, this.qrcode_video.videoHeight);
             if( this.qrcode_context == null ){
                 if( this.qrcode_video.videoWidth == 0 || this.qrcode_video.videoHeight == 0 ){
-                    if( this.qrcode_running ){
+                    if( this.qrcode_running )
                         requestAnimationFrame(this.qrcode_draw);
-                        return;
-                    }
+                    return;
                 }
                 this.qrcode_canvas.width = this.qrcode_video.videoWidth;
                 this.qrcode_canvas.height = this.qrcode_video.videoHeight;
