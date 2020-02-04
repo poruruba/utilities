@@ -149,7 +149,12 @@ var vue_options = {
         /* QRコード */
         qrcode_create: function(){
             $('#qrcode_area').empty();
-            new QRCode($("#qrcode_area")[0], this.qrcode_input);
+            var opt = {
+		text: this.qrcode_input,
+		width: 512,
+		height: 512,
+            };
+            new QRCode($("#qrcode_area")[0], opt);
         },
         qrcode_scan: function(){
             this.qrcode_video = $('#qrcode_camera')[0];
