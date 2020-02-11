@@ -436,8 +436,8 @@ var vue_options = {
 
         /* バイナリファイル */
         binary_save: function(){
-            var target = this.binary_output.replace(/\r?\n|\s/g, '');
-			var array = hexStr2byteAry(target);
+            var target = this.binary_input.replace(/\r?\n|\s/g, '');
+	    var array = hexStr2byteAry(target);
             var buffer = new ArrayBuffer(array.length);
 			var dv = new DataView(buffer);
 			for( var i = 0 ; i < array.length ; i++ )
