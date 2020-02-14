@@ -8,12 +8,23 @@ var encoder = new TextEncoder('utf-8');
 var decoder = new TextDecoder('utf-8');
 
 const QRCODE_CANCEL_TIMER = 20000;
+const IMAGE_ICON_LIST_ANDROID = [512, 192, 144, 96, 72, 48, 36];
+const IMAGE_ICON_LIST_IPHONE = [1024, 180, 167, 152, 120, 87, 80, 76, 60, 58, 40, 29, 20];
+const IMAGE_ICON_LIST_WINDOWS = [256, 48, 32, 16]; 
 
 var vue_options = {
     el: "#top",
     data: {
         progress_title: '',
 
+        image_icon: 'android',
+        image_icon_list: IMAGE_ICON_LIST_ANDROID,
+        image_image: null,
+        image_image_scaled: null,
+        image_size: {},
+        image_scale: 'crop',
+        image_src: null,
+        image_type: '',
         server_apikey: '',
         server_url: '',
         base64_input: '',
@@ -146,6 +157,134 @@ var vue_options = {
         }
     },
     methods: {
+        /* 画像ファイル */
+        image_icon_change: function(){
+            switch( this.image_icon ){
+                case 'android': this.image_icon_list = IMAGE_ICON_LIST_ANDROID; break;
+                case 'iphone': this.image_icon_list = IMAGE_ICON_LIST_IPHONE; break;
+                case 'windows': this.image_icon_list = IMAGE_ICON_LIST_WINDOWS; break;
+            }
+        },
+        image_open: function(e){
+            this.image_open_file(e.target.files[0]);
+        },
+        image_drag: function(e){
+            e.stopPropagation();
+            e.preventDefault();
+        },
+        image_drop: function(e){
+            e.stopPropagation();
+            e.preventDefault();
+
+            $('#image_file')[0].files = e.dataTransfer.files;
+            this.image_open_file(e.dataTransfer.files[0]);
+        },
+        image_open_file: function(file){
+            if( !file.type.startsWith('image/') ){
+                alert('画像ファイルではありません。');
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = (theFile) =>{
+                this.image_type = file.type;
+                this.image_src = reader.result;
+                this.image_image = new Image();
+                this.image_image.onload = () =>{
+                    this.image_size = { width: this.image_image.width, height: this.image_image.height };
+                    this.image_scale_change();
+                };
+                this.image_image.src = this.image_src;
+            };
+            reader.readAsDataURL(file);
+        },
+        image_scale_change: function(){
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            var image = this.image_image;
+            if( this.image_scale == 'cover'){
+                var size = (image.width > image.height) ? image.width : image.height;
+
+                canvas.width = size;
+                canvas.height = size;
+    
+                context.drawImage(image, 0, 0, image.width, image.height, 0, 0, size, size);
+            }else
+            if( this.image_scale == 'contain'){
+                var size = (image.width > image.height) ? image.width : image.height;
+
+                canvas.width = size;
+                canvas.height = size;
+
+                var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                for(var i = 0; i < (imageData.width * imageData.height); i++)
+                    imageData.data[i * 4 + 3] = 0;
+                context.putImageData(imageData, 0, 0);
+
+                var x = Math.floor((size - image.width) / 2);
+                var y = Math.floor((size - image.height) / 2);
+                context.drawImage(image, x, y, image.width, image.height);
+            }else
+            if( this.image_scale == 'crop'){
+                var size = (image.width < image.height) ? image.width : image.height;
+
+                canvas.width = size;
+                canvas.height = size;
+    
+                var x = Math.floor((image.width - size) / 2);
+                var y = Math.floor((image.height - size) / 2);
+                context.drawImage(image, x, y, canvas.width, canvas.height, 0, 0, size, size);
+            }
+
+            var canvas2 = $('#image_icon')[0];
+            var context2 = canvas2.getContext('2d');
+            canvas2.width = canvas.width;
+            canvas2.height = canvas.height;
+            context2.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+            this.image_image_scaled = canvas;
+        },
+        image_save: async function(){
+            if(!this.image_src)
+                return;
+
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+            var zip = new JSZip();
+            for( var i = 0 ; i < this.image_icon_list.length ; i++ ){
+                canvas.width = this.image_icon_list[i];
+                canvas.height = this.image_icon_list[i];
+                context.drawImage(this.image_image_scaled, 0, 0, this.image_image_scaled.width, this.image_image_scaled.height, 0, 0, canvas.width, canvas.height);
+
+                var data_url = canvas.toDataURL('image/png');
+                var byteStr = atob( data_url.split( "," )[1] ) ;
+                var content = new Uint8Array(byteStr.length);
+                for( var j = 0; j < byteStr.length; j++ )
+                    content[j] = byteStr.charCodeAt( j ) ;
+                var blob = new Blob( [ content ], {
+                    type: this.image_type,
+                });
+
+                var fname = this.image_icon_list[i] + "x" + this.image_icon_list[i] + '.png';
+                zip.file(fname, blob);
+            }
+
+            var zip_blog = await zip.generateAsync({type: "blob"})
+            var url = window.URL.createObjectURL(zip_blog);
+
+            var a = document.createElement("a");
+            a.href = url;
+            a.target = '_blank';
+            a.download = "icon_list.zip";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        },
+        image_click: function(e){
+            this.image_type = '';
+            this.image_src = null;
+
+            e.target.value = '';
+        },
+
         /* QRコード */
         qrcode_create: function(){
             $('#qrcode_area').empty();
@@ -171,7 +310,7 @@ var vue_options = {
             .then(stream =>{
                 this.qrcode_scaned_data = "";
                 this.qrcode_video.srcObject = stream;
-		this.qrcode_draw();
+                this.qrcode_draw();
             })
             .catch(error =>{
                 alert(error);
@@ -437,7 +576,7 @@ var vue_options = {
         /* バイナリファイル */
         binary_save: function(){
             var target = this.binary_input.replace(/\r?\n|\s/g, '');
-	    var array = hexStr2byteAry(target);
+			var array = hexStr2byteAry(target);
             var buffer = new ArrayBuffer(array.length);
 			var dv = new DataView(buffer);
 			for( var i = 0 ; i < array.length ; i++ )
@@ -457,7 +596,7 @@ var vue_options = {
             var file = e.target.files[0];
             var reader = new FileReader();
             reader.onload = (theFile) =>{
-                this.binary_data = new Uint8Array(theFile.target.result);
+                this.binary_data = new Uint8Array(reader.result);
                 this.binary_type = file.type || 'application/octet-stream';
                 if( this.binary_type.startsWith('text/'))
                     this.binary_text = decoder.decode(this.binary_data);
