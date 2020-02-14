@@ -235,13 +235,13 @@ var vue_options = {
                 var y = Math.floor((image.height - size) / 2);
                 context.drawImage(image, x, y, canvas.width, canvas.height, 0, 0, size, size);
             }
+            this.image_image_scaled = canvas;
 
             var canvas2 = $('#image_icon')[0];
             var context2 = canvas2.getContext('2d');
             canvas2.width = canvas.width;
             canvas2.height = canvas.height;
             context2.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-            this.image_image_scaled = canvas;
         },
         image_save: async function(){
             if(!this.image_src)
