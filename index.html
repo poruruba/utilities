@@ -34,6 +34,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.0.6/chroma.min.js"></script>
 
+    <script src="dist/js/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-css.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-html.js"></script>
@@ -45,6 +46,7 @@
             <li role="presentation"><a href="#encode" data-toggle="tab">エンコード</a></li>
             <li role="presentation"><a href="#string" data-toggle="tab">文字列</a></li>
             <li role="presentation"><a href="#passwd" data-toggle="tab">パスワード</a></li>
+            <li role="presentation"><a href="#image" data-toggle="tab">画像ファイル</a></li>
             <li role="presentation"><a href="#color" data-toggle="tab">カラー</a></li>
             <li role="presentation"><a href="#crypto" data-toggle="tab">暗号化</a></li>
             <li role="presentation"><a href="#binary" data-toggle="tab">バイナリファイル</a></li>
@@ -62,6 +64,45 @@
         </ul>
 
         <div class="tab-content">
+            <div id="image" class="tab-pane fade in">
+                <h2 class="page-header">画像ファイル</h2>
+                <input type="file" id="image_file" v-on:change="image_open" v-on:click="image_click">
+                <label>mime-type</label> {{image_type}}&nbsp;&nbsp;<label>size</label> {{image_size.width}}x{{image_size.height}}<br>
+                <br>
+                <div class="form-inline">
+                    <label>icon size</label>
+                    <select class="form-control" v-model="image_icon" v-on:change="image_icon_change">
+                        <option value="android">Android</option>
+                        <option value="iphone">iPhone</option>
+                        <option value="windows">Windows</option>
+                    </select>
+                    {{image_icon_list}}
+                </div>
+                <div class="form-inline">
+                    <label>scale</label>
+                    <select class="form-control" v-model="image_scale" v-on:change="image_scale_change">
+                        <option value="cover">cover</option>
+                        <option value="contain">contain</option>
+                        <option value="crop">crop</option>
+                    </select>
+                </div>
+                <br>
+                <button v-on:click="image_save()">ファイルに保存</button><br>
+                <br>
+                <div class="rows">
+                    <div class="col-xs-6 text-center"><label>オリジナル</label></div>
+                    <div class="col-xs-1"></div>
+                    <div class="col-xs-5 text-center"><label>変換後</label></div>
+                </div>
+                <div class="rows">
+                    <div class="col-xs-6">
+                        <img v-if="!image_src" class="center-block" src="img/image_drop.png" v-on:drop="image_drop" v-on:dragover="image_drag">
+                        <img v-if="image_src" class="img-responsive img-thumbnail" v-bind:src="image_src" v-on:drop="image_drop" v-on:dragover="image_drag">
+                    </div>
+                    <div class="col-xs-1"></div>
+                    <canvas class="col-xs-5 img-responsive img-thumbnail" id="image_icon"></canvas>
+                </div>
+            </div>
 
             <div id="qrcode" class="tab-pane fade in active">
                 <h2 class="page-header">QRコード</h2>
@@ -82,6 +123,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <div class="panel-title"><a data-toggle="collapse" href="#qrcode_scan_panel">QRコードスキャン</a></div>
@@ -292,7 +334,7 @@
             <div id="binary" class="tab-pane fade in">
                 <h2 class="page-header">バイナリファイル</h2>
                 <input type="file" v-on:change="binary_open" v-on:click="binary_click">
-                <label>type</label> {{binary_type}}
+                <label>mime-type</label> {{binary_type}}
                 <button v-if="binary_type.startsWith('image/') || binary_type.startsWith('text/')" class="btn btn-default btn-sm" v-on:click="dialog_open('#binary_image_dialog')">内容表示</button><br><br>
                 <div class="form-inline" v-on:change="binary_change()">
                     <label>変換</label>
