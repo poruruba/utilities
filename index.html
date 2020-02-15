@@ -98,7 +98,7 @@
                         <img v-if="image_src" class="img-responsive img-thumbnail" v-bind:src="image_src" v-on:drop="image_drop" v-on:dragover="image_drag">
                     </span>
                     <div class="col-xs-1"></div>
-                    <canvas class="col-xs-5 img-responsive img-thumbnail" id="image_icon"></canvas>
+                    <canvas v-if="image_src" class="col-xs-5 img-responsive img-thumbnail" id="image_icon"></canvas>
                 </div>
             </div>
 
