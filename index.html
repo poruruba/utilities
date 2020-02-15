@@ -71,12 +71,10 @@
                 <br>
                 <div class="form-inline">
                     <label>icon size</label>
-                    <select class="form-control" v-model="image_icon" v-on:change="image_icon_change">
-                        <option value="android">Android</option>
-                        <option value="iphone">iPhone</option>
-                        <option value="windows">Windows</option>
+                    <select class="form-control" v-model="image_icon">
+                    	<option v-for="(item, name) in image_icon_list" v-bind:value="name">{{name}}</option>
                     </select>
-                    {{image_icon_list}}
+                    {{image_icon_list[image_icon]}}
                 </div>
                 <div class="form-inline">
                     <label>scale</label>
