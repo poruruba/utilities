@@ -39,8 +39,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-css.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-html.js"></script>
 </head>
-<body>
+<body style="padding-top: 30px">
     <div id="top" class="container">
+    <!--
         <ul class="nav nav-tabs">
             <li role="presentation" class="active"><a href="#qrcode" data-toggle="tab">QRコード</a></li>
             <li role="presentation"><a href="#encode" data-toggle="tab">エンコード</a></li>
@@ -62,7 +63,25 @@
             <li role="presentation"><a href="#qiita" data-toggle="tab">Qiita</a></li>
             <li role="presentation"><a href="#help" data-toggle="tab">ヘルプ</a></li>
         </ul>
-
+    -->
+    
+		<div class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" role="button">ユーティリティ <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+							<li v-for="(link, index) in tab_list"><a v-bind:href="'#' + link.id" data-toggle="tab" v-on:click="favorite_add(link.id)">{{link.name}}</a></li>
+							</ul>
+						</li>
+						<li v-for="(link, index) in favorite_link"><a v-bind:href="'#' + link" data-toggle="tab">{{get_tab_name(link)}}</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+   
+   
         <div class="tab-content">
             <div id="image" class="tab-pane fade in">
                 <h2 class="page-header">画像ファイル</h2>
@@ -791,6 +810,7 @@
                     <li><a href="https://qiita.com/poruruba/items/8c5ee3c56210b0b35e4a" target="_blank">Qiita: 便利ページ：Javascriptでカラーピッカー</a>
                     <li><a href="https://qiita.com/poruruba/items/59c3e6771aa9d957bfd0" target="_blank">Qiita: 便利ページ：JavascriptでQRコードスキャン</a>
                     <li><a href="https://qiita.com/poruruba/items/0d57d5b157a97a79dba6" target="_blank">Qiita: 便利ページ：データURLを生成する</a>
+                    <li><a href="https://qiita.com/poruruba/items/268eb6b1f58bce3cff51" target="_blank">Qiita: 便利ページ：アイコンファイルを生成する</a>
                 </ul>
             </div>
 
