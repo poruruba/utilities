@@ -13,12 +13,36 @@ const IMAGE_ICON_LIST = {
 	iphone: [180, 167, 152, 120, 87, 80, 76, 60, 58, 40, 29, 20],
 	windows: [48, 32, 16],
 };
+const FAVORITE_MAX = 5;
+const TAB_LIST = [
+	{ id: 'qrcode', name: 'QRコード' },
+	{ id: 'encode', name: 'エンコード' },
+	{ id: 'string', name: '文字列' },
+	{ id: 'passwd', name: 'パスワード' },
+	{ id: 'image', name: '画像ファイル' },
+	{ id: 'color', name: 'カラー' },
+	{ id: 'crypto', name: '暗号化' },
+	{ id: 'binary', name: 'バイナリファイル' },
+	{ id: 'array', name: 'バイト配列' },
+	{ id: 'date', name: '日時' },
+	{ id: 'cardinal', name: '基数' },
+	{ id: 'clip', name: 'クリップ' },
+	{ id: 'arrange', name: '整形' },
+	{ id: 'gengou', name: '元号' },
+	{ id: 'scraping', name: 'スクレイピング' },
+	{ id: 'trend', name: 'トレンド' },
+	{ id: 'notify', name: '通知' },
+	{ id: 'qiita', name: 'Qiita' },
+	{ id: 'help', name: 'ヘルプ' },
+];
 
 var vue_options = {
     el: "#top",
     data: {
         progress_title: '',
 
+		tab_list: TAB_LIST,
+		favorite_link: [],
         image_icon: 'android',
         image_icon_list: IMAGE_ICON_LIST,
         image_image: null,
@@ -156,9 +180,26 @@ var vue_options = {
                 return null;
             var date = this.date_moment_after.toDate();
             return date.toLocaleString();
-        }
+        },
     },
     methods: {
+    	/* お気に入りタブ */
+        get_tab_name: function(id){
+    		for( var i = 0 ; i < this.tab_list.length ; i++ )
+    			if( this.tab_list[i].id == id )
+    				return this.tab_list[i].name;
+    		return 'Unknown';
+        },
+    	favorite_add: function(link){
+    		var index = this.favorite_link.indexOf(link);
+			if( index >= 0 )
+				this.favorite_link.splice(index, 1);
+			else if( this.favorite_link.length >= FAVORITE_MAX )
+				this.favorite_link.pop();
+			
+			this.favorite_link.unshift(link);
+			Cookies.set('favorite_link', JSON.stringify(this.favorite_link), { expires: 365 });
+    	},
         /* 画像ファイル */
         image_open: function(e){
             this.image_open_file(e.target.files[0]);
@@ -997,6 +1038,12 @@ var vue_options = {
         proc_load();
         history.replaceState(null, null, location.pathname);
 
+		var link = Cookies.get('favorite_link');
+		if( !link )
+			this.favorite_link = [];
+		else
+			this.favorite_link = JSON.parse(link);
+		
         this.date_process();
         for( var i = 0 ; i <= 6 ; i++ ){
             this.clip_data[i] = Cookies.get('clip_data' + i);
