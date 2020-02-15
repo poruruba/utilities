@@ -8,9 +8,11 @@ var encoder = new TextEncoder('utf-8');
 var decoder = new TextDecoder('utf-8');
 
 const QRCODE_CANCEL_TIMER = 20000;
-const IMAGE_ICON_LIST_ANDROID = [192, 144, 96, 72, 48, 36];
-const IMAGE_ICON_LIST_IPHONE = [180, 167, 152, 120, 87, 80, 76, 60, 58, 40, 29, 20];
-const IMAGE_ICON_LIST_WINDOWS = [48, 32, 16]; 
+const IMAGE_ICON_LIST = {
+	android: [192, 144, 96, 72, 48, 36],
+	iphone: [180, 167, 152, 120, 87, 80, 76, 60, 58, 40, 29, 20],
+	windows: [48, 32, 16],
+};
 
 var vue_options = {
     el: "#top",
@@ -18,7 +20,7 @@ var vue_options = {
         progress_title: '',
 
         image_icon: 'android',
-        image_icon_list: IMAGE_ICON_LIST_ANDROID,
+        image_icon_list: IMAGE_ICON_LIST,
         image_image: null,
         image_image_scaled: null,
         image_size: {},
@@ -158,13 +160,6 @@ var vue_options = {
     },
     methods: {
         /* 画像ファイル */
-        image_icon_change: function(){
-            switch( this.image_icon ){
-                case 'android': this.image_icon_list = IMAGE_ICON_LIST_ANDROID; break;
-                case 'iphone': this.image_icon_list = IMAGE_ICON_LIST_IPHONE; break;
-                case 'windows': this.image_icon_list = IMAGE_ICON_LIST_WINDOWS; break;
-            }
-        },
         image_open: function(e){
             this.image_open_file(e.target.files[0]);
         },
@@ -216,13 +211,28 @@ var vue_options = {
                 canvas.width = size;
                 canvas.height = size;
 
-                var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                for(var i = 0; i < (imageData.width * imageData.height); i++)
-                    imageData.data[i * 4 + 3] = 0;
-                context.putImageData(imageData, 0, 0);
-
                 var x = Math.floor((size - image.width) / 2);
                 var y = Math.floor((size - image.height) / 2);
+
+/*
+                var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                for( var i = 0 ; i < y ; i++ ){
+                	for( var j = 0 ; j < size ; j++ ){
+	                    imageData.data[i * 4 * size + j * 4 + 3] = 0;
+                	}
+                }
+                for( var i = y ; i < y + image.height ; i++ ){
+	            	for( var j = x + image.width ; j < size ; j++ ){
+	                    imageData.data[i * 4 * size + j * 4 + 3] = 0;
+	            	}
+	            }
+                for( var i = y ; i < size ; i++ ){
+                	for( var j = 0 ; j < size ; j++ ){
+	                    imageData.data[i * 4 * size + j * 4 + 3] = 0;
+                	}
+                }
+                context.putImageData(imageData, 0, 0);
+*/
                 context.drawImage(image, x, y, image.width, image.height);
             }else
             if( this.image_scale == 'crop'){
@@ -250,9 +260,10 @@ var vue_options = {
             var canvas = document.createElement('canvas');
             var context = canvas.getContext('2d');
             var zip = new JSZip();
-            for( var i = 0 ; i < this.image_icon_list.length ; i++ ){
-                canvas.width = this.image_icon_list[i];
-                canvas.height = this.image_icon_list[i];
+            var list = this.image_icon_list[this.image_icon];
+            for( var i = 0 ; i < list.length ; i++ ){
+                canvas.width = list[i];
+                canvas.height = list[i];
                 context.drawImage(this.image_image_scaled, 0, 0, this.image_image_scaled.width, this.image_image_scaled.height, 0, 0, canvas.width, canvas.height);
 
                 var data_url = canvas.toDataURL('image/png');
@@ -264,12 +275,12 @@ var vue_options = {
                     type: this.image_type,
                 });
 
-                var fname = this.image_icon_list[i] + "x" + this.image_icon_list[i] + '.png';
+                var fname = list[i] + "x" + list[i] + '.png';
                 zip.file(fname, blob);
             }
 
-            var zip_blog = await zip.generateAsync({type: "blob"})
-            var url = window.URL.createObjectURL(zip_blog);
+            var zip_blob = await zip.generateAsync({type: "blob"})
+            var url = window.URL.createObjectURL(zip_blob);
 
             var a = document.createElement("a");
             a.href = url;
