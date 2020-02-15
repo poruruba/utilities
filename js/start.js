@@ -194,6 +194,9 @@ var vue_options = {
             reader.readAsDataURL(file);
         },
         image_scale_change: function(){
+            if(!this.image_src)
+                return;
+
             var canvas = document.createElement('canvas');
             var context = canvas.getContext('2d');
             var image = this.image_image;
