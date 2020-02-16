@@ -205,10 +205,6 @@ var vue_options = {
         image_open: function(e){
             this.image_open_file(e.target.files[0]);
         },
-        image_drag: function(e){
-            e.stopPropagation();
-            e.preventDefault();
-        },
         image_drop: function(e){
             e.stopPropagation();
             e.preventDefault();
