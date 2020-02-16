@@ -13,7 +13,7 @@ const IMAGE_ICON_LIST = {
 	iphone: [180, 167, 152, 120, 87, 80, 76, 60, 58, 40, 29, 20],
 	windows: [48, 32, 16],
 };
-const FAVORITE_MAX = 8;
+const FAVORITE_MAX = 5;
 const TAB_LIST = [
 	{ id: 'qrcode', name: 'QRコード' },
 	{ id: 'encode', name: 'エンコード' },
@@ -198,9 +198,14 @@ var vue_options = {
 			else if( this.favorite_link.length >= FAVORITE_MAX )
 				this.favorite_link.pop();
 			
-			this.favorite_link.unshift(link);
+            this.favorite_link.unshift(link);
 			Cookies.set('favorite_link', JSON.stringify(this.favorite_link), { expires: 365 });
-    	},
+        },
+        file_drag: function(e){
+            e.stopPropagation();
+            e.preventDefault();
+        },
+        
         /* 画像ファイル */
         image_open: function(e){
             this.image_open_file(e.target.files[0]);
@@ -275,10 +280,9 @@ var vue_options = {
             canvas.height = size;
             var context = canvas.getContext('2d');
 
-            var angle = this.image_rotate;
             var trans = Math.floor(size / 2);
             context.translate(trans, trans);
-            context.rotate(angle * Math.PI / 180);
+            context.rotate(this.image_rotate * Math.PI / 180);
             context.translate(-trans, -trans);
 
             context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
@@ -643,17 +647,7 @@ var vue_options = {
         },
         binary_open: function(e){
             var file = e.target.files[0];
-            var reader = new FileReader();
-            reader.onload = (theFile) =>{
-                this.binary_data = new Uint8Array(reader.result);
-                this.binary_type = file.type || 'application/octet-stream';
-                if( this.binary_type.startsWith('text/'))
-                    this.binary_text = decoder.decode(this.binary_data);
-                this.binary_dataurl = "data:" + this.binary_type + ";base64," + bufferToBase64(this.binary_data);
-
-                this.binary_change();
-            };
-            reader.readAsArrayBuffer(file);
+            this.binary_open_file(file);
         },
         binary_click: function(e){
             this.binary_type = '';
@@ -697,6 +691,26 @@ var vue_options = {
                 }
                 this.binary_output = str;
             }
+        },
+        binary_drop: function(e){
+            e.stopPropagation();
+            e.preventDefault();
+
+            $('#binary_file')[0].files = e.dataTransfer.files;
+            this.binary_open_file(e.dataTransfer.files[0]);
+        },
+        binary_open_file: function(file){
+            var reader = new FileReader();
+            reader.onload = (theFile) =>{
+                this.binary_data = new Uint8Array(reader.result);
+                this.binary_type = file.type || 'application/octet-stream';
+                if( this.binary_type.startsWith('text/'))
+                    this.binary_text = decoder.decode(this.binary_data);
+                this.binary_dataurl = "data:" + this.binary_type + ";base64," + bufferToBase64(this.binary_data);
+
+                this.binary_change();
+            };
+            reader.readAsArrayBuffer(file);
         },
 
         /* 日時 */
