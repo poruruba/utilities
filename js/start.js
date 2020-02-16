@@ -13,7 +13,7 @@ const IMAGE_ICON_LIST = {
 	iphone: [180, 167, 152, 120, 87, 80, 76, 60, 58, 40, 29, 20],
 	windows: [48, 32, 16],
 };
-const FAVORITE_MAX = 5;
+const FAVORITE_MAX = 8;
 const TAB_LIST = [
 	{ id: 'qrcode', name: 'QRコード' },
 	{ id: 'encode', name: 'エンコード' },
