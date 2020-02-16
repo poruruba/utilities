@@ -42,7 +42,8 @@ var vue_options = {
         progress_title: '',
 
 		tab_list: TAB_LIST,
-		favorite_link: [],
+        favorite_link: [],
+        image_rotate: 0,
         image_icon: 'android',
         image_icon_list: IMAGE_ICON_LIST,
         image_image: null,
@@ -238,64 +239,61 @@ var vue_options = {
             if(!this.image_src)
                 return;
 
-            var canvas = document.createElement('canvas');
-            var context = canvas.getContext('2d');
             var image = this.image_image;
-            if( this.image_scale == 'cover'){
-                var size = (image.width > image.height) ? image.width : image.height;
+            var size, sx, sy, sw, sh, dx, dy, dw, dh;
 
-                canvas.width = size;
-                canvas.height = size;
-    
-                context.drawImage(image, 0, 0, image.width, image.height, 0, 0, size, size);
+            if( this.image_scale == 'cover'){
+                size = (image.width > image.height) ? image.width : image.height;
+                sx = sy = 0;
+                sw = image.width;
+                sh = image.height;
+                dx = dy = 0;
+                dw = dh = size;
             }else
             if( this.image_scale == 'contain'){
-                var size = (image.width > image.height) ? image.width : image.height;
-
-                canvas.width = size;
-                canvas.height = size;
-
+                size = (image.width > image.height) ? image.width : image.height;
                 var x = Math.floor((size - image.width) / 2);
                 var y = Math.floor((size - image.height) / 2);
-
-/*
-                var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                for( var i = 0 ; i < y ; i++ ){
-                	for( var j = 0 ; j < size ; j++ ){
-	                    imageData.data[i * 4 * size + j * 4 + 3] = 0;
-                	}
-                }
-                for( var i = y ; i < y + image.height ; i++ ){
-	            	for( var j = x + image.width ; j < size ; j++ ){
-	                    imageData.data[i * 4 * size + j * 4 + 3] = 0;
-	            	}
-	            }
-                for( var i = y ; i < size ; i++ ){
-                	for( var j = 0 ; j < size ; j++ ){
-	                    imageData.data[i * 4 * size + j * 4 + 3] = 0;
-                	}
-                }
-                context.putImageData(imageData, 0, 0);
-*/
-                context.drawImage(image, x, y, image.width, image.height);
+                sx = 0;
+                sy = 0;
+                sw = image.width;
+                sh = image.height;
+                dx = x;
+                dy = y;
+                dw = image.width;
+                dh = image.height;                
             }else
             if( this.image_scale == 'crop'){
-                var size = (image.width < image.height) ? image.width : image.height;
-
-                canvas.width = size;
-                canvas.height = size;
-    
+                size = (image.width < image.height) ? image.width : image.height;
                 var x = Math.floor((image.width - size) / 2);
                 var y = Math.floor((image.height - size) / 2);
-                context.drawImage(image, x, y, canvas.width, canvas.height, 0, 0, size, size);
+                sx = x;
+                sy = y;
+                sw = sh = size;
+                dx = dy = 0;
+                dw = dh = size;         
             }
+
+            var canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            var context = canvas.getContext('2d');
+
+            var angle = this.image_rotate;
+            var trans = Math.floor(size / 2);
+            context.translate(trans, trans);
+            context.rotate(angle * Math.PI / 180);
+            context.translate(-trans, -trans);
+
+            context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+
             this.image_image_scaled = canvas;
 
             var canvas2 = $('#image_icon')[0];
-            var context2 = canvas2.getContext('2d');
             canvas2.width = canvas.width;
             canvas2.height = canvas.height;
-            context2.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+            var context2 = canvas2.getContext('2d');
+            context2.drawImage(canvas, 0, 0);
         },
         image_save: async function(){
             if(!this.image_src)
