@@ -51,6 +51,9 @@
             </li>
         </ul>
    
+        <!--
+            画像ファイル
+        -->
         <div class="tab-content">
             <div id="image" class="tab-pane fade in">
                 <h2 class="page-header">画像ファイル</h2>
@@ -91,14 +94,17 @@
                 </div>
                 <div class="rows">
                     <span class="col-xs-6">
-                        <img v-if="!image_src" class="center-block" src="img/image_drop.png" v-on:drop="image_drop">
-                        <img v-if="image_src" class="img-responsive img-thumbnail" v-bind:src="image_src" v-on:drop="image_drop">
+                        <img v-if="!image_src" class="center-block" src="img/image_drop.png" v-on:drop="image_drop" v-on:dragover="file_drag">
+                        <img v-if="image_src" class="img-responsive img-thumbnail" v-bind:src="image_src" v-on:drop="image_drop" v-on:dragover="file_drag">
                     </span>
                     <div class="col-xs-1"></div>
                     <canvas v-if="image_src" class="col-xs-5 img-responsive img-thumbnail" id="image_icon"></canvas>
                 </div>
             </div>
 
+            <!--
+                QRコード
+            -->
             <div id="qrcode" class="tab-pane fade in active">
                 <h2 class="page-header">QRコード</h2>
                 <div class="panel panel-primary">
@@ -146,6 +152,9 @@
                 </div>
             </div>
 
+            <!--
+                文字列
+            -->
             <div id="string" class="tab-pane fade in">
                 <h2 class="page-header">文字列</h2>
                 <h3>UTF8 ⇔ バイト配列</h3>
@@ -158,6 +167,9 @@
                 <textarea id="string_output" class="form-control" rows="3" readonly>{{string_output}}</textarea>
             </div>
 
+            <!--
+                暗号化
+            -->
             <div id="crypto" class="tab-pane fade in">
                 <h2 class="page-header">暗号化</h2>
                 <h3>HMAC(SHA256)</h3>
@@ -184,6 +196,9 @@
                 <textarea id="aes_output" class="form-control" rows="3" readonly>{{aes_output}}</textarea>
             </div>
 
+            <!--
+                エンコーディング
+            -->
             <div id="encode" class="tab-pane fade in">
                 <h2 class="page-header">エンコーディング</h2>
                 <h3>Base64エンコード</h3>
@@ -233,6 +248,9 @@
                 </div>
             </div>
 
+            <!--
+                パスワード
+            -->
             <div id="passwd" class="tab-pane fade in">
                 <h2 class="page-header">パスワード</h2>
                 <div class="form-inline">
@@ -270,6 +288,9 @@
                 </div>
             </div> 
 
+            <!--
+                カラー
+            -->
             <div id="color" class="tab-pane fade in">
                 <h2 class="page-header">カラー</h2>
                 <div class="form-inline">
@@ -326,9 +347,12 @@
                 </table>
             </div>
 
+            <!--
+                バイナリファイル
+            -->
             <div id="binary" class="tab-pane fade in">
                 <h2 class="page-header">バイナリファイル</h2>
-                <input type="file" v-on:change="binary_open" v-on:click="binary_click">
+                <input type="file" id="binary_file" v-on:change="binary_open" v-on:click="binary_click">
                 <label>mime-type</label> {{binary_type}}
                 <button v-if="binary_type.startsWith('image/') || binary_type.startsWith('text/')" class="btn btn-default btn-sm" v-on:click="dialog_open('#binary_image_dialog')">内容表示</button><br><br>
                 <div class="form-inline" v-on:change="binary_change()">
@@ -350,13 +374,16 @@
                     <input type="checkbox" v-model="binary_space">空白　
                     <button class="btn btn-default" v-on:click="binary_cr()">整形</button><br>
                 </div>
-                <textarea class="form-control" rows="10" readonly>{{binary_output}}</textarea>
+                <textarea class="form-control" rows="10" v-on:drop="binary_drop" v-on:dragover="file_drag" readonly>{{binary_output}}</textarea>
                 <br>
                 <button class="btn btn-default btn-sm" v-on:click="binary_copy()">Copy</button><br>
                 <textarea class="form-control" rows="10" v-model="binary_input"></textarea>
                 <button v-on:click="binary_save()">ファイルに保存</button><br>
             </div>
 
+            <!--
+                バイト配列
+            -->
             <div id="array" class="tab-pane fade in">
                 <h2 class="page-header">バイト配列</h2>
                 <label>長さ</label> {{array_length}}<br>
@@ -382,6 +409,9 @@
                 <input type="text" class="form-control data-block" v-model="array_pattern[4]">
             </div>
 
+            <!--
+                日時
+            -->
             <div id="date" class="tab-pane fade in">
                 <h2 class="page-header">日時</h2>
                 <div class="panel panel-default">
@@ -460,6 +490,9 @@
                 </div>
             </div>
 
+            <!--
+                基数
+            -->
             <div id="cardinal" class="tab-pane fade in">
                 <h2 class="page-header">基数</h2>
                 <label>10進数</label>
@@ -512,6 +545,9 @@
                 </div>
             </div>
 
+            <!--
+                クリップ
+            -->
             <div id="clip" class="tab-pane fade in">
                 <h2 class="page-header">クリップ</h2>
                 <span class="glyphicon glyphicon-erase">クッキーから消去</span>&nbsp;&nbsp;
@@ -580,6 +616,9 @@
                 <textarea id="clip_data_id_6" class="form-control" rows="5" v-model="clip_data[6]"></textarea>
             </div>
 
+            <!--
+                元号
+            -->
             <div id="gengou" class="tab-pane fade in">
                 <h2 class="page-header">元号</h2>
                 <div class="form-inline">
@@ -614,6 +653,9 @@
                 </table>
             </div>
 
+            <!--
+                スクレイピング
+            -->
             <div id="scraping" class="tab-pane fade in">
                 <h2 class="page-header">スクレイピング</h2>
                 <p>
@@ -633,6 +675,9 @@
                 <hr>
             </div>
     
+            <!--
+                整形
+            -->
             <div id="arrange" class="tab-pane fade in">
                 <h2 class="page-header">整形</h2>
                 <div class="panel panel-primary">
@@ -697,6 +742,9 @@
                 </div>
             </div>
 
+            <!--
+                通知
+            -->
             <div id="notify" class="tab-pane fade in">
                 <h2 class="page-header">通知</h2>
                 <p>
@@ -722,6 +770,9 @@
                 <button class="btn btn-primary" v-on:click="notify_line()">通知</button><br>
             </div>
 
+            <!--
+                Qiita
+            -->
             <div id="qiita" class="tab-pane fade in">
                 <h2 class="page-header">Qiita</h2>
                 <p>
@@ -749,6 +800,9 @@
                 <hr>
             </div>
 
+            <!--
+                トレンドキーワード
+            -->
             <div id="trend" class="tab-pane fade in">
                 <h2 class="page-header">トレンドキーワード</h2>
                 <p>
@@ -776,6 +830,9 @@
                 <hr>
             </div>
 
+            <!--
+                ヘルプ
+            -->
             <div id="help" class="tab-pane fade in">
                 <h2 class="page-header">ヘルプ</h2>
                 <ul>
