@@ -386,7 +386,7 @@
             -->
             <div id="array" class="tab-pane fade in">
                 <h2 class="page-header">バイト配列</h2>
-                <label>長さ</label> {{array_length}}<br>
+                <label>長さ</label> {{array_base.length}}<br>
                 <br>
                 <button class="btn btn-default" v-on:click="array_set(0)">変換</button>
                 <label>(例) 0011aabb</label>
@@ -407,6 +407,17 @@
                 <button class="btn btn-default" v-on:click="array_set(4)">変換</button>
                 <label>(例) 0, 1, 2, 3, 4</label>
                 <input type="text" class="form-control data-block" v-model="array_pattern[4]">
+                <br>
+                <br>
+                <div class="panel panel-default">
+                    <div class="panel-heading">乱数生成</div>
+                    <div class="panel-body">
+                        <div class="form-inline">
+                            <label>長さ</label> <input type="number" class="form-control" v-model="array_random_length">
+                            <button class="btn btn-default btn-sm" v-on:click="array_random_generate">乱数生成</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!--
