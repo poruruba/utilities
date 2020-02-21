@@ -72,7 +72,7 @@ var vue_options = {
         html_input: '',
         html_output: '',
         json_inout: '',
-        encode_html_space: false,
+        encode_html_space: true,
         js_inout: '',
         css_inout: '',
         html_inout: '',
@@ -119,8 +119,8 @@ var vue_options = {
         cardinal_binary_num: 2,
         cardinal_check_binary: false,
         array_pattern: [],
-        base_array: null,
-        array_length: 0,
+        array_base: [],
+        array_random_length: 1,
         gengou_era_name: '令和',
         gengou_era_other: '',
         gengou_era_year: 2,
@@ -191,7 +191,7 @@ var vue_options = {
     				return this.tab_list[i].name;
     		return 'Unknown';
         },
-    	favorite_add: function(link){
+        favorite_add: function(link){
     		var index = this.favorite_link.indexOf(link);
 			if( index >= 0 )
 				this.favorite_link.splice(index, 1);
@@ -455,7 +455,7 @@ var vue_options = {
                     var decrypted = CryptoJS.AES.decrypt(CryptoJS.lib.CipherParams.create({ ciphertext: input }), key, { iv: iv, padding: CryptoJS.pad.NoPadding });
                     this.aes_output = decrypted.toString(CryptoJS.enc.Hex);
                 }
-        }catch( error ){
+            }catch( error ){
                 alert(error);
             }
         },
@@ -607,23 +607,29 @@ var vue_options = {
         /* バイト配列 */
         array_set: function(ptn){
             if( ptn == 0 ){
-                this.base_array = hexStr2byteAry(this.array_pattern[0]);
+                this.array_base = hexStr2byteAry(this.array_pattern[0]);
             }else if( ptn == 1 ){
-                this.base_array = hexStr2byteAry(this.array_pattern[1], ' ');
+                this.array_base = hexStr2byteAry(this.array_pattern[1], ' ');
             }else if( ptn == 2 ){
-                this.base_array = hexStr2byteAry(this.array_pattern[2], ',');
+                this.array_base = hexStr2byteAry(this.array_pattern[2], ',');
             }else if( ptn == 3 ){
-                this.base_array = hexStr2byteAry_2(this.array_pattern[3], ',');
+                this.array_base = hexStr2byteAry_2(this.array_pattern[3], ',');
             }else if( ptn == 4 ){
-                this.base_array = hexStr2byteAry_3(this.array_pattern[4], ',');
+                this.array_base = hexStr2byteAry_3(this.array_pattern[4], ',');
             }
 
-            this.array_length = this.base_array.length;
-            this.array_pattern[0] = byteAry2hexStr(this.base_array, '');
-            this.array_pattern[1] = byteAry2hexStr(this.base_array, ' ');
-            this.array_pattern[2] = byteAry2hexStr(this.base_array, ', ', '0x');
-            this.array_pattern[3] = byteAry2hexStr(this.base_array, ', ', '(byte)0x');
-            this.array_pattern[4] = this.base_array.join(', ');
+            this.array_pattern[0] = byteAry2hexStr(this.array_base, '');
+            this.array_pattern[1] = byteAry2hexStr(this.array_base, ' ');
+            this.array_pattern[2] = byteAry2hexStr(this.array_base, ', ', '0x');
+            this.array_pattern[3] = byteAry2hexStr(this.array_base, ', ', '(byte)0x');
+            this.array_pattern[4] = this.array_base.join(', ');
+        },
+        array_random_generate: function(){
+            var array = [];
+            for( var i = 0 ; i < this.array_random_length ; i++ )
+                array.push(Math.floor(Math.random() * 256));
+            this.array_base = array;
+            this.array_set(-1);
         },
 
         /* バイナリファイル */
@@ -837,9 +843,8 @@ var vue_options = {
             Cookies.set('clip_data' + index, this.clip_data[index], { expires: 365 });
         },
         clip_clearall: function(){
-            for( var i = 0 ; i <= 6 ; i++ ){
+            for( var i = 0 ; i <= 6 ; i++ )
                 this.clip_clear(i);
-            }
             this.clip_data = JSON.parse(JSON.stringify(this.clip_data));
         },
         clip_clear: function(index){
