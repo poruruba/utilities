@@ -427,7 +427,7 @@
                 <h2 class="page-header">日時</h2>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title">基準時間
+                        <div class="panel-title">基準日時
                             <button class="btn btn-default" v-on:click="date_get_now('base')">現在時間</button>
                             <button class="btn btn-default" v-on:click="date_input_dialog('base')">手動設定</button>
                         </div>
@@ -445,13 +445,12 @@
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title">経過期間
-                            <button class="btn btn-default btn-sm" v-on:click="date_duration_reset">リセット</button>
-                        </div>
+                        <div class="panel-title">経過期間</div>
                     </div>
                     <div class="panel-body">
                         <div class="form-inline">
                             <div class="form-inline">
+                                <button class="btn btn-default btm-sm" v-on:click="date_duration_reset">リセット</button>
                                 <select class="form-control" v-on:change="date_process()" v-model="date_duration_unit">
                                     <option value="year">年</option>
                                     <option value="month">月</option>
@@ -461,8 +460,8 @@
                                     <option value="second">秒</option>
                                 </select>
                                 <input type="number" class="form-control" v-on:change="date_process()" v-model.number="date_duration">&nbsp;&nbsp;
-                                <button class="btn btn-primary" v-on:click="date_process()">経過期間を経過後日時に変換</button>
-                                <button class="btn btn-primary" v-on:click="date_elapsed_process()">経過後日時を経過期間に変換</button>
+                                <button class="btn btn-primary btm-sm" v-on:click="date_process()">経過期間→経過後日時</button>
+                                <button class="btn btn-primary btm-sm" v-on:click="date_elapsed_process()">経過後日時→経過期間</button>
                             </div>
                         </div>
                     </div>
