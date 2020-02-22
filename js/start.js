@@ -627,7 +627,7 @@ var vue_options = {
         array_random_generate: function(){
             var array = [];
             for( var i = 0 ; i < this.array_random_length ; i++ )
-                array.push(Math.floor(Math.random() * 256));
+                array.push(make_random(255));
             this.array_base = array;
             this.array_set(-1);
         },
