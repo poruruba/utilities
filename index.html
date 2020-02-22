@@ -413,7 +413,7 @@
                     <div class="panel-heading">乱数生成</div>
                     <div class="panel-body">
                         <div class="form-inline">
-                            <label>長さ</label> <input type="number" class="form-control" v-model="array_random_length">
+                            <label>長さ</label> <input type="number" class="form-control" v-model.number="array_random_length">
                             <button class="btn btn-default btn-sm" v-on:click="array_random_generate">乱数生成</button>
                         </div>
                     </div>
@@ -446,13 +446,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="panel-title">経過期間
-                            <button class="btn btn-default btn-sm" v-on:click="date_duration=0">リセット</button>
+                            <button class="btn btn-default btn-sm" v-on:click="date_duration_reset">リセット</button>
                         </div>
                     </div>
                     <div class="panel-body">
                         <div class="form-inline">
                             <div class="form-inline">
-                                <select class="form-control" v-model="date_duration_unit">
+                                <select class="form-control" v-on:change="date_process()" v-model="date_duration_unit">
                                     <option value="year">年</option>
                                     <option value="month">月</option>
                                     <option value="day">日</option>
@@ -460,17 +460,16 @@
                                     <option value="minute">分</option>
                                     <option value="second">秒</option>
                                 </select>
-                                <input type="number" class="form-control" v-model.number="date_duration">&nbsp;&nbsp;
+                                <input type="number" class="form-control" v-on:change="date_process()" v-model.number="date_duration">&nbsp;&nbsp;
+                                <button class="btn btn-primary" v-on:click="date_process()">経過期間を経過後日時に変換</button>
+                                <button class="btn btn-primary" v-on:click="date_elapsed_process()">経過後日時を経過期間に変換</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel-footer">
-                        <button class="btn btn-primary" v-on:click="date_process()">経過日時に変換</button>
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <div class="panel-title">経過日時
+                        <div class="panel-title">経過後日時
                             <button class="btn btn-default" v-on:click="date_get_now('elapsed')">現在時間</button>
                             <button class="btn btn-default" v-on:click="date_input_dialog('elapsed')">手動設定</button>
                         </div>
@@ -484,19 +483,6 @@
                         <input type="text" class="form-control" v-model="date_iso2_after" readonly>
                         <label>Locale</label>
                         <input type="text" class="form-control" v-model="date_locale_after" readonly>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="form-inline">
-                            <select class="form-control" v-model="date_duration_unit">
-                                <option value="year">年</option>
-                                <option value="month">月</option>
-                                <option value="day">日</option>
-                                <option value="hour">時</option>
-                                <option value="minute">分</option>
-                                <option value="second">秒</option>
-                            </select>
-                            <button class="btn btn-primary" v-on:click="date_elapsed_process()">経過日時を経過期間に変換</button>
-                        </div>
                     </div>
                 </div>
             </div>
