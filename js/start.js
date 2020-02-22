@@ -737,6 +737,10 @@ var vue_options = {
             this.date_input_time = temp.format('HH:mm:ss');
             this.dialog_open('#date_input_dialog');
         },
+        date_duration_reset: function(){
+            this.date_duration = 0;
+            this.date_process();
+        },
         date_process: function(){
             var temp = moment(this.date_moment);
             if( this.date_duration_unit == 'year' )
