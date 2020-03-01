@@ -35,6 +35,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.0.6/chroma.min.js"></script>
 
     <script src="dist/js/jszip.min.js"></script>
+    <script src="dist/js/uuid.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-css.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-html.js"></script>
@@ -50,11 +51,37 @@
                 </ul>
             </li>
         </ul>
-   
-        <!--
-            画像ファイル
-        -->
+
+        
         <div class="tab-content">
+
+            <!--
+                UUID
+            -->
+            <div id="uuid" class="tab-pane fade in">
+                <h2 class="page-header">UUID</h2>
+                <button class="btn btn-default" v-on:click="uuid_generate">生成</button>&nbsp;<button class="btn btn-default" v-on:click="uuid_parse">解析</button>
+                <input class="form-control" v-model="uuid_input">
+                <br>
+                <label>UUID</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#uuid_uuid"></button>
+                    </span>
+                    <input type="text" id="uuid_uuid" class="form-control" v-model="uuid_uuid" readonly>
+                </div>
+                <label>バイト配列</label>
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#uuid_array"></button>
+                    </span>
+                    <input type="text" id="uuid_array" class="form-control" v-model="uuid_array" readonly>
+                </div>
+            </div>
+
+            <!--
+                画像ファイル
+            -->
             <div id="image" class="tab-pane fade in">
                 <h2 class="page-header">画像ファイル</h2>
                 <input type="file" id="image_file" v-on:change="image_open" v-on:click="image_click">
