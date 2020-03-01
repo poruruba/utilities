@@ -18,6 +18,7 @@ const TAB_LIST = [
 	{ id: 'qrcode', name: 'QRコード' },
 	{ id: 'encode', name: 'エンコード' },
 	{ id: 'string', name: '文字列' },
+	{ id: 'uuid', name: 'UUID' },
 	{ id: 'passwd', name: 'パスワード' },
 	{ id: 'image', name: '画像ファイル' },
 	{ id: 'color', name: 'カラー' },
@@ -43,6 +44,11 @@ var vue_options = {
 
 		tab_list: TAB_LIST,
         favorite_link: [],
+
+        uuid_input: null,
+        uuid_uuid: null,
+        uuid_array: null,
+        uuid_urn: null,
         image_rotate: 0,
         image_icon: 'android',
         image_icon_list: IMAGE_ICON_LIST,
@@ -147,8 +153,7 @@ var vue_options = {
     },
     computed: {
         date_unix: function(){
-            var date = this.date_moment.toDate();
-            return date.getTime();
+            return this.date_moment.unix();
         },
         date_iso: function(){
             return moment(this.date_moment).utc().format();
@@ -163,8 +168,7 @@ var vue_options = {
         date_unix_after: function(){
             if( !this.date_moment_after )
                 return null;
-            var date = this.date_moment_after.toDate();
-            return date.getTime();
+            return this.date_moment_after.unix();
         },
         date_iso_after: function(){
             if( !this.date_moment_after )
@@ -206,6 +210,28 @@ var vue_options = {
             e.preventDefault();
         },
         
+        /* UUID */
+        uuid_parse: function(){
+            var uuid = UUID.parse(this.uuid_input);
+            if( !uuid ){
+                if( this.uuid_input.indexOf('-') < 0 ){
+                    var t = this.uuid_input.slice(0, 8) + '-' + this.uuid_input.slice(8, 12) + '-' + this.uuid_input.slice(12, 16) + '-' + this.uuid_input.slice(16, 20) + '-' + this.uuid_input.slice(20, 32);
+                    uuid = UUID.parse(t);
+                }
+                if( !uuid ){
+                    alert('入力が不正です。');
+                    return;
+                }
+            }
+            this.uuid_uuid = uuid;
+            this.uuid_array = uuid.hexNoDelim;
+        },
+        uuid_generate: function(){
+            var uuid = UUID.genV4();
+            this.uuid_input = uuid;
+            this.uuid_uuid = uuid;
+            this.uuid_array = uuid.hexNoDelim;
+        },
         /* 画像ファイル */
         image_open: function(e){
             this.image_open_file(e.target.files[0]);
