@@ -12,7 +12,7 @@ const IMAGE_ICON_LIST = {
 	android: [192, 144, 96, 72, 48, 36],
 	iphone: [180, 167, 152, 120, 87, 80, 76, 60, 58, 40, 29, 20],
 	windows: [48, 32, 16],
-	alexa: [108, 512],
+	alexa: [512, 108],
 };
 const FAVORITE_MAX = 5;
 const TAB_LIST = [
