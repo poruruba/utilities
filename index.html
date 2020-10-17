@@ -19,13 +19,18 @@
   
     <title>ユーティリティ</title>
 
-    <script src="js/methods_utils.js"></script>
+    <link rel="stylesheet" href="css/start.css">
+    <script src="js/methods_bootstrap.js"></script>
+    <script src="js/components_bootstrap.js"></script>
     <script src="js/vue_utils.js"></script>
-
+  
     <script src="dist/js/vconsole.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  
     <script src="dist/js/crypto-js.js"></script>
     <script src="dist/js/base64url-arraybuffer.js"></script>
     <script src="dist/js/qrcode.js"></script>
@@ -39,6 +44,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-css.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.9.1/beautify-html.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 </head>
 <body>
     <div id="top" class="container">
@@ -735,6 +742,22 @@
                 </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading">
+                        <div class="panel-title"><a data-toggle="collapse" href="#marked_arrange_panel">Markdown</a></div>
+                    </div>
+                    <div class="panel-collapse collapse" id="marked_arrange_panel">
+                        <div class="panel-body">
+                            <button class="btn btn-default" v-on:click="arrange_convert('marked_view')">表示</button>
+                            <button class="btn btn-default" v-on:click="arrange_convert('marked_html')">HTML</button><br>
+                            <label>入力</label>
+                            <textarea class="form-control" rows="20" v-model="marked_inout"></textarea>
+                        </div>
+                        <div class="panel-footer">
+                            <button class="btn btn-default" data-toggle="collapse" href="#marked_arrange_panel">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
                         <div class="panel-title"><a data-toggle="collapse" href="#html_arrange_panel">HTML</a></div>
                     </div>
                     <div class="panel-collapse collapse" id="html_arrange_panel">
@@ -917,6 +940,22 @@
                 </div>
             </div>
         </div>
+
+        <modal-dialog size="lg" id="marked_dialog">
+            <div slot="content">
+                <div class="modal-header">
+                    <button class="btn btn-default pull-right" v-on:click="dialog_close('#marked_dialog')">閉じる</button>
+                </div>
+                <div class="modal-body">
+                    <div v-show="marked_show_type=='marked_view'" id="marked_content"></div>
+                    <textarea v-if="marked_show_type=='marked_html'" rows="20" v-bind:value="marked_html" class="form-control"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" v-on:click="dialog_close('#marked_dialog')">閉じる</button>
+                </div>
+        </div>
+        </modal-dialog>
+
 
         <div class="modal fade" id="progress">
             <div class="modal-dialog">
