@@ -83,6 +83,9 @@ var vue_options = {
         js_inout: '',
         css_inout: '',
         html_inout: '',
+        marked_inout: '',
+        marked_html: null,
+        marked_show_type: '',
         date_duration: 0,
         date_duration_unit: 'year',
         date_moment: moment(),
@@ -976,7 +979,22 @@ var vue_options = {
                 alert(error);
             }
         },
-
+        arrange_convert: function(type){
+            try{
+                if( type == 'marked_view'){
+                    this.marked_show_type = type;
+                    document.getElementById('marked_content').innerHTML = marked(this.marked_inout);
+                    this.dialog_open('#marked_dialog');
+                }else
+                if( type == 'marked_html' ){
+                    this.marked_show_type = type;
+                    this.marked_html = marked(this.marked_inout);;
+                    this.dialog_open('#marked_dialog');
+                }
+            }catch( error ){
+                alert(error);
+            }
+        },
         /* トレンド */
         trend_get: function(){
             var body = {
@@ -1097,7 +1115,8 @@ var vue_options = {
         this.notify_gmail_address = Cookies.get('notify_gmail_address');
     }
 };
-vue_add_methods(vue_options, methods_utils);
+vue_add_methods(vue_options, methods_bootstrap);
+vue_add_components(vue_options, components_bootstrap);
 var vue = new Vue( vue_options );
 
 function do_post(url, body){

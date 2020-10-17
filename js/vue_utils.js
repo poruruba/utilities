@@ -25,3 +25,10 @@ function vue_add_computed(options, funcs){
         options.computed[func] = funcs[func];
     }
 }
+function vue_add_components(options, components){
+    if( !options.components )
+        options.components = {};
+    for( var component in components){
+        options.components[component] = components[component];
+    }
+}
