@@ -157,7 +157,7 @@ var vue_options = {
     },
     computed: {
         date_unix: function(){
-            return this.date_moment.unix();
+            return this.date_moment.valueOf();
         },
         date_iso: function(){
             return moment(this.date_moment).utc().format();
@@ -172,7 +172,7 @@ var vue_options = {
         date_unix_after: function(){
             if( !this.date_moment_after )
                 return null;
-            return this.date_moment_after.unix();
+            return this.date_moment_after.valueOf();
         },
         date_iso_after: function(){
             if( !this.date_moment_after )
