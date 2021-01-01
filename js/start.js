@@ -1113,6 +1113,14 @@ var vue_options = {
         this.server_apikey = Cookies.get('server_apikey');
         this.server_url = Cookies.get('server_url');
         this.notify_gmail_address = Cookies.get('notify_gmail_address');
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(async (registration) => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }).catch((err) => {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        }
     }
 };
 vue_add_methods(vue_options, methods_bootstrap);
