@@ -30,7 +30,8 @@ const TAB_LIST = [
 	{ id: 'cardinal', name: '基数' },
 	{ id: 'clip', name: 'クリップ' },
 	{ id: 'arrange', name: '整形' },
-	{ id: 'gengou', name: '元号' },
+    { id: 'gengou', name: '元号' },
+    { id: 'blecent', name: 'BLECentral' },
 	{ id: 'scraping', name: 'スクレイピング' },
 	{ id: 'trend', name: 'トレンド' },
 	{ id: 'notify', name: '通知' },
@@ -46,6 +47,10 @@ var vue_options = {
 		tab_list: TAB_LIST,
         favorite_link: [],
 
+        ble_device: null,
+        ble_services: [],
+        ble_isConnected: false,
+        ble_additional_services: '',
         uuid_input: null,
         uuid_uuid: null,
         uuid_array: null,
@@ -212,6 +217,213 @@ var vue_options = {
         file_drag: function(e){
             e.stopPropagation();
             e.preventDefault();
+        },
+
+        /* BLE Central */
+        ble_allnotify: async function(){
+            for( var i = 0 ; i < this.ble_services.length ; i++ ){
+                for( var j = 0 ; j < this.ble_services[i].characteristics.length ; j++ ){
+                    var characteristic = this.ble_services[i].characteristics[j];
+                    if( characteristic.characteristic.properties.notify ){
+                        this.notify_enable(characteristic, true);
+                    }
+                }
+            }
+            this.toast_show("All startNotificationしました。");
+        },
+        ble_allread: async function(){
+            for( var i = 0 ; i < this.ble_services.length ; i++ ){
+                for( var j = 0 ; j < this.ble_services[i].characteristics.length ; j++ ){
+                    var characteristic = this.ble_services[i].characteristics[j];
+                    if( characteristic.characteristic.properties.read ){
+                        try{
+                            await characteristic.characteristic.readValue();
+                            this.$set(characteristic, "value_changed", false);
+                        }catch(error){
+                            console.error(error);
+                        }
+                    }
+                }
+            }
+            this.toast_show("All readValueしました。");
+        },
+        ble_disconnect: function(){
+            if( this.ble_device != null && this.ble_device.gatt.connected ){
+                this.ble_device.gatt.disconnect();
+                this.ble_services = [];
+                this.ble_isConnected = false;
+            }
+        },
+        ble_connect: async function(){
+            try{
+                this.ble_disconnect();
+                
+                var additional_services;
+                if( this.ble_additional_services.trim() ){
+                    additional_services = this.ble_additional_services.split(/\r\n|\r|\n/);
+                    for( var i = 0 ; i < additional_services.length ; i++ ){
+                        if( additional_services[i].length == 4 )
+                        additional_services[i] = parseInt(additional_services[i], 16);
+                    }
+                }else{
+                    additional_services = [];
+                }
+                var optionalServices = additional_services.concat(Object.keys(serviceUuidList).map(x => parseInt(x)));
+
+                console.log('Execute : requestDevice');
+                var device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices:true,
+                    optionalServices: optionalServices
+                });
+            }catch(error){
+                console.error(error);
+                alert(error);
+                return;
+            }
+
+            this.progress_open();
+            try{
+                console.log("requestDevice OK");
+                this.ble_services = [];
+                this.ble_device = device;
+                this.ble_device.addEventListener('gattserverdisconnected', this.ble_onDisconnect.bind(this.ble_onDisconnect) );
+                var server = await this.ble_device.gatt.connect()
+                console.log('Execute : getPrimaryServices');
+                var services = await server.getPrimaryServices();
+                console.log(services);
+                services.map(async service => this.ble_setService(service));
+                this.ble_isConnected = true;
+                this.toast_show("接続しました。");
+            }catch(error){
+                console.error(error);
+                alert(error);
+            }finally{
+                this.progress_close();
+            }
+        },
+        async ble_onDisconnect(event){
+            console.log('onDisconnect');
+            this.ble_isConnected = false;
+            this.ble_services = [];
+        },
+        async ble_onDataChanged(event){
+            console.log('ble_onDataChanged');
+            console.log(event);
+            var characteristic = this.find_characteristic(event.target.service.uuid, event.target.uuid);
+            try{
+                this.$set(characteristic, "value_hex", this.dataview2hex(characteristic.characteristic.value));
+                this.$set(characteristic, "value_changed", true);
+            }catch(error){
+                console.log(error);
+            }
+        },
+        find_characteristic(service_uuid, characteristic_uuid){
+            var service = this.ble_services.find(item => item.uuid == service_uuid);
+            if( !service )
+                return null;
+            return service.characteristics.find(item => item.uuid == characteristic_uuid);
+        },
+        async ble_setService(service){
+            var item = {
+                uuid: service.uuid,
+                service: service,
+                characteristics: []
+            };
+            try{
+                console.log('Execute : getCharacteristics');
+                var characteristics = await service.getCharacteristics();
+                characteristics.map(async characteristic => this.ble_setCharacteristic(item.characteristics, characteristic))
+            }catch(error){
+//                console.error(error);
+            }
+            this.ble_services.push(item);
+        },
+        async ble_setCharacteristic(characteristics, characteristic) {
+            var item = {
+                uuid: characteristic.uuid,
+                characteristic: characteristic,
+            };
+            item.properties = "properties:";
+            if( characteristic.properties.broadacast )
+                item.properties += " broadcast";
+            if( characteristic.properties.read )
+                item.properties += " read";
+            if( characteristic.properties.writeWithoutResponse )
+                item.properties += " writeWithoutResponse";
+            if( characteristic.properties.write )
+                item.properties += " write";
+            if( characteristic.properties.notify )
+                item.properties += " notify";
+            if( characteristic.properties.indicate )
+                item.properties += " indicate";
+            if( characteristic.properties.authenticatedSignedWrites )
+                item.properties += " authenticatedSignedWrites";
+            characteristic.addEventListener('characteristicvaluechanged', this.ble_onDataChanged.bind(this.ble_onDataChanged) );
+            characteristics.push(item);
+        },
+        dataview2hex: function(data){
+            return new Uint8Array(data.buffer).reduce((hex, val) =>{
+                var t = val.toString(16);
+                return hex += ('00' + t).slice(-2);
+            }, "").toUpperCase();
+        },
+        hex2array: function(hex){
+            var array = new Uint8Array(hex.length / 2);
+            for( var i = 0 ; i < hex.length ; i += 2)
+                array[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+            return array;
+        },
+        async value_read(characteristic){
+            try{
+                await characteristic.characteristic.readValue();
+                this.$set(characteristic, "value_changed", false);
+            }catch(error){
+                console.error(error);
+            }
+        },
+        async value_write(characteristic){
+            try{
+                var array = this.hex2array(characteristic.value_hex);
+                if( characteristic.characteristic.properties.writeWithoutResponse )
+                    await characteristic.characteristic.writeValueWithoutResponse(array);
+                else
+                    await characteristic.characteristic.writeValueWithResponse(array);
+            }catch(error){
+                console.error(error);
+            }
+        },
+        async notify_enable(characteristic, forceEnable = false){
+            if( characteristic.notify_enabled && !forceEnable ){
+                characteristic.characteristic.stopNotifications();
+                this.$set(characteristic, "notify_enabled", false);
+            }else{
+                characteristic.characteristic.startNotifications();
+                this.$set(characteristic, "notify_enabled", true);
+            }
+        },
+        uuid128touuid16(uuid128){
+            if( uuid128.substr(0, 4) == '0000' && uuid128.substr(8, 28) == "-0000-1000-8000-00805f9b34fb" )
+                return parseInt(uuid128.substr(0, 8), 16);
+            else
+                return -1;
+        },
+        find_service_name: function(uuid){
+            var uuid16 = this.uuid128touuid16(uuid);
+            if( uuid16 < 0 )
+                return uuid;
+            var name = serviceUuidList[uuid16];
+            if( !name )
+                return ('0000' + uuid16.toString(16)).slice(-4).toUpperCase();
+            return name;
+        },
+        find_characteristic_name: function(uuid){
+            var uuid16 = this.uuid128touuid16(uuid);
+            if( uuid16 < 0 )
+                return null;
+            var name = characteristicUuidList[uuid16];
+            if( !name )
+                return ('0000' + uuid16.toString(16)).slice(-4).toUpperCase();
+            return name;
         },
         
         /* UUID */
@@ -1113,7 +1325,7 @@ var vue_options = {
         this.server_apikey = Cookies.get('server_apikey');
         this.server_url = Cookies.get('server_url');
         this.notify_gmail_address = Cookies.get('notify_gmail_address');
-
+        
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(async (registration) => {
                 console.log('ServiceWorker registration successful with scope: ', registration.scope);
@@ -1256,3 +1468,275 @@ function makeHmacSha256(input, secret){
     var hash = CryptoJS.HmacSHA256(input, secret);
     return wordarray_to_uint8array(hash);
 }
+
+const serviceUuidList = {
+    0x1800: "Generic Access",
+    0x1801: "Generic Attribute",
+    0x1802: "Immediate Alert",
+    0x1803: "Link Loss",
+    0x1804: "Tx Power",
+    0x1805: "Current Time Service",
+    0x1806: "Reference Time Update Service",
+    0x1807: "Next DST Change Service",
+    0x1808: "Glucose",
+    0x1809: "Health Thermometer",
+    0x180A: "Device Information",
+    0x180B: "Network Availability Service",
+    0x180D: "Heart Rate",
+    0x180E: "Phone Alert Status Service",
+    0x180F: "Battery Service",
+    0x1810: "Blood Pressure",
+    0x1811: "Alert Notification Service",
+    0x1812: "Human Interface Device",
+    0x1813: "Scan Parameters",
+    0x1814: "Running Speed and Cadence",
+    0x1815: "Automation IO",
+    0x1816: "Cycling Speed and Cadence",
+    0x1818: "Cycling Power",
+    0x1819: "Location and Navigation",
+    0x181A: "Environmental Sensing",
+    0x181B: "Body Composition",
+    0x181C: "User Data",
+    0x181D: "Weight Scale",
+    0x181E: "Bond Management Service",
+    0x181F: "Continuous Glucose Monitoring",
+    0x1820: "Internet Protocol Support Service",
+    0x1821: "Indoor Positioning",
+    0x1822: "Pulse Oximeter Service",
+    0x1823: "HTTP Proxy",
+    0x1824: "Transport Discovery",
+    0x1825: "Object Transfer Service",
+    0x1826: "Fitness Machine",
+    0x1827: "Mesh Provisioning Service",
+    0x1828: "Mesh Proxy Service",
+    0x1829: "Reconnection Configuration",
+};
+
+const characteristicUuidList = {
+    0x2A00: "Device Name",
+    0x2A01: "Appearance",
+    0x2A02: "Peripheral Privacy Flag",
+    0x2A03: "Reconnection Address",
+    0x2A04: "Peripheral Preferred Connection Parameters",
+    0x2A05: "Service Changed",
+    0x2A06: "Alert Level",
+    0x2A07: "Tx Power Level",
+    0x2A08: "Date Time",
+    0x2A09: "Day of Week",
+    0x2A0A: "Day Date Time",
+    0x2A0B: "Exact Time 100",
+    0x2A0C: "Exact Time 256",
+    0x2A0D: "DST Offset",
+    0x2A0E: "Time Zone",
+    0x2A0F: "Local Time Information",
+    0x2A10: "Secondary Time Zone",
+    0x2A11: "Time with DST",
+    0x2A12: "Time Accuracy",
+    0x2A13: "Time Source",
+    0x2A14: "Reference Time Information",
+    0x2A15: "Time Broadcast",
+    0x2A16: "Time Update Control Point",
+    0x2A17: "Time Update State",
+    0x2A18: "Glucose Measurement",
+    0x2A19: "Battery Level",
+    0x2A1A: "Battery Power State",
+    0x2A1B: "Battery Level State",
+    0x2A1C: "Temperature Measurement",
+    0x2A1D: "Temperature Type",
+    0x2A1E: "Intermediate Temperature",
+    0x2A1F: "Temperature Celsius",
+    0x2A20: "Temperature Fahrenheit",
+    0x2A21: "Measurement Interval",
+    0x2A22: "Boot Keyboard Input Report",
+    0x2A23: "System ID",
+    0x2A24: "Model Number String",
+    0x2A25: "Serial Number String",
+    0x2A26: "Firmware Revision String",
+    0x2A27: "Hardware Revision String",
+    0x2A28: "Software Revision String",
+    0x2A29: "Manufacturer Name String",
+    0x2A2A: "IEEE 11073-20601 Regulatory Certification Data List",
+    0x2A2B: "Current Time",
+    0x2A2C: "Magnetic Declination",
+    0x2A2D: "Latitude",
+    0x2A2E: "Longitude",
+    0x2A2F: "Position 2D",
+    0x2A30: "Position 3D",
+    0x2A31: "Scan Refresh",
+    0x2A32: "Boot Keyboard Output Report",
+    0x2A33: "Boot Mouse Input Report",
+    0x2A34: "Glucose Measurement Context",
+    0x2A35: "Blood Pressure Measurement",
+    0x2A36: "Intermediate Cuff Pressure",
+    0x2A37: "Heart Rate Measurement",
+    0x2A38: "Body Sensor Location",
+    0x2A39: "Heart Rate Control Point",
+    0x2A3A: "Removable",
+    0x2A3B: "Service Required",
+    0x2A3C: "Scientific Temperature Celsius",
+    0x2A3D: "String",
+    0x2A3E: "Network Availability",
+    0x2A3F: "Alert Status",
+    0x2A40: "Ringer Control point",
+    0x2A41: "Ringer Setting",
+    0x2A42: "Alert Category ID Bit Mask",
+    0x2A43: "Alert Category ID",
+    0x2A44: "Alert Notification Control Point",
+    0x2A45: "Unread Alert Status",
+    0x2A46: "New Alert",
+    0x2A47: "Supported New Alert Category",
+    0x2A48: "Supported Unread Alert Category",
+    0x2A49: "Blood Pressure Feature",
+    0x2A4A: "HID Information",
+    0x2A4B: "Report Map",
+    0x2A4C: "HID Control Point",
+    0x2A4D: "Report",
+    0x2A4E: "Protocol Mode",
+    0x2A4F: "Scan Interval Window",
+    0x2A50: "PnP ID",
+    0x2A51: "Glucose Feature",
+    0x2A52: "Record Access Control Point",
+    0x2A53: "RSC Measurement",
+    0x2A54: "RSC Feature",
+    0x2A56: "Digital",
+    0x2A55: "SC Control Point",
+    0x2A57: "Digital Output",
+    0x2A58: "Analog",
+    0x2A59: "Analog Output",
+    0x2A5A: "Aggregate",
+    0x2A5B: "CSC Measurement",
+    0x2A5C: "CSC Feature",
+    0x2A5D: "Sensor Location",
+    0x2A5E: "PLX Spot-Check Measurement",
+    0x2A5F: "PLX Continuous Measurement Characteristic",
+    0x2A60: "PLX Features",
+    0x2A62: "Pulse Oximetry Control Point",
+    0x2A63: "Cycling Power Measurement",
+    0x2A64: "Cycling Power Vector",
+    0x2A65: "Cycling Power Feature",
+    0x2A66: "Cycling Power Control Point",
+    0x2A67: "Location and Speed Characteristic",
+    0x2A68: "Navigation",
+    0x2A69: "Position Quality",
+    0x2A6A: "LN Feature",
+    0x2A6B: "LN Control Point",
+    0x2A6C: "Elevation",
+    0x2A6D: "Pressure",
+    0x2A6E: "Temperature",
+    0x2A6F: "Humidity",
+    0x2A70: "True Wind Speed",
+    0x2A71: "True Wind Direction",
+    0x2A72: "Apparent Wind Speed",
+    0x2A73: "Apparent Wind Direction",
+    0x2A74: "Gust Factor",
+    0x2A75: "Pollen Concentration",
+    0x2A76: "UV Index",
+    0x2A77: "Irradiance",
+    0x2A78: "Rainfall",
+    0x2A79: "Wind Chill",
+    0x2A7A: "Heat Index",
+    0x2A7B: "Dew Point",
+    0x2A7D: "Descriptor Value Changed",
+    0x2A7E: "Aerobic Heart Rate Lower Limit",
+    0x2A7F: "Aerobic Threshold",
+    0x2A80: "Age",
+    0x2A81: "Anaerobic Heart Rate Lower Limit",
+    0x2A82: "Anaerobic Heart Rate Upper Limit",
+    0x2A83: "Anaerobic Threshold",
+    0x2A84: "Aerobic Heart Rate Upper Limit",
+    0x2A85: "Date of Birth",
+    0x2A86: "Date of Threshold Assessment",
+    0x2A87: "Email Address",
+    0x2A88: "Fat Burn Heart Rate Lower Limit",
+    0x2A89: "Fat Burn Heart Rate Upper Limit",
+    0x2A8A: "First Name",
+    0x2A8B: "Five Zone Heart Rate Limits",
+    0x2A8C: "Gender",
+    0x2A8D: "Heart Rate Max",
+    0x2A8E: "Height",
+    0x2A8F: "Hip Circumference",
+    0x2A90: "Last Name",
+    0x2A91: "Maximum Recommended Heart Rate",
+    0x2A92: "Resting Heart Rate",
+    0x2A93: "Sport Type for Aerobic and Anaerobic Thresholds",
+    0x2A94: "Three Zone Heart Rate Limits",
+    0x2A95: "Two Zone Heart Rate Limit",
+    0x2A96: "VO2 Max",
+    0x2A97: "Waist Circumference",
+    0x2A98: "Weight",
+    0x2A99: "Database Change Increment",
+    0x2A9A: "User Index",
+    0x2A9B: "Body Composition Feature",
+    0x2A9C: "Body Composition Measurement",
+    0x2A9D: "Weight Measurement",
+    0x2A9E: "Weight Scale Feature",
+    0x2A9F: "User Control Point",
+    0x2AA0: "Magnetic Flux Density - 2D",
+    0x2AA1: "Magnetic Flux Density - 3D",
+    0x2AA2: "Language",
+    0x2AA3: "Barometric Pressure Trend",
+    0x2AA4: "Bond Management Control Point",
+    0x2AA5: "Bond Management Features",
+    0x2AA6: "Central Address Resolution",
+    0x2AA7: "CGM Measurement",
+    0x2AA8: "CGM Feature",
+    0x2AA9: "CGM Status",
+    0x2AAA: "CGM Session Start Time",
+    0x2AAB: "CGM Session Run Time",
+    0x2AAC: "CGM Specific Ops Control Point",
+    0x2AAD: "Indoor Positioning Configuration",
+    0x2AAE: "Latitude",
+    0x2AAF: "Longitude",
+    0x2AB0: "Local North Coordinate",
+    0x2AB1: "Local East Coordinate",
+    0x2AB3: "Altitude",
+    0x2AB4: "Uncertainty",
+    0x2AB5: "Location Name",
+    0x2AB6: "URI",
+    0x2ABC: "TDS Control Point",
+    0x2ABD: "OTS Feature",
+    0x2ABE: "Object Name",
+    0x2ABF: "Object Type",
+    0x2AC0: "Object Size",
+    0x2AC1: "Object First-Created",
+    0x2AC2: "Object Last-Modified",
+    0x2AC3: "Object ID",
+    0x2AC4: "Object Properties",
+    0x2AC5: "Object Action Control Point",
+    0x2AC6: "Object List Control Point",
+    0x2AC7: "Object List Filter",
+    0x2AC8: "Object Changed",
+    0x2AC9: "Resolvable Private Address Only",
+    0x2ACE: "Cross Trainer Data",
+    0x2AD9: "Fitness Machine Control Point",
+    0x2ACC: "Fitness Machine Feature",
+    0x2ACD: "Treadmill Data",
+    0x2ACF: "Step Climber Data",
+    0x2AB2: "Floor Number",
+    0x2AB7: "HTTP Headers",
+    0x2AB8: "HTTP Status Code",
+    0x2AB9: "HTTP Entity Body",
+    0x2ABA: "HTTP Control Point",
+    0x2ABB: "HTTPS Security",
+    0x2AC9: "Resolvable Private Address Only",
+    0x2AD0: "Stair Climber Data",
+    0x2AD1: "Rower Data",
+    0x2AD2: "Indoor Bike Data",
+    0x2AD3: "Training Status",
+    0x2AD4: "Supported Speed Range",
+    0x2AD5: "Supported Inclination Range",
+    0x2AD6: "Supported Resistance Level Range",
+    0x2AD7: "Supported Heart Rate Range",
+    0x2AD8: "Supported Power Range",
+    0x2ADA: "Fitness Machine Status",
+    0x2ADB: "Mesh Provisioning Data In",
+    0x2ADC: "Mesh Provisioning Data Out",
+    0x2ADD: "Mesh Proxy Data In",
+    0x2ADE: "Mesh Proxy Data Out",
+    0x2B1D: "RC Feature",
+    0x2B1E: "RC Settings",
+    0x2B1F: "Reconnection Configuration Control Point",
+    0x2B29: "Client Supported Features",
+    0x2B2A: "Database Hash",
+    0x2B3A: "Server Supported Features",
+  };

@@ -20,5 +20,11 @@ var methods_bootstrap = {
     },
     toast_show: function(message, title, level = "info", option){
         toastr[level](message, title, option);
+    },
+    clip_paste: async function(){
+    	return navigator.clipboard.readText();
+    },
+    clip_copy: async function(text){
+    	return navigator.clipboard.writeText(text);
     }
 };
