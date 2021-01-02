@@ -2,8 +2,6 @@
 
 //var vConsole = new VConsole();
 
-new ClipboardJS('.clip_btn');
-
 var encoder = new TextEncoder('utf-8');
 var decoder = new TextDecoder('utf-8');
 
@@ -269,7 +267,7 @@ var vue_options = {
                     additional_services = this.ble_additional_services.split(/\r\n|\r|\n/);
                     for( var i = 0 ; i < additional_services.length ; i++ ){
                         if( additional_services[i].length == 4 )
-                            additional_services[i] = parseInt(additional_services[i], 16);
+                        additional_services[i] = parseInt(additional_services[i], 16);
                     }
                 }
                 var optionalServices = additional_services.concat(Object.keys(serviceUuidList).map(x => parseInt(x)));
