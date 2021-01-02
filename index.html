@@ -80,6 +80,11 @@
                     </div>
                   </span>
                 </collapse-panel>
+
+                <div v-if="ble_device">
+                    <label>id</label> {{ble_device.id}}<br>
+                    <label>name</label> {{ble_device.name}}<br>
+                </div>
                 <button class="btn btn-default" v-on:click="ble_allread()" v-if="ble_isConnected">All Read</button>
                 <button class="btn btn-default" v-on:click="ble_allnotify()" v-if="ble_isConnected">All Notify</button>
                 <br><br>
