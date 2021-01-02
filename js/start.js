@@ -255,6 +255,7 @@ var vue_options = {
         ble_disconnect: function(){
             if( this.ble_device != null && this.ble_device.gatt.connected ){
                 this.ble_device.gatt.disconnect();
+                this.ble_device = null;
                 this.ble_services = [];
                 this.ble_isConnected = false;
             }
@@ -306,6 +307,7 @@ var vue_options = {
         },
         async ble_onDisconnect(event){
             console.log('onDisconnect');
+            this.ble_device = null;
             this.ble_isConnected = false;
             this.ble_services = [];
         },
