@@ -220,6 +220,11 @@ var vue_options = {
         },
 
         /* BLE Central */
+        ble_toStr: function(characteristic){
+            if( !characteristic.characteristic.value )
+                return null;
+            return decoder.decode(characteristic.characteristic.value);
+        },
         ble_allnotify: async function(){
             for( var i = 0 ; i < this.ble_services.length ; i++ ){
                 for( var j = 0 ; j < this.ble_services[i].characteristics.length ; j++ ){
