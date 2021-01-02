@@ -35,7 +35,6 @@
     <script src="dist/js/base64url-arraybuffer.js"></script>
     <script src="dist/js/qrcode.js"></script>
     <script src="dist/js/jsQR.js"></script>
-    <script src="https://unpkg.com/clipboard@2/dist/clipboard.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.0.6/chroma.min.js"></script>
 
@@ -128,16 +127,16 @@
                 <label>UUID</label>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#uuid_uuid"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(uuid_uuid)"></button>
                     </span>
-                    <input type="text" id="uuid_uuid" class="form-control" v-model="uuid_uuid" readonly>
+                    <input type="text" class="form-control" v-model="uuid_uuid" readonly>
                 </div>
                 <label>バイト配列</label>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#uuid_array"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(uuid_array)"></button>
                     </span>
-                    <input type="text" id="uuid_array" class="form-control" v-model="uuid_array" readonly>
+                    <input type="text" class="form-control" v-model="uuid_array" readonly>
                 </div>
             </div>
 
@@ -176,12 +175,12 @@
                 <br>
                 <button v-on:click="image_save()">ファイルに保存</button><br>
                 <br>
-                <div class="rows">
+                <div class="row">
                     <div class="col-xs-6 text-center"><label>オリジナル</label></div>
                     <div class="col-xs-1"></div>
                     <div class="col-xs-5 text-center"><label>scale変換後</label></div>
                 </div>
-                <div class="rows">
+                <div class="row">
                     <span class="col-xs-6">
                         <img v-if="!image_src" class="center-block" src="img/image_drop.png" v-on:drop="image_drop" v-on:dragover="file_drag">
                         <img v-if="image_src" class="img-responsive img-thumbnail" v-bind:src="image_src" v-on:drop="image_drop" v-on:dragover="file_drag">
@@ -223,9 +222,9 @@
                             <label>scaned data</label>
                             <div class="input-group">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#qrcode_scaned_data"></button>
+                                    <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(qrcode_scaned_data)"></button>
                                 </span>
-                                <input id="qrcode_scaned_data" type="text" class="form-control" v-model="qrcode_scaned_data" readonly>
+                                <input type="text" class="form-control" v-model="qrcode_scaned_data" readonly>
                             </div><br>
                             <button class="btn btn-primary" v-on:click="qrcode_scan()">{{qrcode_btn}}</button><br>
                             <div>
@@ -246,14 +245,14 @@
             -->
             <div id="string" class="tab-pane fade in">
                 <h2 class="page-header">文字列</h2>
-                <h3>UTF8 ⇔ バイト配列</h3>
+                <h3>UTF-8 ⇔ バイト配列</h3>
                 <label>入力</label>
                 <textarea class="form-control" rows="3" v-model="string_input"></textarea>
                 <button class="btn btn-primary" v-on:click="string_encode(true)">toバイト配列</button>
                 <button class="btn btn-primary" v-on:click="string_encode(false)">fromバイト配列</button><br>
                 <label>出力</label><br>
-                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#string_output"></button>
-                <textarea id="string_output" class="form-control" rows="3" readonly>{{string_output}}</textarea>
+                <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(string_output)"></button>
+                <textarea class="form-control" rows="3" readonly>{{string_output}}</textarea>
             </div>
 
             <!--
@@ -268,8 +267,8 @@
                 <textarea class="form-control" rows="1" v-model="hmac_secret"></textarea>
                 <button class="btn btn-primary" v-on:click="crypto_hmac()">生成</button><br>
                 <label>出力</label><br>
-                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#hmac_output"></button>
-                <textarea id="hmac_output" class="form-control" rows="2" readonly>{{hmac_output}}</textarea>
+                <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(hmac_output)"></button>
+                <textarea class="form-control" rows="2" readonly>{{hmac_output}}</textarea>
 
                 <h3>AES</h3>
                 <label>入力</label>
@@ -281,8 +280,8 @@
                 <button class="btn btn-primary" v-on:click="crypto_aes(true)">暗号化</button>
                 <button class="btn btn-primary" v-on:click="crypto_aes(false)">復号化</button><br>
                 <label>出力</label><br>
-                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#aes_output"></button>
-                <textarea id="aes_output" class="form-control" rows="3" readonly>{{aes_output}}</textarea>
+                <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(aes_output)"></button>
+                <textarea class="form-control" rows="3" readonly>{{aes_output}}</textarea>
             </div>
 
             <!--
@@ -298,8 +297,8 @@
                 <button class="btn btn-primary" v-on:click="base64_encode(true, true)">バイナリエンコード</button>
                 <button class="btn btn-primary" v-on:click="base64_encode(false, true)">バイナリデコード</button><br>
                 <label>出力</label><br>
-                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#base64_output"></button>
-                <textarea id="base64_output" class="form-control" rows="5" readonly>{{base64_output}}</textarea>
+                <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(base64_output)"></button>
+                <textarea class="form-control" rows="5" readonly>{{base64_output}}</textarea>
 
                 <h3>Base64URLエンコード</h3>
                 <label>入力</label>
@@ -307,8 +306,8 @@
                 <button class="btn btn-primary" v-on:click="base64url_encode(true)">バイナリエンコード</button>
                 <button class="btn btn-primary" v-on:click="base64url_encode(false)">バイナリデコード</button><br>
                 <label>出力</label><br>
-                <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#base64url_output"></button>
-                <textarea id="base64url_output" class="form-control" rows="5" readonly>{{base64url_output}}</textarea>
+                <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(base64url_output)"></button>
+                <textarea class="form-control" rows="5" readonly>{{base64url_output}}</textarea>
 
                 <h3>URLエンコード</h3>
                 <label>入力</label>
@@ -318,9 +317,9 @@
                 <label>出力</label>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#url_output"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(url_output)"></button>
                     </span>
-                    <input id="url_output" type="text" class="form-control" v-model="url_output" readonly>
+                    <input type="text" class="form-control" v-model="url_output" readonly>
                 </div>
 
                 <h3>HTMLエンティティエンコード</h3>
@@ -331,9 +330,9 @@
                 <label>出力</label>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#html_output"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(html_output)"></button>
                     </span>
-                    <input id="html_output" type="text" class="form-control" v-model="html_output" readonly>
+                    <input type="text" class="form-control" v-model="html_output" readonly>
                 </div>
             </div>
 
@@ -371,9 +370,9 @@
                 <br>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#passwd_password"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(passwd_password)"></button>
                     </span>
-                    <input id="passwd_password" type="text" class="form-control" v-model="passwd_password" readonly>
+                    <input type="text" class="form-control" v-model="passwd_password" readonly>
                 </div>
             </div> 
 
@@ -479,23 +478,23 @@
                 <br>
                 <button class="btn btn-default" v-on:click="array_set(0)">変換</button>
                 <label>(例) 0011aabb</label>
-                <input type="text" class="form-control data-block" v-model="array_pattern[0]">
+                <input type="text" class="form-control" v-model="array_pattern[0]">
                 <br>
                 <button class="btn btn-default" v-on:click="array_set(1)">変換</button>
                 <label>(例) 00 11 aa bb</label>
-                <input type="text" class="form-control data-block" v-model="array_pattern[1]">
+                <input type="text" class="form-control" v-model="array_pattern[1]">
                 <br>
                 <button class="btn btn-default" v-on:click="array_set(2)">変換</button>
                 <label>(例) 0x00, 0x11, 0xaa, 0xbb</label>
-                <input type="text" class="form-control data-block" v-model="array_pattern[2]">
+                <input type="text" class="form-control" v-model="array_pattern[2]">
                 <br>
                 <button class="btn btn-default" v-on:click="array_set(3)">変換</button>
                 <label>(例) (byte)0x00, (byte)0x11, (byte)0xaa, (byte)0xbb</label>
-                <input type="text" class="form-control data-block" v-model="array_pattern[3]">
+                <input type="text" class="form-control" v-model="array_pattern[3]">
                 <br>
                 <button class="btn btn-default" v-on:click="array_set(4)">変換</button>
                 <label>(例) 0, 1, 2, 3, 4</label>
-                <input type="text" class="form-control data-block" v-model="array_pattern[4]">
+                <input type="text" class="form-control" v-model="array_pattern[4]">
                 <br>
                 <br>
                 <div class="panel panel-default">
@@ -584,9 +583,9 @@
                 <div class="form-inline">
                     <div class="input-group">
                         <span class="input-group-btn">
-                            <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#cardinal_decimal_copy"></button>
+                            <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(cardinal_decimal)"></button>
                         </span>
-                        <input type="text" id="cardinal_decimal_copy" size="40" class="form-control text-right" v-model="cardinal_decimal">
+                        <input type="text" size="40" class="form-control text-right" v-model="cardinal_decimal">
                     </div>
                     <button class="btn btn-default" v-on:click="cardinal_convart(10)">セット</button>&nbsp;&nbsp;
                     <div class="btn-group">
@@ -599,9 +598,9 @@
                 <div class="form-inline">
                     <div class="input-group">
                         <span class="input-group-btn">
-                            <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#cardinal_binary_copy"></button>
+                            <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(cardinal_binary)"></button>
                         </span>
-                        <input type="text" id="cardinal_binary_copy" size="40" class="form-control text-right" v-model="cardinal_binary">
+                        <input type="text" size="40" class="form-control text-right" v-model="cardinal_binary">
                     </div>
                     <button class="btn btn-default" v-on:click="cardinal_convart(2)">セット</button>&nbsp;&nbsp;
                     <div class="btn-group">
@@ -616,9 +615,9 @@
                 <div class="form-inline">
                     <div class="input-group">
                         <span class="input-group-btn">
-                            <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#cardinal_hexadecimal_copy"></button>
+                            <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(cardinal_hexadecimal)"></button>
                         </span>
-                        <input type="text" id="cardinal_hexadecimal_copy" size="40" class="form-control text-right" v-model="cardinal_hexadecimal">
+                        <input type="text" size="40" class="form-control text-right" v-model="cardinal_hexadecimal">
                     </div>
                     <button class="btn btn-default" v-on:click="cardinal_convart(16)">セット</button>&nbsp;&nbsp;
                     <div class="btn-group">
@@ -645,60 +644,60 @@
                     <span class="input-group-btn">
                         <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(0)"></button>
                         <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(0)"></button>
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_0"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(clip_data[0])"></button>
                     </span>
-                    <input id="clip_data_id_0" type="text" class="form-control" v-model="clip_data[0]">
+                    <input type="text" class="form-control" v-model="clip_data[0]">
                 </div>
                 <label>入力1</label>
                 <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(1)"></button>
                         <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(1)"></button>
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_1"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(clip_data[1])"></button>
                     </span>
-                    <input id="clip_data_id_1" type="text" class="form-control" v-model="clip_data[1]">
+                    <input type="text" class="form-control" v-model="clip_data[1]">
                 </div>
                 <label>入力2</label>
                 <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(2)"></button>
                         <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(2)"></button>
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_2"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(clip_data[2])"></button>
                     </span>
-                    <input id="clip_data_id_2" type="text" class="form-control" v-model="clip_data[2]">
+                    <input type="text" class="form-control" v-model="clip_data[2]">
                 </div>
                 <label>入力3</label>
                 <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(3)"></button>
                         <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(3)"></button>
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_3"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(clip_data[3])"></button>
                     </span>
-                    <input id="clip_data_id_3" type="text" class="form-control" v-model="clip_data[3]">
+                    <input type="text" class="form-control" v-model="clip_data[3]">
                 </div>
                 <label>入力4</label>
                 <div class="input-group">
                     <span class="input-group-btn">
                         <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(4)"></button>
                         <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(4)"></button>
-                        <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_4"></button>
+                        <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(clip_data[4])"></button>
                     </span>
-                    <input id="clip_data_id_4" type="text" class="form-control" v-model="clip_data[4]">
+                    <input type="text" class="form-control" v-model="clip_data[4]">
                 </div>
                 <label>入力5</label>
                 <span class="input-group-btn">
                     <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(5)"></button>
                     <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(5)"></button>
-                    <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_5"></button>
+                    <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(clip_data[5])"></button>
                 </span>
-                <textarea id="clip_data_id_5" class="form-control" rows="2" v-model="clip_data[5]"></textarea>
+                <textarea class="form-control" rows="2" v-model="clip_data[5]"></textarea>
                 <label>入力6</label>
                 <span class="input-group-btn">
                     <button class="btn btn-default glyphicon glyphicon-erase" v-on:click="clip_clear(6)"></button>
                     <button class="btn btn-default glyphicon glyphicon-floppy-disk" v-on:click="clip_save(6)"></button>
-                    <button class="btn btn-default clip_btn glyphicon glyphicon-paperclip" data-clipboard-target="#clip_data_id_6"></button>
+                    <button class="btn btn-default glyphicon glyphicon-paperclip" v-on:click="clip_copy(clip_data[6])"></button>
                 </span>
-                <textarea id="clip_data_id_6" class="form-control" rows="5" v-model="clip_data[6]"></textarea>
+                <textarea class="form-control" rows="5" v-model="clip_data[6]"></textarea>
             </div>
 
             <!--
@@ -947,6 +946,7 @@
                     <li><a href="https://qiita.com/poruruba/items/59c3e6771aa9d957bfd0" target="_blank">Qiita: 便利ページ：JavascriptでQRコードスキャン</a></li>
                     <li><a href="https://qiita.com/poruruba/items/0d57d5b157a97a79dba6" target="_blank">Qiita: 便利ページ：データURLを生成する</a></li>
                     <li><a href="https://qiita.com/poruruba/items/268eb6b1f58bce3cff51" target="_blank">Qiita: 便利ページ：Javascriptでアイコンファイルを生成する</a></li>
+                    <li><a href="https://qiita.com/poruruba/items/653e9bbf6b725438442e" target="_blank">Qiita: 便利ページ：Web Bluetooth APIでBLEデバイスに接続</a></li>
                 </ul>
             </div>
 
