@@ -66,6 +66,49 @@
         <div class="tab-content">
 
             <!--
+                BLE Central
+            -->
+            <div id="blecent" class="tab-pane fade in">
+                <h2 class="page-header">BLE Central</h2>
+                <button class="btn btn-primary" v-on:click="ble_connect()" v-if="!ble_isConnected">Connect</button>
+                <button class="btn btn-primary" v-on:click="ble_disconnect()" v-else>Disonnect</button>
+                <br><br>
+                <collapse-panel class="panel-default" id="additional_services_panel" title="Additional Services" collapse="true">
+                  <span slot="content">
+                    <div class="panel-body">
+                      <textarea class="form-control" v-model="ble_additional_services"></textarea>
+                    </div>
+                  </span>
+                </collapse-panel>
+                <button class="btn btn-default" v-on:click="ble_allread()" v-if="ble_isConnected">All Read</button>
+                <button class="btn btn-default" v-on:click="ble_allnotify()" v-if="ble_isConnected">All Notify</button>
+                <br><br>
+            
+                <div class="panel panel-default" v-for="(service, index) in ble_services">
+                  <div class="panel-heading"><h2 class="panel-title">{{find_service_name(service.uuid)}}</h2></div>
+                  <div class="panel-body">
+                    <label>uuid</label> {{service.uuid}}
+                    <br><br>
+                    <table class="table table-striped">
+                      <tr v-for="(characteristic, index) in service.characteristics">
+                        <td>
+                          <label data-toggle="tooltip" v-bind:title="characteristic.properties">{{characteristic.uuid}}</label>
+                          <span v-if="find_characteristic_name(characteristic.uuid)"><br>{{find_characteristic_name(characteristic.uuid)}}</span></td>
+                        <td><span v-bind:class="{ 'has-success': characteristic.value_changed }">
+                          <input type="text" class="form-control" v-model="characteristic.value_hex">
+                        </span></td>
+                        <td>
+                          <button class="btn btn-default btn-sm" v-if="characteristic.characteristic.properties.read" v-on:click="value_read(characteristic)">Read</button>
+                          <button class="btn btn-default btn-sm" v-if="characteristic.characteristic.properties.write || characteristic.characteristic.properties.writeWithoutResponse || characteristic.characteristic.properties.authenticatedSignedWrites" v-on:click="value_write(characteristic)">Write</button>
+                          <button class="btn btn-default btn-sm" v-if="characteristic.characteristic.properties.notify" v-on:click="notify_enable(characteristic)"><span v-if="characteristic.notify_enabled">Disable Notify</span><span v-else>Enable Notify</span></button>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+            </div>
+
+            <!--
                 UUID
             -->
             <div id="uuid" class="tab-pane fade in">
@@ -960,18 +1003,8 @@
         </modal-dialog>
 
 
-        <div class="modal fade" id="progress">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">{{progress_title}}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <center><progress max="100" /></center>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- for progress-dialog -->
+        <progress-dialog v-bind:title="progress_title"></progress-dialog>
     </div>
 
     <script src="js/gengou.js"></script>
