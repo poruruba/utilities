@@ -263,15 +263,13 @@ var vue_options = {
             try{
                 this.ble_disconnect();
                 
-                var additional_services;
+                var additional_services = [];
                 if( this.ble_additional_services.trim() ){
-                    additional_services = this.ble_additional_services.split(/\r\n|\r|\n/);
+                    additional_services = this.ble_additional_services.split(/\r\n|\r|\n/).trim();
                     for( var i = 0 ; i < additional_services.length ; i++ ){
                         if( additional_services[i].length == 4 )
                         additional_services[i] = parseInt(additional_services[i], 16);
                     }
-                }else{
-                    additional_services = [];
                 }
                 var optionalServices = additional_services.concat(Object.keys(serviceUuidList).map(x => parseInt(x)));
 
