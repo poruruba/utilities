@@ -361,8 +361,8 @@ var vue_options = {
                 item.properties += " indicate";
             if( characteristic.properties.authenticatedSignedWrites )
                 item.properties += " authenticatedSignedWrites";
-            characteristic.addEventListener('characteristicvaluechanged', this.ble_onDataChanged.bind(this.ble_onDataChanged) );
             characteristics.push(item);
+            characteristic.addEventListener('characteristicvaluechanged', this.ble_onDataChanged.bind(this.ble_onDataChanged) );
         },
         dataview2hex: function(data){
             return new Uint8Array(data.buffer).reduce((hex, val) =>{
