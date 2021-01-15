@@ -573,6 +573,98 @@
                     </div>
                 </div>
             </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title"><a data-toggle="collapse" href="#date_tostring_panel">toLocaleString</a></div>
+                    </div>
+                    <div class="panel-collapse collapse" id="date_tostring_panel">
+                        <div class="panel-body">
+                            <h3><label>{{date_tostring}}</label> {{date_localestring}}</h3>
+                            <div class="form-inline"  v-on:change="date_option_change">
+                                <label>toString</label>
+                                <select class="form-control" v-model="date_tostring">
+                                    <option value="toLocaleString">toLocaleString</option>
+                                    <option value="toLocaleDateString">toLocaleDateString</option>
+                                    <option value="toLocaleTimeString">toLocaleTimeString</option>
+                                </select>
+                                <br>
+                                <label>locales</label>
+                                <select class="form-control" v-model="date_locales">
+                                    <option value="ja-JP">ja-JP</option>
+                                    <option value="ja-JP-u-ca-japanese">ja-JP-u-ca-japanese</option>
+                                </select>
+                                <br>
+                                <label>era</label>
+                                <select class="form-control" v-model="date_option.era">
+                                    <option value=""></option>
+                                    <option value="narrow">narrow</option>
+                                    <option value="short">short</option>
+                                    <option value="long">long</option>
+                                </select>
+                                <label>year</label>
+                                <select class="form-control" v-model="date_option.year">
+                                    <option value=""></option>
+                                    <option value="numeric">numeric</option>
+                                    <option value="2-digit">2-digit</option>
+                                </select>
+                                <label>month</label>
+                                <select class="form-control" v-model="date_option.month">
+                                    <option value=""></option>
+                                    <option value="numeric">numeric</option>
+                                    <option value="2-digit">2-digit</option>
+                                    <option value="narrow">narrow</option>
+                                    <option value="short">short</option>
+                                    <option value="long">long</option>
+                                </select>
+                                <label>day</label>
+                                <select class="form-control" v-model="date_option.day">
+                                    <option value=""></option>
+                                    <option value="numeric">numeric</option>
+                                    <option value="2-digit">2-digit</option>
+                                </select>
+                                <label>weekday</label>
+                                <select class="form-control" v-model="date_option.weekday">
+                                    <option value=""></option>
+                                    <option value="narrow">narrow</option>
+                                    <option value="short">short</option>
+                                    <option value="long">long</option>
+                                </select>
+                                <br>
+                                <label>hour12</label>
+                                <select class="form-control" v-model="date_option.hour12">
+                                    <option value=""></option>
+                                    <option value="true">true</option>
+                                    <option value="false">false</option>
+                                </select>
+                                <label>hour</label>
+                                <select class="form-control" v-model="date_option.hour">
+                                    <option value=""></option>
+                                    <option value="numeric">numeric</option>
+                                    <option value="2-digit">2-digit</option>
+                                </select>
+                                <label>minute</label>
+                                <select class="form-control" v-model="date_option.minute">
+                                    <option value=""></option>
+                                    <option value="numeric">numeric</option>
+                                    <option value="2-digit">2-digit</option>
+                                </select>
+                                <label>second</label>
+                                <select class="form-control" v-model="date_option.second">
+                                    <option value=""></option>
+                                    <option value="numeric">numeric</option>
+                                    <option value="2-digit">2-digit</option>
+                                </select>
+                                <label>timeZoneName</label>
+                                <select class="form-control" v-model="date_option.timeZoneName">
+                                    <option value=""></option>
+                                    <option value="short">short</option>
+                                    <option value="long">long</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!--
                 基数
