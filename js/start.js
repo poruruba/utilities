@@ -97,6 +97,10 @@ var vue_options = {
         date_input_free: null,
         date_input_date: null,
         date_input_time: null,
+        date_localestring: new Date().toLocaleString(),
+        date_option: {},
+        date_locales: "ja-JP",
+        date_tostring: "toLocaleString",
         qrcode_input: '',
         qrcode_btn: 'QRスキャン開始',
         qrcode_video: null,
@@ -965,6 +969,30 @@ var vue_options = {
         },
 
         /* 日時 */
+        date_option_change: function(){
+            var options = {};
+            if( this.date_option.hour12 ) options.hour12 = this.date_option.hour12;
+            if( this.date_option.era ) options.era = this.date_option.era;
+            if( this.date_option.year ) options.year = this.date_option.year;
+            if( this.date_option.month ) options.month = this.date_option.month;
+            if( this.date_option.day ) options.day = this.date_option.day;
+            if( this.date_option.weekday ) options.weekday = this.date_option.weekday;
+            if( this.date_option.hour ) options.hour = this.date_option.hour;
+            if( this.date_option.minute ) options.minute = this.date_option.minute;
+            if( this.date_option.second ) options.second = this.date_option.second;
+            if( this.date_option.timeZoneName ) options.timeZoneName = this.date_option.timeZoneName;
+            switch(this.date_tostring ){
+                case "toLocaleString":
+                    this.date_localestring = new Date().toLocaleString(this.date_locales, options);
+                    break;
+                case "toLocaleDateString":
+                    this.date_localestring = new Date().toLocaleDateString(this.date_locales, options);
+                    break;
+                case "toLocaleTimeString":
+                    this.date_localestring = new Date().toLocaleTimeString(this.date_locales, options);
+                    break;
+            }
+        },
         date_get_now: function(target){
             if( target == 'base')
                 this.date_moment = moment();
