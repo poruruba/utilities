@@ -971,7 +971,8 @@ var vue_options = {
         /* 日時 */
         date_option_change: function(){
             var options = {};
-            if( this.date_option.hour12 ) options.hour12 = this.date_option.hour12;
+            if( this.date_option.hour12 == "true" ) options.hour12 = true;
+            else if( this.date_option.hour12 == "false" ) options.hour12 = false;
             if( this.date_option.era ) options.era = this.date_option.era;
             if( this.date_option.year ) options.year = this.date_option.year;
             if( this.date_option.month ) options.month = this.date_option.month;
