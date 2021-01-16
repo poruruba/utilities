@@ -97,7 +97,7 @@ var vue_options = {
         date_input_free: null,
         date_input_date: null,
         date_input_time: null,
-        date_localestring: new Date().toLocaleString(),
+        date_localestring: new Date().toLocaleString("ja-JP"),
         date_option: {},
         date_locales: "ja-JP",
         date_tostring: "toLocaleString",
