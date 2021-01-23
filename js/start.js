@@ -297,7 +297,13 @@ var vue_options = {
                 console.log('Execute : getPrimaryServices');
                 var services = await server.getPrimaryServices();
                 console.log(services);
-                services.map(async service => this.ble_setService(service));
+//                services.map(async service => this.ble_setService(service));
+                var list = [];
+                for( var i = 0 ; i < services.length ; i++ ){
+                    var service = await this.ble_setService(services[i]);
+                    list.push(service);
+                }
+                this.ble_services = list; 
                 this.ble_isConnected = true;
                 this.toast_show("接続しました。");
             }catch(error){
@@ -309,9 +315,10 @@ var vue_options = {
         },
         async ble_onDisconnect(event){
             console.log('onDisconnect');
-            this.ble_device = null;
             this.ble_isConnected = false;
-            this.ble_services = [];
+//            this.ble_device = null;
+//            this.ble_services = [];
+	    this.progress_close();
         },
         async ble_onDataChanged(event){
             console.log('ble_onDataChanged');
@@ -339,11 +346,14 @@ var vue_options = {
             try{
                 console.log('Execute : getCharacteristics');
                 var characteristics = await service.getCharacteristics();
-                characteristics.map(async characteristic => this.ble_setCharacteristic(item.characteristics, characteristic))
-            }catch(error){
+//                characteristics.map(async characteristic => this.ble_setCharacteristic(item.characteristics, characteristic));
+                for( var i = 0 ; i < characteristics.length ; i++  )
+                    await this.ble_setCharacteristic(item.characteristics, characteristics[i]);
+	    }catch(error){
 //                console.error(error);
             }
-            this.ble_services.push(item);
+//            this.ble_services.push(item);
+	    return item;
         },
         async ble_setCharacteristic(characteristics, characteristic) {
             var item = {
