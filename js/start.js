@@ -42,7 +42,7 @@ var vue_options = {
     data: {
         progress_title: '',
 
-		tab_list: TAB_LIST,
+	tab_list: TAB_LIST,
         favorite_link: [],
 
         ble_device: null,
