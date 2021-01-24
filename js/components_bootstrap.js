@@ -16,9 +16,9 @@ var components_bootstrap = {
       </div>`,
   },
   'modal-dialog': {
-    props: ['size'],
+    props: ['id', 'size'],
     template: `
-      <div class="modal fade">
+      <div class="modal fade" v-bind:id="id">
         <div class="modal-dialog" v-bind:class="(size) ? 'modal-' + size : ''">
             <div class="modal-content">
                 <slot name="content"></slot>
