@@ -18,6 +18,9 @@ var methods_bootstrap = {
     progress_close: function(){
         this.dialog_close('#progress');
     },
+    tab_select: function(target){
+        $("a[href='" + target + "']").tab("show").show();
+    },
     toast_show: function(message, title, level = "info", option){
         toastr[level](message, title, option);
     },
