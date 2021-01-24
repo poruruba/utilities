@@ -160,7 +160,7 @@ var vue_options = {
         color_g: 0,
         color_b: 0,
         color_basic_list: color_basic_list,
-        color_near: null
+        color_near: null,
     },
     computed: {
         date_unix: function(){
@@ -322,7 +322,6 @@ var vue_options = {
         },
         async ble_onDataChanged(event){
             console.log('ble_onDataChanged');
-            console.log(event);
             var characteristic = this.find_characteristic(event.target.service.uuid, event.target.uuid);
             try{
                 this.$set(characteristic, "value_hex", this.dataview2hex(characteristic.characteristic.value));
@@ -346,16 +345,14 @@ var vue_options = {
             try{
                 console.log('Execute : getCharacteristics');
                 var characteristics = await service.getCharacteristics();
-//                characteristics.map(async characteristic => this.ble_setCharacteristic(item.characteristics, characteristic));
                 for( var i = 0 ; i < characteristics.length ; i++  )
-                    await this.ble_setCharacteristic(item.characteristics, characteristics[i]);
+                    await this.ble_setupCharacteristic(item.characteristics, characteristics[i]);
 	    }catch(error){
 //                console.error(error);
             }
-//            this.ble_services.push(item);
 	    return item;
         },
-        async ble_setCharacteristic(characteristics, characteristic) {
+        async ble_setupCharacteristic(characteristics, characteristic) {
             var item = {
                 uuid: characteristic.uuid,
                 characteristic: characteristic,
