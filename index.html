@@ -72,7 +72,7 @@
                 <button class="btn btn-primary" v-on:click="ble_connect()" v-if="!ble_isConnected">Connect</button>
                 <button class="btn btn-primary" v-on:click="ble_disconnect()" v-else>Disonnect</button>
                 <br><br>
-                <collapse-panel class="panel-default" id="additional_services_panel" title="Additional Services" collapse="true">
+                <collapse-panel id="additional_services_panel" title="Additional Services" collapse="true">
                   <span slot="content">
                     <div class="panel-body">
                       <textarea class="form-control" v-model="ble_additional_services"></textarea>
