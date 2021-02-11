@@ -197,6 +197,22 @@ var vue_options = {
             var date = this.date_moment_after.toDate();
             return date.toLocaleString();
         },
+        date_tolocalestring_string: function(){
+             var options = {};
+            if( this.date_option.hour12 == "true" ) options.hour12 = true;
+            else if( this.date_option.hour12 == "false" ) options.hour12 = false;
+            if( this.date_option.era ) options.era = this.date_option.era;
+            if( this.date_option.year ) options.year = this.date_option.year;
+            if( this.date_option.month ) options.month = this.date_option.month;
+            if( this.date_option.day ) options.day = this.date_option.day;
+            if( this.date_option.weekday ) options.weekday = this.date_option.weekday;
+            if( this.date_option.hour ) options.hour = this.date_option.hour;
+            if( this.date_option.minute ) options.minute = this.date_option.minute;
+            if( this.date_option.second ) options.second = this.date_option.second;
+            if( this.date_option.timeZoneName ) options.timeZoneName = this.date_option.timeZoneName;
+
+            return "new Date()." + this.date_tostring + "( '" + this.date_locales + "', " + JSON.stringify(options) + " );";
+        },	    
     },
     methods: {
     	/* お気に入りタブ */
