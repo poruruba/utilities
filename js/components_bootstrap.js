@@ -1,8 +1,8 @@
-var components_bootstrap = {
+const components_bootstrap = {
   'progress-dialog': {
     props: ['title'],
     template: `
-      <div class="modal fade" id="progress">
+      <div class="modal" id="progress">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -18,7 +18,7 @@ var components_bootstrap = {
   'modal-dialog': {
     props: ['id', 'size'],
     template: `
-      <div class="modal fade" v-bind:id="id">
+      <div class="modal" v-bind:id="id">
         <div class="modal-dialog" v-bind:class="(size) ? 'modal-' + size : ''">
             <div class="modal-content">
                 <slot name="content"></slot>
@@ -29,12 +29,14 @@ var components_bootstrap = {
   'collapse-panel': {
     props: ['id', 'collapse', 'title'],
     template: `
-      <div class="panel">
-        <div class="panel-heading">
-          <div class="panel-title"><a data-toggle="collapse" v-bind:href="'#' + id">{{title}}</a></div>
-        </div>
-        <div class="panel-collapse" v-bind:class="collapse=='true' ? 'collapse' : 'collapse in'" v-bind:id="id">
-          <slot name="content"></slot>
+      <div class="accordion m-3">
+        <div class="accordion-item">
+          <div class="accordion-header">
+            <button class="accordion-button" v-bind:class="collapse=='true' ? 'collapsed' : ''" type="button" data-bs-toggle="collapse" v-bind:href="'#' + id"><label class='title'>{{title}}</label></button>
+          </div>
+          <div class="accordion-collapse" v-bind:class="collapse=='true' ? 'collapse' :	'collapse show'" v-bind:id="id">
+            <slot name="content"></slot>
+          </div>
         </div>
       </div>`,
   }
