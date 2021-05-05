@@ -115,7 +115,7 @@ export default {
     },
     make_console_close_message: function (event) {
       var date_string = new Date().toLocaleString('ja-JP', { "hour12": false, "year": "numeric", "month": "2-digit", "day": "2-digit", "hour": "2-digit", "minute": "2-digit", "second": "2-digit" });
-      return "[STATE] " + event.type + " " + event.code + " " + date_string;
+      return "[STATE] " + event.type + " code=" + event.code + " " + date_string;
     },
     make_console_input_message: function(event){
       var date_string = new Date().toLocaleString('ja-JP', { "hour12": false, "year": "numeric", "month": "2-digit", "day": "2-digit", "hour": "2-digit", "minute": "2-digit", "second": "2-digit" });
