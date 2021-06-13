@@ -22,6 +22,7 @@ const TAB_LIST = [
     { id: 'gengou', name: '元号' },
     { id: 'blecent', name: 'BLECentral' },
     { id: 'websocket', name: 'WebSocket' },
+    { id: 'html5', name: 'HTML5' },
 	{ id: 'help', name: 'ヘルプ' },
 ];
 
@@ -80,6 +81,7 @@ var vue_options = {
 };
 vue_add_data(vue_options, { progress_title: '' }); // for progress-dialog
 vue_add_global_components(components_bootstrap);
+vue_add_global_components(components_utils);
 
 /* add additional components */
 import comp_arrange from './comp/comp_arrange.js';
@@ -99,6 +101,7 @@ import comp_cardinal from './comp/comp_cardinal.js';
 import comp_gengou from './comp/comp_gengou.js';
 import comp_clip from './comp/comp_clip.js';
 import comp_websocket from './comp/comp_websocket.js';
+import comp_html5 from './comp/comp_html5.js';
 vue_add_component(vue_options, "comp_arrange", comp_arrange);
 vue_add_component(vue_options, "comp_blecent", comp_blecent);
 vue_add_component(vue_options, "comp_uuid", comp_uuid);
@@ -116,5 +119,6 @@ vue_add_component(vue_options, "comp_cardinal", comp_cardinal);
 vue_add_component(vue_options, "comp_gengou", comp_gengou);
 vue_add_component(vue_options, "comp_clip", comp_clip);
 vue_add_component(vue_options, "comp_websocket", comp_websocket);
+vue_add_component(vue_options, "comp_html5", comp_html5);
 
 window.vue = new Vue( vue_options );

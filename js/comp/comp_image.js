@@ -10,7 +10,7 @@ export default {
   template: `
 <div>
   <h2 class="modal-header">画像ファイル</h2>
-  <input class="form-control" type="file" id="image_file" v-on:change="image_open" v-on:click="image_click">
+  <comp_file id="image_file" v-bind:callback="image_open_files" ref="image_file"></comp_file>
   <label class="title">mime-type</label> {{image_type}}&nbsp;&nbsp;<label class="title">size</label> {{image_size.width}}x{{image_size.height}}<br>
   <br>
   <div class="row">
@@ -54,8 +54,8 @@ export default {
       </div>
       <div class="row">
           <span class="col-6">
-              <img v-if="!image_src" class="center-block" src="img/image_drop.png" v-on:drop="image_drop" v-on:dragover="file_drag">
-              <img v-if="image_src" class="img-fluid img-thumbnail" v-bind:src="image_src" v-on:drop="image_drop" v-on:dragover="file_drag">
+              <img v-if="!image_src" class="center-block" src="img/image_drop.png" v-on:drop="image_drop" v-on:dragover.prevent>
+              <img v-if="image_src" class="img-fluid img-thumbnail" v-bind:src="image_src" v-on:drop="image_drop" v-on:dragover.prevent>
           </span>
           <div class="col-1"></div>
           <canvas v-if="image_src" class="col-5 img-fluid img-thumbnail" id="image_icon"></canvas>
@@ -76,23 +76,17 @@ export default {
     }
   },
   methods: {
-    file_drag: function (e) {
-      e.stopPropagation();
-      e.preventDefault();
-    },
-
     /* 画像ファイル */
-    image_open: function (e) {
-      this.image_open_file(e.target.files[0]);
-    },
     image_drop: function (e) {
-      e.stopPropagation();
-      e.preventDefault();
-
-      document.querySelector('#image_file').files = e.dataTransfer.files;
-      this.image_open_file(e.dataTransfer.files[0]);
+      this.$refs.image_file.file_drop(e);
     },
-    image_open_file: function (file) {
+    image_open_files: function (files) {
+      if( files.length == 0 ){
+        this.image_type = '';
+        this.image_src = null;
+        return;
+      }
+      var file = files[0];
       if (!file.type.startsWith('image/')) {
         alert('画像ファイルではありません。');
         return;
@@ -205,12 +199,6 @@ export default {
       a.download = "icon_list.zip";
       a.click();
       window.URL.revokeObjectURL(url);
-    },
-    image_click: function (e) {
-      this.image_type = '';
-      this.image_src = null;
-
-      e.target.value = '';
     },
   }
 };

@@ -3,7 +3,7 @@ export default {
   template: `
 <div>
   <h2 class="modal-header">バイナリファイル</h2>
-  <input class="form-control" type="file" id="binary_file" v-on:change="binary_open" v-on:click="binary_click">
+  <comp_file id="binary_file" ref="binary_file" v-bind:callback="binary_open_files"></comp_file>
   <label class="title">mime-type</label> {{binary_type}}
   <button v-if="binary_type.startsWith('image/') || binary_type.startsWith('text/')" class="btn btn-secondary btn-sm" v-on:click="dialog_open('#binary_image_dialog')">内容表示</button><br><br>
   <div class="row" v-on:change="binary_change()">
@@ -31,7 +31,7 @@ export default {
       </span>
       <button class="col-auto btn btn-secondary" v-on:click="binary_cr()">整形</button><br>
   </div>
-  <textarea class="form-control" rows="10" v-on:drop="binary_drop" v-on:dragover="file_drag" readonly>{{binary_output}}</textarea>
+  <textarea class="form-control" rows="10" v-on:drop="binary_drop" v-on:dragover.prevent readonly>{{binary_output}}</textarea>
   <br>
   <button class="btn btn-secondary btn-sm" v-on:click="binary_copy()">Copy</button><br>
   <textarea class="form-control" rows="10" v-model="binary_input"></textarea>
@@ -69,12 +69,10 @@ export default {
     }
   },
   methods: {
-    file_drag: function (e) {
-      e.stopPropagation();
-      e.preventDefault();
-    },
-
     /* バイナリファイル */
+    binary_drop: function (e) {
+      this.$refs.binary_file.file_drop(e);
+    },
     binary_save: function () {
       var target = this.binary_input.replace(/\r?\n|\s/g, '');
       var array = hexStr2byteAry(target);
@@ -92,20 +90,6 @@ export default {
       a.download = "array.bin";
       a.click();
       window.URL.revokeObjectURL(url);
-    },
-    binary_open: function (e) {
-      var file = e.target.files[0];
-      this.binary_open_file(file);
-    },
-    binary_click: function (e) {
-      this.binary_type = '';
-      this.binary_output = '';
-      this.binary_data = null;
-      this.binary_input = '';
-      this.binary_dataurl = '';
-      this.binary_text = '';
-
-      e.target.value = '';
     },
     binary_copy: function () {
       if (this.binary_data != null)
@@ -140,14 +124,17 @@ export default {
         this.binary_output = str;
       }
     },
-    binary_drop: function (e) {
-      e.stopPropagation();
-      e.preventDefault();
+    binary_open_files: function (files) {
+      if( files.length <= 0 ){
+        this.binary_type = '';
+        this.binary_output = '';
+        this.binary_data = null;
+        this.binary_input = '';
+        this.binary_dataurl = '';
+        this.binary_text = '';
+      }
 
-      document.querySelector('#binary_file').files = e.dataTransfer.files;
-      this.binary_open_file(e.dataTransfer.files[0]);
-    },
-    binary_open_file: function (file) {
+      var file = files[0];
       var reader = new FileReader();
       reader.onload = (theFile) => {
         this.binary_data = new Uint8Array(reader.result);
