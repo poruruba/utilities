@@ -149,7 +149,7 @@ export default {
   <collapse-panel id="html5_recognition" title="SpeechRecognition" collapse="true">
     <span slot="content">
       <div class="card-body">
-        <button class="btn btn-secondary" v-on:click="speech_recognition">音声認識</button><br><br>
+        <button class="btn btn-secondary" v-on:click="speech_recognition">音声認識</button> {{speech_status}}<br><br>
         <input type="text" class="form-control" v-model="speech_recognized" readonly>
       </div>
     </span>
@@ -178,9 +178,12 @@ export default {
               <option value="environment">environment</option>
             </select>
           </span>
-          <br>
-          <video class="img-fluid" id="record_preview" v-show="record_previewing" autoplay></video>
+          <label for="record_audio_checkbox" class="col-auto" v-if="!record_previewing">
+            <input type="checkbox" class="form-check-input" v-model="record_audio" id="record_audio_checkbox" />Audio
+          </label>
         </div>
+        <br>
+        <video class="img-fluid" id="record_preview" v-show="record_previewing" autoplay></video>
       </div>
     </span>
   </collapse-panel>
@@ -208,6 +211,7 @@ export default {
       speech_rate: 100,
       speech_text: "",
       speech_recognized: '',
+      speech_status: '',
       record_preview: null,
       record_chunks: [],
       record_resolution_list: resolution_list,
@@ -216,6 +220,7 @@ export default {
       record_recording: false,
       record_previewing: false,
       record_facing: "environment",
+      record_audio: true,
     }
   },
   computed: {
@@ -363,7 +368,7 @@ export default {
       this.speech_pitch = 100;
     },
     speech_start: async function(){
-      var result = await new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         var utter = new window.SpeechSynthesisUtterance();
         utter.volume = this.speech_volume / 100;
         utter.rate = this.speech_rate / 100;
@@ -399,6 +404,7 @@ export default {
       });
     },
     speech_recognition: async function(){
+      this.speech_status = '音声認識中';
       this.speech_recognized = await new Promise((resolve, reject) => {
         var recognition = new webkitSpeechRecognition();
         recognition.lang = "ja-JP";
@@ -438,29 +444,9 @@ export default {
           console.log('Event(Recog) : onerror : ' + JSON.stringify(e));
           if (!match && !error) {
             error = true;
+            this.speech_status = '';
             reject('onerror');
           }
-        };
-        recognition.onsoundend = function () {
-          console.log('Event(Recog) : onsoundend');
-        };
-        recognition.onaudiostart = function () {
-          console.log('Event(Recog) : onaudiostart');
-        };
-        recognition.onsoundstart = function () {
-          console.log('Event(Recog) : onsoundstart');
-        };
-        recognition.onspeechstart = function () {
-          console.log('Event(Recog) : onspeechstart');
-        };
-        recognition.onspeechend = function () {
-          console.log('Event(Recog) : onspeechend');
-        };
-        recognition.onaudioend = function () {
-          console.log('Event(Recog) : onaudioend');
-        };
-        recognition.onstart = function () {
-          console.log('Event(Recog) : onstart');
         };
 
         recognition.start();
@@ -468,13 +454,14 @@ export default {
       .catch(error => {
         console.log(error);
       });
+      this.speech_status = '';
     },
     record_prepare: function(){
       this.record_dispose();
 
       this.record_previewing = true;
       var resolution = this.record_resolution_list[this.record_resolution];
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: this.record_facing, width: resolution.width, height: resolution.height }, audio: true })
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: this.record_facing, width: resolution.width, height: resolution.height }, audio: this.record_audio })
         .then((stream) => {
           g_stream = stream;
           this.record_preview.srcObject = stream;
