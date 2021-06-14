@@ -112,3 +112,15 @@ export default {
     },
   }
 };
+
+function byteAry2hexStr(bytes, sep = '', pref = '') {
+  if (bytes instanceof ArrayBuffer)
+    bytes = new Uint8Array(bytes);
+  if (bytes instanceof Uint8Array)
+    bytes = Array.from(bytes);
+
+  return bytes.map((b) => {
+    var s = b.toString(16);
+    return pref + (b < 0x10 ? ('0' + s) : s);
+  }).join(sep);
+}
