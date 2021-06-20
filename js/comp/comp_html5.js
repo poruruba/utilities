@@ -291,17 +291,12 @@ export default {
       reader.readAsDataURL(file);
     },
     location_get: function(){
-      var options = {
-        enableHightAccuracy: true,
-        maximumAge: 0,
-        timeout: 120000
-      }
       navigator.geolocation.getCurrentPosition((position) =>{
         this.location = position.coords;
       }, (error) =>{
         console.error(error);
         alert(error);
-      }, options);
+      });
     },
     motion_start: function () {
       if (!this.motion_running) {
