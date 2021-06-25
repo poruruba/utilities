@@ -135,3 +135,10 @@ function bufferToBase64(buf) {
   const binstr = buf.map(b => String.fromCharCode(b)).join("");
   return btoa(binstr);
 }
+
+function base64ToBuffer(b64) {
+    var binstr = atob(b64);
+    var buf = new Uint8Array(binstr.length);
+    Array.from(binstr).forEach((ch, i) => buf[i] = ch.charCodeAt(0));
+    return buf;
+}
