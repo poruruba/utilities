@@ -162,6 +162,20 @@ function byteAry2hexStr(bytes, sep = '', pref = '') {
   }).join(sep);
 }
 
+function hexStr2byteAry(hexs, sep = '') {
+    hexs = hexs.trim(hexs);
+    if( sep == '' ){
+        var array = [];
+        for( var i = 0 ; i < hexs.length / 2 ; i++)
+            array[i] = parseInt(hexs.substr(i * 2, 2), 16);
+        return array;
+    }else{
+        return hexs.split(sep).map((h) => {
+            return parseInt(h, 16);
+        });
+    }
+}
+
 function bufferToBase64(buf) {
   if (buf instanceof ArrayBuffer)
     buf = new Uint8Array(buf);
