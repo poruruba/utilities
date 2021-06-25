@@ -113,3 +113,25 @@ export default {
     },
   }
 };
+
+function byteAry2hexStr(bytes, sep = '', pref = '') {
+  if (bytes instanceof ArrayBuffer)
+    bytes = new Uint8Array(bytes);
+  if (bytes instanceof Uint8Array)
+    bytes = Array.from(bytes);
+
+  return bytes.map((b) => {
+    const s = b.toString(16);
+    return pref + (b < 0x10 ? ('0' + s) : s);
+  }).join(sep);
+}
+
+function bufferToBase64(buf) {
+  if (buf instanceof ArrayBuffer)
+    buf = new Uint8Array(buf);
+  if (buf instanceof Uint8Array)
+    buf = Array.from(buf);
+
+  const binstr = buf.map(b => String.fromCharCode(b)).join("");
+  return btoa(binstr);
+}
