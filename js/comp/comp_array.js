@@ -54,35 +54,36 @@ export default {
     /* バイト配列 */
     array_set: function (ptn) {
       if (ptn == 0) {
-        this.array_base = hexStr2byteAry(this.array_pattern[0]);
+        this.array_base = this.hex2ba(this.array_pattern[0]);
       } else if (ptn == 1) {
-        this.array_base = hexStr2byteAry(this.array_pattern[1], ' ');
+        this.array_base = this.hex2ba(this.array_pattern[1], ' ');
       } else if (ptn == 2) {
-        this.array_base = hexStr2byteAry(this.array_pattern[2], ',');
+        this.array_base = this.hex2ba(this.array_pattern[2], ',');
       } else if (ptn == 3) {
         this.array_base = hexStr2byteAry_2(this.array_pattern[3], ',');
       } else if (ptn == 4) {
         this.array_base = hexStr2byteAry_3(this.array_pattern[4], ',');
       }
 
-      this.array_pattern[0] = byteAry2hexStr(this.array_base, '');
-      this.array_pattern[1] = byteAry2hexStr(this.array_base, ' ');
-      this.array_pattern[2] = byteAry2hexStr(this.array_base, ', ', '0x');
-      this.array_pattern[3] = byteAry2hexStr(this.array_base, ', ', '(byte)0x');
+      this.array_pattern[0] = this.ba2hex(this.array_base, '');
+      this.array_pattern[1] = this.ba2hex(this.array_base, ' ');
+      this.array_pattern[2] = this.ba2hex(this.array_base, ', ', '0x');
+      this.array_pattern[3] = this.ba2hex(this.array_base, ', ', '(byte)0x');
       this.array_pattern[4] = this.array_base.join(', ');
     },
     array_random_generate: function () {
       var array = [];
       for (var i = 0; i < this.array_random_length; i++)
-        array.push(make_random(255));
+        array.push(this.make_random(255));
       this.array_base = array;
       this.array_set(-1);
     },
   }
 };
 
-function hexStr2byteAry(hexs, sep = '') {
+function hexStr2byteAry_2(hexs, sep = '') {
   hexs = hexs.trim(hexs);
+  hexs = hexs.replace(/\( ?byte ?\)/g, "");
   if (sep == '') {
     var array = [];
     for (var i = 0; i < hexs.length / 2; i++)
@@ -95,18 +96,9 @@ function hexStr2byteAry(hexs, sep = '') {
   }
 }
 
-function byteAry2hexStr(bytes, sep = '', pref = '') {
-  if (bytes instanceof ArrayBuffer)
-    bytes = new Uint8Array(bytes);
-  if (bytes instanceof Uint8Array)
-    bytes = Array.from(bytes);
-
-  return bytes.map((b) => {
-    var s = b.toString(16);
-    return pref + (b < 0x10 ? ('0' + s) : s);
-  }).join(sep);
-}
-
-function make_random(max) {
-  return Math.floor(Math.random() * (max + 1));
+function hexStr2byteAry_3(hexs, sep = '') {
+  hexs = hexs.trim(hexs);
+  return hexs.split(sep).map((h) => {
+    return parseInt(h);
+  });
 }

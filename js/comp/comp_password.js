@@ -93,7 +93,7 @@ export default {
         kind[passwd_number_num + i] = 's';
 
       for (var i = 0; i < passwd_num; i++) {
-        var index = make_random(passwd_num - 1);
+        var index = this.make_random(passwd_num - 1);
         if (index == i || kind[i] == kind[index])
           continue;
         var temp = kind[i];
@@ -119,14 +119,14 @@ export default {
       var passwd = '';
       for (var i = 0; i < kind.length; i++) {
         if (kind[i] == 'n') {
-          var index = make_random(number_pattern.length - 1);
+          var index = this.make_random(number_pattern.length - 1);
           passwd += number_pattern.charAt(index);
         } else if (kind[i] == 's') {
           var pattern = this.passwd_symbol_pattern;
-          var index = make_random(pattern.length - 1);
+          var index = this.make_random(pattern.length - 1);
           passwd += pattern.charAt(index);
         } else {
-          var index = make_random(alpha_pattern.length - 1);
+          var index = this.make_random(alpha_pattern.length - 1);
           passwd += alpha_pattern.charAt(index);
         }
       }
@@ -135,7 +135,3 @@ export default {
     },
   }
 };
-
-function make_random(max) {
-  return Math.floor(Math.random() * (max + 1));
-}

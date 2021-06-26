@@ -87,7 +87,7 @@ export default {
     },
     color_range: function () {
       var rgb = [this.color_r, this.color_g, this.color_b];
-      this.color_select('#' + byteAry2hexStr(rgb));
+      this.color_select('#' + this.ba2hex(rgb));
     },
     color_do_near: function () {
       var min_delta = 200.0;
@@ -112,15 +112,3 @@ export default {
     },
   }
 };
-
-function byteAry2hexStr(bytes, sep = '', pref = '') {
-  if (bytes instanceof ArrayBuffer)
-    bytes = new Uint8Array(bytes);
-  if (bytes instanceof Uint8Array)
-    bytes = Array.from(bytes);
-
-  return bytes.map((b) => {
-    var s = b.toString(16);
-    return pref + (b < 0x10 ? ('0' + s) : s);
-  }).join(sep);
-}

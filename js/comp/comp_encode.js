@@ -71,7 +71,7 @@ export default {
           if (encode)
             this.base64_output = bufferToBase64(hexStr2byteAry(this.base64_input));
           else
-            this.base64_output = byteAry2hexStr(base64ToBuffer(this.base64_input));
+            this.base64_output = this.ba2hex(base64ToBuffer(this.base64_input));
         }
       } catch (error) {
         alert(error);
@@ -82,7 +82,7 @@ export default {
         if (encode)
           this.base64url_output = base64url.encode(hexStr2byteAry(this.base64url_input));
         else
-          this.base64url_output = byteAry2hexStr(base64url.decode(this.base64url_input));
+          this.base64url_output = this.ba2hex(base64url.decode(this.base64url_input));
       } catch (error) {
         alert(error);
       }
@@ -113,18 +113,6 @@ export default {
     },
   }
 };
-
-function byteAry2hexStr(bytes, sep = '', pref = '') {
-  if (bytes instanceof ArrayBuffer)
-    bytes = new Uint8Array(bytes);
-  if (bytes instanceof Uint8Array)
-    bytes = Array.from(bytes);
-
-  return bytes.map((b) => {
-    const s = b.toString(16);
-    return pref + (b < 0x10 ? ('0' + s) : s);
-  }).join(sep);
-}
 
 function bufferToBase64(buf) {
   if (buf instanceof ArrayBuffer)

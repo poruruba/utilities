@@ -89,7 +89,7 @@ export default {
         this.ws_socket.send(this.ws_send_message);
         this.console_log(this.make_console_output_message("text", this.ws_send_message));
       }else{
-        var data = hexStr2byteAry(this.ws_send_message);
+        var data = this.hex2ba(this.ws_send_message);
         var array = new Uint8Array(data);
         this.ws_socket.send(array);
         this.console_log(this.make_console_output_message("binary", array));
@@ -105,7 +105,7 @@ export default {
         message = data;
       } else {
 //        message = new Uint8Array(data).toString();
-        message = byteAry2hexStr(data);
+        message = this.ba2hex(data);
       }
       return "[SEND] message " + type + " " + date_string + "\n" + message;
     },
@@ -126,7 +126,7 @@ export default {
         type = "text";
       } else {
 //        message = new Uint8Array(event.data).toString();
-        message = byteAry2hexStr(event.data);
+        message = this.ba2hex(event.data);
         type = "binary";
       }
       
@@ -141,30 +141,3 @@ export default {
     elem_in.style.height = 10;
   }
 };
-
-function hexStr2byteAry(hexs, sep = '') {
-  hexs = hexs.trim(hexs);
-  if (sep == '') {
-    var array = [];
-    for (var i = 0; i < hexs.length / 2; i++)
-      array[i] = parseInt(hexs.substr(i * 2, 2), 16);
-    return array;
-  } else {
-    return hexs.split(sep).map((h) => {
-      return parseInt(h, 16);
-    });
-  }
-}
-
-function byteAry2hexStr(bytes, sep = '', pref = '') {
-  if (bytes instanceof ArrayBuffer)
-    bytes = new Uint8Array(bytes);
-  if (bytes instanceof Uint8Array)
-    bytes = Array.from(bytes);
-
-  return bytes.map((b) => {
-    const s = b.toString(16);
-    return pref + (b < 0x10 ? ('0' + s) : s);
-  }).join(sep);
-}
-

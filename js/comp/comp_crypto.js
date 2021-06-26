@@ -41,7 +41,7 @@ export default {
     /* 暗号化 */
     crypto_hmac: function () {
       try {
-        this.hmac_output = byteAry2hexStr(makeHmacSha256(this.chmac_input, this.hmac_secret));
+        this.hmac_output = this.ba2hex(makeHmacSha256(this.chmac_input, this.hmac_secret));
       } catch (error) {
         alert(error);
       }
@@ -64,19 +64,6 @@ export default {
     },
   }
 };
-
-function byteAry2hexStr(bytes, sep = '', pref = '') {
-  if (bytes instanceof ArrayBuffer)
-    bytes = new Uint8Array(bytes);
-  if (bytes instanceof Uint8Array)
-    bytes = Array.from(bytes);
-
-  return bytes.map((b) => {
-    var s = b.toString(16);
-    return pref + (b < 0x10 ? '0' + s : s);
-  })
-    .join(sep);
-}
 
 function makeHmacSha256(input, secret) {
   var hash = CryptoJS.HmacSHA256(input, secret);

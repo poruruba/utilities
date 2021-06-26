@@ -75,7 +75,7 @@ export default {
     },
     binary_save: function () {
       var target = this.binary_input.replace(/\r?\n|\s/g, '');
-      var array = hexStr2byteAry(target);
+      var array = this.hex2ba(target);
       var buffer = new ArrayBuffer(array.length);
       var dv = new DataView(buffer);
       for (var i = 0; i < array.length; i++)
@@ -93,12 +93,12 @@ export default {
     },
     binary_copy: function () {
       if (this.binary_data != null)
-        this.binary_input = byteAry2hexStr(this.binary_data);
+        this.binary_input = this.ba2hex(this.binary_data);
     },
     binary_change: function () {
       if (this.binary_data != null) {
         if (this.binary_format == 'none') {
-          this.binary_output = byteAry2hexStr(this.binary_data);
+          this.binary_output = this.ba2hex(this.binary_data);
         } else if (this.binary_format == 'cr') {
           this.binary_cr();
         } else if (this.binary_format == 'dataurl') {
@@ -110,16 +110,16 @@ export default {
       var num_of_interval = this.binary_cr_num;
       if (num_of_interval == 0) {
         if (this.binary_space)
-          this.binary_output = byteAry2hexStr(this.binary_data, ' ');
+          this.binary_output = this.ba2hex(this.binary_data, ' ');
         else
-          this.binary_output = byteAry2hexStr(this.binary_data);
+          this.binary_output = this.ba2hex(this.binary_data);
       } else {
         var str = '';
         for (var i = 0; i < this.binary_data.length; i += num_of_interval) {
           if (this.binary_space)
-            str += byteAry2hexStr(this.binary_data.slice(i, i + num_of_interval), ' ') + '\n';
+            str += this.ba2hex(this.binary_data.slice(i, i + num_of_interval), ' ') + '\n';
           else
-            str += byteAry2hexStr(this.binary_data.slice(i, i + num_of_interval)) + '\n';
+            str += this.ba2hex(this.binary_data.slice(i, i + num_of_interval)) + '\n';
         }
         this.binary_output = str;
       }
@@ -149,32 +149,6 @@ export default {
     },
   }
 };
-
-function byteAry2hexStr(bytes, sep = '', pref = '') {
-  if (bytes instanceof ArrayBuffer)
-    bytes = new Uint8Array(bytes);
-  if (bytes instanceof Uint8Array)
-    bytes = Array.from(bytes);
-
-  return bytes.map((b) => {
-    const s = b.toString(16);
-    return pref + (b < 0x10 ? ('0' + s) : s);
-  }).join(sep);
-}
-
-function hexStr2byteAry(hexs, sep = '') {
-    hexs = hexs.trim(hexs);
-    if( sep == '' ){
-        var array = [];
-        for( var i = 0 ; i < hexs.length / 2 ; i++)
-            array[i] = parseInt(hexs.substr(i * 2, 2), 16);
-        return array;
-    }else{
-        return hexs.split(sep).map((h) => {
-            return parseInt(h, 16);
-        });
-    }
-}
 
 function bufferToBase64(buf) {
   if (buf instanceof ArrayBuffer)
