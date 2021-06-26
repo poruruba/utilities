@@ -23,6 +23,7 @@ const TAB_LIST = [
     { id: 'blecent', name: 'BLECentral' },
     { id: 'websocket', name: 'WebSocket' },
     { id: 'html5', name: 'HTML5' },
+    { id: 'x509', name: 'X.509' },
 	{ id: 'help', name: 'ヘルプ' },
 ];
 
@@ -102,6 +103,7 @@ import comp_gengou from './comp/comp_gengou.js';
 import comp_clip from './comp/comp_clip.js';
 import comp_websocket from './comp/comp_websocket.js';
 import comp_html5 from './comp/comp_html5.js';
+import comp_x509 from './comp/comp_x509.js';
 vue_add_component(vue_options, "comp_arrange", comp_arrange);
 vue_add_component(vue_options, "comp_blecent", comp_blecent);
 vue_add_component(vue_options, "comp_uuid", comp_uuid);
@@ -120,5 +122,6 @@ vue_add_component(vue_options, "comp_gengou", comp_gengou);
 vue_add_component(vue_options, "comp_clip", comp_clip);
 vue_add_component(vue_options, "comp_websocket", comp_websocket);
 vue_add_component(vue_options, "comp_html5", comp_html5);
+vue_add_component(vue_options, "comp_x509", comp_x509);
 
 window.vue = new Vue( vue_options );
