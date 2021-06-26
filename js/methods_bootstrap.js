@@ -62,6 +62,33 @@ const methods_bootstrap = {
         var ctrl = window.datgui.addColor(this, property);
         this.$watch(property, (v) => ctrl.setValue(v));
     },
+    ba2hex: function (bytes, sep = '', pref = '') {
+        if (bytes instanceof ArrayBuffer)
+            bytes = new Uint8Array(bytes);
+        if (bytes instanceof Uint8Array)
+            bytes = Array.from(bytes);
+
+        return bytes.map((b) => {
+            const s = b.toString(16);
+            return pref + (b < 0x10 ? ('0' + s) : s);
+        }).join(sep);
+    },
+    hex2ba: function (hex, sep = '') {
+        var hexs = hex.trim(hex);
+        if (sep == '') {
+            var array = [];
+            for (var i = 0; i < hexs.length / 2; i++)
+                array[i] = parseInt(hexs.substr(i * 2, 2), 16);
+            return array;
+        } else {
+            return hexs.split(sep).map((h) => {
+                return parseInt(h, 16);
+            });
+        }
+    },
+    make_random: function(max) {
+        return Math.floor(Math.random() * (max + 1));
+    }
 };
 
 const mixins_bootstrap = {
