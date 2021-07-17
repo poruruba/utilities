@@ -209,7 +209,7 @@ export default {
       speech_pitch: 100,
       speech_volume: 100,
       speech_rate: 100,
-      speech_text: "",
+      speech_text: "こんにちは",
       speech_recognized: '',
       speech_status: '',
       record_preview: null,
