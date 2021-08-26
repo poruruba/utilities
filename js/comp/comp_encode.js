@@ -69,7 +69,7 @@ export default {
             this.base64_output = atob(this.base64_input);
         } else {
           if (encode)
-            this.base64_output = bufferToBase64(hexStr2byteAry(this.base64_input));
+            this.base64_output = bufferToBase64(hex2ba(this.base64_input));
           else
             this.base64_output = this.ba2hex(base64ToBuffer(this.base64_input));
         }
@@ -80,7 +80,7 @@ export default {
     base64url_encode: function (encode) {
       try {
         if (encode)
-          this.base64url_output = base64url.encode(hexStr2byteAry(this.base64url_input));
+          this.base64url_output = base64url.encode(hex2ba(this.base64url_input));
         else
           this.base64url_output = this.ba2hex(base64url.decode(this.base64url_input));
       } catch (error) {
