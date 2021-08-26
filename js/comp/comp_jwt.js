@@ -3,14 +3,19 @@ export default {
   template: `
 <div>
   <h2 class="modal-header">JWT</h2>
-  <textarea class="form-control" rows="5" v-model="jwt_input"></textarea>
-  <button class="btn btn-primary" v-on:click="jwt_parse()">解析</button><br>
-
-  <label class="title">ヘッダ</label>
-  <textarea class="form-control" rows="5" v-model="jwt_output_header" readonly></textarea>
-  <label class="title">ペイロード</label>
-  <textarea class="form-control" rows="10" v-model="jwt_output_payload" readonly></textarea>
-
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary" v-on:click="jwt_parse()">解析</button><br>
+      <textarea class="form-control" rows="10" v-model="jwt_input"></textarea>
+    </div>
+    <div class="col">
+      <br>
+      <label class="title">ヘッダ</label>
+      <textarea class="form-control" rows="5" v-model="jwt_output_header" readonly></textarea>
+      <label class="title">ペイロード</label>
+      <textarea class="form-control" rows="10" v-model="jwt_output_payload" readonly></textarea>
+    </div>
+  </div>
 </div>`,
   data: function () {
     return {
