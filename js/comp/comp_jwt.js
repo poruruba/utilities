@@ -1,3 +1,5 @@
+var decoder = new TextDecoder('utf-8');
+
 export default {
   mixins: [mixins_bootstrap],
   template: `
@@ -28,8 +30,10 @@ export default {
     /* JWT */
     jwt_parse: function(){
       var jwt = this.jwt_input.split('.');
-      this.jwt_output_header = JSON.stringify(JSON.parse(atob(jwt[0])), null, '\t');
-      this.jwt_output_payload = JSON.stringify(JSON.parse(atob(jwt[1])), null, '\t');
+      var header = decoder.decode(base64url.decode(jwt[0].trim()));
+      var payload = decoder.decode(base64url.decode(jwt[1].trim()));
+      this.jwt_output_header = JSON.stringify(JSON.parse(header), null, '\t');
+      this.jwt_output_payload = JSON.stringify(JSON.parse(payload), null, '\t');
     }
   }
 };
