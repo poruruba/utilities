@@ -42,7 +42,7 @@ export default {
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">内容表示
-                    <span class="pull-right">
+                    <span class="float-end">
                         <button class="btn btn-secondary" v-on:click="dialog_close('#binary_image_dialog')">閉じる</button>
                     </span>
                 </h4>

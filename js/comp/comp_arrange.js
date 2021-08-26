@@ -68,7 +68,7 @@ export default {
   <modal-dialog size="lg" id="marked_dialog">
     <div slot="content">
         <div class="modal-header">
-            <button class="btn btn-secondary pull-right" v-on:click="dialog_close('#marked_dialog')">閉じる</button>
+            <button class="btn btn-secondary float-end" v-on:click="dialog_close('#marked_dialog')">閉じる</button>
         </div>
         <div class="modal-body">
             <div v-show="marked_show_type=='marked_view'" v-html="marked_content"></div>
