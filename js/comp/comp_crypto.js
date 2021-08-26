@@ -41,7 +41,7 @@ export default {
     /* 暗号化 */
     crypto_hmac: function () {
       try {
-        this.hmac_output = this.ba2hex(makeHmacSha256(this.chmac_input, this.hmac_secret));
+        this.hmac_output = this.ba2hex(makeHmacSha256(this.hmac_input, this.hmac_secret));
       } catch (error) {
         alert(error);
       }
