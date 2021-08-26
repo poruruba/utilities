@@ -12,6 +12,7 @@ export default {
         <option value="md5">MD5</option>
         <option value="sha1">SHA1</option>
         <option value="sha256">SHA256</option>
+        <option value="sha512">SHA512</option>
       </select>
     </span>
     <label class="col-auto title">入力</label>
@@ -37,7 +38,16 @@ export default {
   <button class="btn btn-secondary oi oi-paperclip" v-on:click="clip_copy(hash_output)"></button>
   <textarea class="form-control" rows="2" readonly>{{hash_output}}</textarea>
   <br>
-  <h3>HMAC(SHA256)</h3>
+  <h3>HMAC</h3>
+  <div class="row">
+    <label class="col-auto title">アルゴリズム</label>
+    <span class="col-auto">
+      <select class="form-select" v-model="hmac_type">
+        <option value="md5">MD5</option>
+        <option value="sha256">SHA256</option>
+      </select>
+    </span>
+  </div>
   <label class="title">入力</label>
   <div class="input-group">
     <span class="col-auto">
@@ -83,6 +93,7 @@ export default {
       hash_input: '',
       hash_input_type: 'hexstring',
       hash_output: '',
+      hmac_type: 'sha256',
       hmac_input: '',
       hmac_input_type: 'string',
       hmac_secret: '',
@@ -127,10 +138,13 @@ export default {
     crypto_hmac: function () {
       try {
         var input = (this.hmac_input_type == 'string') ? this.hmac_input : CryptoJS.enc.Hex.parse(this.hmac_input);
-        console.log(input);
         var secret = (this.hmac_secret_type == 'string') ? this.hmac_secret : CryptoJS.enc.Hex.parse(this.hmac_secret);
-        console.log(secret);
-        this.hmac_output = this.ba2hex(makeHmacSha256(input, secret));
+        var hash;
+        if( this.hmac_type == 'sha256' )
+          hash = CryptoJS.HmacSHA256(input, secret);
+        else if( this.hmac_type == 'md5' )
+          hash = CryptoJS.HmacMD5(input, secret);
+        this.hmac_output = this.ba2hex(wordarray_to_uint8array(hash));
       } catch (error) {
         alert(error);
       }
@@ -153,11 +167,6 @@ export default {
     },
   }
 };
-
-function makeHmacSha256(input, secret) {
-  var hash = CryptoJS.HmacSHA256(input, secret);
-  return wordarray_to_uint8array(hash);
-}
 
 function wordarray_to_uint8array(wordArray, length) {
   if (wordArray.hasOwnProperty("sigBytes") && wordArray.hasOwnProperty("words")) {
