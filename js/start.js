@@ -79,6 +79,8 @@ var vue_options = {
                 console.log('ServiceWorker registration failed: ', err);
             });
         }
+	    
+        loader_loaded();
     }
 };
 vue_add_data(vue_options, { progress_title: '' }); // for progress-dialog
