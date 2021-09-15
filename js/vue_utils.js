@@ -52,6 +52,11 @@ function vue_add_global_component(name, component) {
   Vue.component(name, component);
 }
 
+function loader_loaded(){
+  const element = document.getElementById("loader-background");
+  element.classList.add('loader-loaded');
+}
+
 function do_post(url, body) {
   const headers = new Headers({ "Content-Type": "application/json; charset=utf-8" });
 
