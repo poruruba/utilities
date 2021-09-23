@@ -54,7 +54,8 @@ function vue_add_global_component(name, component) {
 
 function loader_loaded(){
   const element = document.getElementById("loader-background");
-  element.classList.add('loader-loaded');
+  if( element )
+    element.classList.add('loader-loaded');
 }
 
 function do_post(url, body) {
