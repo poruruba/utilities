@@ -67,8 +67,10 @@
     <div id="top" class="container">
 
         <ul class="nav nav-tabs">
-            <li v-for="(link, index) in favorite_link"><a class="nav-link" v-bind:href="'#' + link" data-bs-toggle="tab">{{get_tab_name(link)}}</a></li>
-            <li class="dropdown">
+            <li class="nav-item" v-for="(link, index) in favorite_link">
+                <a class="nav-link" v-bind:href="'#' + link" data-bs-toggle="tab">{{get_tab_name(link)}}</a>
+            </li>
+            <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">ユーティリティ</a>
                 <ul class="dropdown-menu">
                     <li v-for="(link, index) in tab_list" v-on:click="favorite_add(link.id)"><a class="dropdown-item" v-bind:href="'#' + link.id" data-bs-toggle="tab">{{link.name}}</a></li>
