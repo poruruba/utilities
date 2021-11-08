@@ -85,6 +85,17 @@ export default {
   <label class="title">出力</label><br>
   <button class="btn btn-secondary oi oi-paperclip" v-on:click="clip_copy(aes_output)"></button>
   <textarea class="form-control" rows="3" readonly>{{aes_output}}</textarea>
+  <br>
+  <h3>bcrypto</h3>
+  <label>input</label>
+  <input type="text" class="form-control" v-model="bcrypt_input">
+  <button class="btn btn-primary" v-on:click="crypto_bcrypt(true)">ハッシュ生成</button>
+  <label>hashed</label> {{bcrypt_hashed}}
+  <br>
+  <label>answer</label> <input type="text" class="form-control" v-model="bcrypt_answer">
+  <label>hash</label> <input type="text" class="form-control" v-model="bcrypt_hash">
+  <button class="btn btn-primary" v-on:click="crypto_bcrypt(false)">ハッシュ検証</button>
+  <label>result</label> {{bcrypt_result}}
 </div>`,
   data: function () {
     return {
@@ -103,6 +114,11 @@ export default {
       aes_iv: '',
       aes_secret: '',
       aes_output: '',
+      bcrypt_input: '',
+      bcrypt_hashed: '',
+      bcrypt_answer: '',
+      bcrypt_hash: '',
+      bcrypt_result: '',
     }
   },
   methods: {
@@ -165,6 +181,18 @@ export default {
         alert(error);
       }
     },
+    crypto_bcrypt: function(generate){
+      try{
+        if( generate ){
+          var salt = dcodeIO.bcrypt.genSaltSync(10);
+          this.bcrypt_hashed = dcodeIO.bcrypt.hashSync(this.bcrypt_input, salt);
+        }else{
+          this.bcrypt_result = dcodeIO.bcrypt.compareSync(this.bcrypt_answer, this.bcrypt_hash);
+        }
+      }catch(error){
+        alert(error);
+      }
+    }
   }
 };
 
