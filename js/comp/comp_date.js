@@ -28,7 +28,7 @@ export default {
           <div class="row">
               <button class="col-auto btn btn-secondary btn-sm" v-on:click="date_duration_reset">リセット</button>
               <span class="col-auto">
-                  <select class="form-select" v-on:change="date_process()" v-model="date_duration_unit">
+                  <select class="form-select" v-model="date_duration_unit">
                       <option value="year">年</option>
                       <option value="month">月</option>
                       <option value="day">日</option>
@@ -38,7 +38,7 @@ export default {
                   </select>
               </span>
               <span class="col-auto">
-                  <input type="number" class="form-control" v-on:change="date_process()" v-model.number="date_duration">
+                  <input type="number" class="form-control" v-model.number="date_duration">
               </span>
               &nbsp;&nbsp;
               <button class="col-auto btn btn-primary btn-sm" v-on:click="date_process()">経過期間→経過後日時</button>
