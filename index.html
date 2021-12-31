@@ -50,6 +50,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="manifest" href="manifest.webmanifest" />
     <script async src="https://cdn.jsdelivr.net/npm/pwacompat" crossorigin="anonymous"></script></head>
+    <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
 
     <title>ユーティリティ</title>
 </head>
@@ -224,6 +225,13 @@
                 <comp_jwt></comp_jwt>
             </div>
 
+            <!--
+                OCR・共有
+            -->
+            <div id="ocrshare" class="tab-pane fade">
+                <comp_ocrshare></comp_ocrshare>
+            </div>
+            
             <!--
                 ヘルプ
             -->
