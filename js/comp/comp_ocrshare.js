@@ -55,7 +55,7 @@ export default {
   <div class="row">
     <div style="position: relative">
       <canvas id="image_canvas" style="position: absolute; left: 0; top: 0; z-index: 0; border: 1px solid;"></canvas>
-      <canvas id="region_canvas" style="position: absolute; left: 0; top: 0; z-index: 1; border: 1px solid;"
+      <canvas id="region_canvas" style="position: absolute; left: 0; top: 0; z-index: 1; border: 1px solid;" v-on:drop.prevent="do_file_pase" v-on:dragover.prevent
         v-on:mousemove="onMouseMove" v-on:mouseup="onMouseUp" v-on:mouseover="onMouseOut" v-on:mousedown="onMouseDown"></canvas>
     </div>
   </div>
