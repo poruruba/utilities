@@ -13,7 +13,7 @@ export default {
   mixins: [mixins_bootstrap],
   template: `
 <div>
-  <h2 class="modal-header">OCR・共有</h2>
+  <h2 class="modal-header">OCR</h2>
 
   <div class="row float-end">
     <div class="col-auto">
