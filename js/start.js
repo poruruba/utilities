@@ -25,7 +25,7 @@ const TAB_LIST = [
     { id: 'html5', name: 'HTML5' },
     { id: 'x509', name: 'X.509' },
     { id: 'jwt', name: 'JWT' },
-	{ id: 'ocrshare', name: 'OCR・共有' },
+	{ id: 'ocrshare', name: 'OCR' },
 	{ id: 'help', name: 'ヘルプ' },
 ];
 
