@@ -37,7 +37,7 @@ export default {
     <div class="col-9">
       <button class="btn btn-secondary btn-sm float-end" v-on:click="trim_space">スペース除去</button>
       <button class="btn btn-secondary btn-sm float-end" v-on:click="trim_cr">改行除去</button>
-      <textarea placeholder="ここにペーストした文字列が表示されます。" class="form-control" v-model="result_text" rows="3"></textarea><br>
+      <textarea placeholder="ここにスキャンした文字列が表示されます。" class="form-control" v-model="result_text" rows="3"></textarea><br>
     </div>
   </div>
   <div class="row">
