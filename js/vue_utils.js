@@ -115,7 +115,9 @@ function do_post_formdata(url, params) {
 function do_get(url, qs) {
   const params = new URLSearchParams(qs);
 
-  return fetch(url + `?` + params.toString(), {
+  var params_str = params.toString();
+  var postfix = (params_str == "") ? "" : ((url.indexOf('?') >= 0) ? ('&' + params_str) : ('?' + params_str));
+  return fetch(url + postfix, {
     method: 'GET',
   })
   .then((response) => {
