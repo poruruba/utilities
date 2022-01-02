@@ -216,9 +216,7 @@ export default {
             element.width = Math.floor(this.canvasWidth / scale);
             element.height = Math.floor(this.canvasHeight / scale);
             var ctx = element.getContext('2d');
-            ctx.width = Math.floor(this.canvasWidth / scale);
-            ctx.height = Math.floor(this.canvasHeight / scale);
-            ctx.drawImage(imageCanvas, 0, 0, this.canvasWidth, this.canvasHeight, 0, 0, ctx.width, ctx.height);
+            ctx.drawImage(imageCanvas, 0, 0, this.canvasWidth, this.canvasHeight, 0, 0, element.width, element.height);
             var data_url = element.toDataURL('image/jpeg');
             var params = {
                 secret: this.share_secret,
