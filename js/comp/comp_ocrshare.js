@@ -212,8 +212,10 @@ export default {
         try{
             this.progress_open();
             var element = document.createElement('canvas');
-            var ctx = element.getContext('2d');
             var scale = this.auto_scale(this.canvasWidth, this.canvasHeight, MAX_UPLOAD_IMAGE_SIZE);
+            element.width = Math.floor(this.canvasWidth / scale);
+            element.height = Math.floor(this.canvasHeight / scale);
+            var ctx = element.getContext('2d');
             ctx.width = Math.floor(this.canvasWidth / scale);
             ctx.height = Math.floor(this.canvasHeight / scale);
             ctx.drawImage(imageCanvas, 0, 0, this.canvasWidth, this.canvasHeight, 0, 0, ctx.width, ctx.height);
