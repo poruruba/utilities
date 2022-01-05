@@ -30,9 +30,11 @@ export default {
   <br>
   <div class="row">
     <div class="col-3">
+      <comp_file id="image_file" v-bind:callback="image_open_files" ref="image_file"></comp_file><br>
       <textarea placeholder="ここに画像かテキストをペースト(Ctrl-V)してください。" class="form-control" style="text-align: center; resize: none;" rows="5" 
         v-on:paste="do_paste" v-on:drop.prevent="do_file_pase" v-on:dragover.prevent readonly>
       </textarea>
+      <br>
     </div>
     <div class="col-9">
       <button class="btn btn-secondary btn-sm float-end" v-on:click="trim_space">スペース除去</button>
@@ -90,6 +92,23 @@ export default {
       .finally(() =>{
           this.progress_close();
       });
+    },
+    image_open_files: function (files) {
+        if( files.length == 0 ){
+          return;
+        }
+        var file = files[0];
+        if (!file.type.startsWith('image/')) {
+          alert('画像ファイルではありません。');
+          return;
+        }
+  
+        var reader = new FileReader();
+        reader.onload = (e) => {
+            var data_url = e.target.result;
+            this.set_dataurl(data_url);
+        };
+        reader.readAsDataURL(file);
     },
     do_file_pase: function(e){
         console.log(e);
