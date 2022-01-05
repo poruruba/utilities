@@ -29,14 +29,14 @@ export default {
   <br>
   <br>
   <div class="row">
-    <div class="col-3">
+    <div class="col-4">
       <comp_file id="image_file" v-bind:callback="image_open_files" ref="image_file"></comp_file><br>
       <textarea placeholder="ここに画像かテキストをペースト(Ctrl-V)してください。" class="form-control" style="text-align: center; resize: none;" rows="5" 
         v-on:paste="do_paste" v-on:drop.prevent="do_file_pase" v-on:dragover.prevent readonly>
       </textarea>
       <br>
     </div>
-    <div class="col-9">
+    <div class="col-8">
       <button class="btn btn-secondary btn-sm float-end" v-on:click="trim_space">スペース除去</button>
       <button class="btn btn-secondary btn-sm float-end" v-on:click="trim_cr">改行除去</button>
       <textarea placeholder="ここにスキャンした文字列が表示されます。" class="form-control" v-model="result_text" rows="3"></textarea><br>
