@@ -35,11 +35,12 @@ export default {
   <hr>
   <table class="table table-striped">
       <thead>
-          <tr><th>元号</th><th>読み</th><th>始期</th><th></th><th>終期</th><th>備考</th></tr>
+          <tr><th>元号</th><th>読み</th><th>最終年</th><th>始期</th><th></th><th>終期</th><th>備考</th></tr>
       </thead>
       <tbody>
           <tr v-for="(item, index) in gengou_list">
-              <td>{{item.name}}</td><td>{{item.yomi}}</td><td>{{item.start}}</td><td>～</td><td>{{item.end}}</td><td>{{item.extra}}</td>
+              <td>{{item.name}}</td><td>{{item.yomi}}</td><td><span v-if="item.end">{{item.end - item.start + 1}}</span></td>
+              <td>{{item.start}}</td><td>～</td><td>{{item.end}}</td><td>{{item.extra}}</td>
           </tr>
       </tbody>
   </table>
