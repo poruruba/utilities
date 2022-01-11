@@ -1,3 +1,5 @@
+var decoder = new TextDecoder('utf-8');
+
 export default {
   mixins: [mixins_bootstrap],
   template: `
@@ -12,7 +14,6 @@ export default {
           <select class="form-select" v-model="binary_format">
               <option value="none" selected>無し</option>
               <option value="cr">改行</option>
-              <option value="dataurl">Data URL</option>
           </select>
       </span>
   </div>
@@ -101,8 +102,6 @@ export default {
           this.binary_output = this.ba2hex(this.binary_data);
         } else if (this.binary_format == 'cr') {
           this.binary_cr();
-        } else if (this.binary_format == 'dataurl') {
-          this.binary_output = this.binary_dataurl;
         }
       }
     },
@@ -132,6 +131,7 @@ export default {
         this.binary_input = '';
         this.binary_dataurl = '';
         this.binary_text = '';
+        return;
       }
 
       var file = files[0];
