@@ -63,6 +63,8 @@ const methods_bootstrap = {
         this.$watch(property, (v) => ctrl.setValue(v));
     },
     ba2hex: function (bytes, sep = '', pref = '') {
+        if( !bytes )
+            return null;
         if (bytes instanceof ArrayBuffer)
             bytes = new Uint8Array(bytes);
         if (bytes instanceof Uint8Array)
@@ -75,6 +77,8 @@ const methods_bootstrap = {
     },
     hex2ba: function (hex, sep = '') {
         var hexs = hex.trim(hex);
+        if( !hexs )
+            return [];
         if (sep == '') {
             var array = [];
             for (var i = 0; i < hexs.length / 2; i++)
