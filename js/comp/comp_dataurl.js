@@ -13,7 +13,7 @@ export default {
   <label class="title">HexString</label>
   <textarea class="form-control" rows="10" v-on:drop="dataurl_drop" v-on:dragover.prevent v-model="dataurl_hexstring"></textarea>
   <br>
-  <button class="btn btn-secondary" v-on:click="dataurl_to_dataurl">to DataURL</button> <button class="btn btn-secondary" v-on:click="dataurl_to_hexstring">To HexString</button>
+  <button class="btn btn-secondary" v-on:click="dataurl_to_dataurl">to DataURL</button> <button class="btn btn-secondary" v-on:click="dataurl_to_hexstring">to HexString</button>
   <br>
   <br>
   <label class="title">DataURL</label>
