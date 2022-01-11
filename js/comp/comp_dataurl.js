@@ -55,7 +55,6 @@ export default {
     },
     dataurl_open_files: function (files) {
       if( files.length <= 0 ){
-        this.dataurl_type = '';
         return;
       }
 
