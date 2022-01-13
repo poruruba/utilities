@@ -71,9 +71,9 @@ var vue_options = {
 		else
 			this.favorite_link = JSON.parse(link);
 		
-//        this.tab_select('#' + this.favorite_link[0]);
-        this.tab_select('#' + this.tab_list[0].id);
-	this.favorite_add(this.tab_list[0].id);
+//        this.tab_select('#' + this.favorite_link[0]).catch(err => {});
+        this.tab_select('#' + this.tab_list[0].id).catch(err => {});
+	this.favorite_add(this.tab_list[0].id).catch(err => {});
 
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(async (registration) => {
