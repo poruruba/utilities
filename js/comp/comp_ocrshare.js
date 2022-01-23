@@ -48,17 +48,17 @@ export default {
     <button v-bind:disabled="!share_secret" class="btn btn-secondary btn-sm col-auto" v-on:click="do_share">共有</button>
     <button v-bind:disabled="!share_secret" class="btn btn-secondary btn-sm col-auto" v-on:click="get_share">取得</button>
     <span class="col-auto">
-      <select class="form-select" v-model="ocr_lang">
-        <option value="jpn">jpn</option>
-        <option value="eng">eng</option>
-      </select>
+        <select class="form-select" v-model="ocr_lang">
+            <option value="jpn">jpn</option>
+            <option value="eng">eng</option>
+        </select>
     </span>
   </div>
   <div class="row">
-    <div style="position: relative">
+    <div class="col-12" style="position: relative">
       <canvas id="image_canvas" style="position: absolute; left: 0; top: 0; z-index: 0; border: 1px solid;"></canvas>
       <canvas id="region_canvas" style="position: absolute; left: 0; top: 0; z-index: 1; border: 1px solid;" v-on:drop.prevent="do_file_pase" v-on:dragover.prevent
-        v-on:mousemove="onMouseMove" v-on:mouseup="onMouseUp" v-on:mouseover="onMouseOut" v-on:mousedown="onMouseDown"></canvas>
+        v-on:mousemove="onMouseMove" v-on:mouseup="onMouseUp" v-on:mouseover="onMouseOut" v-on:mousedown="onMouseDown"v-on:ontouchmove="onMouseMove"></canvas>
     </div>
   </div>
 </div>`,
@@ -69,29 +69,29 @@ export default {
       canvasWidth: 0,
       canvasHeight: 0,
       base_url: "",
-      ocr_lang: "jpn",  
+      ocr_lang: "jpn",
     }
   },
   methods: {
     /* OCR・共有 */
     do_scan: function(){
-      this.progress_open();
-      Tesseract.recognize(
-          drawingCanvas,
-          this.ocr_lang
-      )
-      .then( result =>{
-          console.log(result);
-          this.result_text = result.data.text;
-          drawingCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-          drawingCtx.strokeRect(startX, startY, endX - startX, endY - startY);
-      })
-      .catch(error =>{
-          console.error(error);
-      })
-      .finally(() =>{
-          this.progress_close();
-      });
+        this.progress_open();
+        Tesseract.recognize(
+            drawingCanvas,
+            this.ocr_lang
+        )
+        .then( result =>{
+            console.log(result);
+            this.result_text = result.data.text;
+            drawingCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            drawingCtx.strokeRect(startX, startY, endX - startX, endY - startY);
+        })
+        .catch(error =>{
+            console.error(error);
+        })
+        .finally(() =>{
+            this.progress_close();
+        });
     },
     image_open_files: function (files) {
         if( files.length == 0 ){
@@ -142,11 +142,27 @@ export default {
             return;
 
         var item = e.clipboardData.items[0];
-        console.log(item.type);
-        if( item.type.startsWith('text/')){
+        var type = item.type;
+        if( type.startsWith('text/')){
             e.clipboardData.items[0].getAsString(str =>{
-                console.log(str);
-                this.result_text = str;
+            	if( type == "text/html" ){
+            		var src = parse_htmlclipboard(str, type);
+            		if( src == null ){
+		                this.result_text = str;
+		            }else{
+		            	do_get_blob(src)
+		            	.then(blob =>{
+							var reader2 = new FileReader();
+							reader2.onload = (e) => {
+				                var data_url = e.target.result;
+				                this.set_dataurl(data_url);
+							}
+							reader2.readAsDataURL(blob) ;
+		            	});
+		            }
+		        }else{
+	                this.result_text = str;
+	            }
             });
             return;
         }else
@@ -163,7 +179,7 @@ export default {
         }
     },
     onMouseMove: function(e){
-  //            console.log('onMouseMove');
+        console.log('onMouseMove');
         if( !this.mousePressed )
             return;
         drawingCtx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -320,3 +336,34 @@ export default {
     drawingCtx.lineWidth = 3;
   }
 };
+
+function do_get_blob(url, qs) {
+  const params = new URLSearchParams(qs);
+
+  var params_str = params.toString();
+  var postfix = (params_str == "") ? "" : ((url.indexOf('?') >= 0) ? ('&' + params_str) : ('?' + params_str));
+  return fetch(url + postfix, {
+
+    method: 'GET',
+  })
+  .then((response) => {
+    if (!response.ok)
+      throw 'status is not 200';
+//    return response.json();
+//    return response.text();
+    return response.blob();
+//    return response.arrayBuffer();
+ });
+}
+
+function parse_htmlclipboard(html, type="text/html"){
+	let parser = new DOMParser()
+	var doc = parser.parseFromString(html, type);
+	var body = doc.querySelector("html > body")
+	if(body.firstChild.nextSibling.data == "StartFragment"){
+		var target = body.firstElementChild;
+		if(target.localName == "img")
+			return target.src;
+	}
+	return null;
+}
