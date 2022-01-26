@@ -3,8 +3,8 @@ export default {
   template: `
 <div>
   <h2 class="modal-header">YAML</h2>
-  <div class="row">
-    <div class="col-auto align-items-center">
+  <div class="row align-items-center">
+    <div class="col-auto">
       <select class="form-select" v-model="yaml_dir_type" v-on:change="yaml_dir_change">
         <option value="yaml2json">YAML⇒JSON</option>
         <option value="json2yaml">JSON⇒YAML</option>
