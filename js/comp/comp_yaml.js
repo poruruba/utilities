@@ -10,7 +10,7 @@ export default {
         <option value="json2yaml">JSON⇒YAML</option>
       </select>
     </div>
-    <button class="btn btn-primary col-auto" v-on:click="yaml_transform(false)">変換</button>
+    <button class="btn btn-primary col-auto" v-on:click="yaml_transform()">変換</button>
     <label class="title col-auto">yaml_depth</label>
     <div class="col-auto">
       <input type="number" class="form-control" v-model="yaml_depth">
