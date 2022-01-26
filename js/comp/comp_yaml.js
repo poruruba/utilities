@@ -104,10 +104,10 @@ export default {
           var object = YAML.parse(this.yaml_right_parts);
           this.yaml_left_parts = JSON.stringify(object, null , "\t");
         }
+        var left_parts = document.querySelector("#left_parts");
+        var right_parts = document.querySelector("#right_parts");
+        left_parts.style.height = right_parts.style.height;
       }
-      var left_parts = document.querySelector("#left_parts");
-      var right_parts = document.querySelector("#right_parts");
-      left_parts.style.height = right_parts.style.height;
     },
   }
 };
