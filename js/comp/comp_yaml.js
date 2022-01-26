@@ -13,7 +13,7 @@ export default {
     <button class="btn btn-primary btn-lg col-auto" v-on:click="yaml_transform()">変換</button>
     <label class="title col-auto">yaml_depth</label>
     <div class="col-auto">
-      <input type="number" class="form-control" v-model="yaml_depth">
+      <input type="number" class="form-control" v-model.number="yaml_depth">
     </div>
   </div>
   <br>
