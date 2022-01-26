@@ -23,7 +23,7 @@ export default {
       <textarea id="left_text" class="form-control" rows="15" v-model="yaml_left_text"></textarea>
     </div>
     <div class="col-sm-6">
-      <label>{{yaml_right_type}}</label>
+      <label class="title">{{yaml_right_type}}</label>
       <textarea id="right_text" class="form-control" rows="15" v-model="yaml_right_text" readonly></textarea>
     </div>
   </div>
