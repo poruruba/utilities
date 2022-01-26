@@ -72,8 +72,8 @@ export default {
         this.yaml_right_type = "YAML";
       }
     },
-    yaml_transform: function(to_left_dir){
-      if( !to_left_dir && this.yaml_dir_type == "yaml2json"){
+    yaml_transform: function(){
+      if( this.yaml_dir_type == "yaml2json"){
         var object = YAML.parse(this.yaml_left_text);
         this.yaml_right_text = JSON.stringify(object, null , "\t");
       }else{
