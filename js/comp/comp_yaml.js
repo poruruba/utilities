@@ -11,7 +11,7 @@ export default {
       </select>
     </div>
     <button class="btn btn-primary col-auto" v-on:click="yaml_transform(false)">変換</button>
-    <label class="col-auto">yaml_depth</label>
+    <label class="title col-auto">yaml_depth</label>
     <div class="col-auto">
       <input type="number" class="form-control" v-model="yaml_depth">
     </div>
@@ -19,7 +19,7 @@ export default {
   <br>
   <div class="row">
     <div class="col-sm-6">
-      <label>{{yaml_left_type}}</label>
+      <label class="title">{{yaml_left_type}}</label>
       <textarea id="left_text" class="form-control" rows="15" v-model="yaml_left_text"></textarea>
     </div>
     <div class="col-sm-6">
@@ -30,7 +30,7 @@ export default {
   <br>
   <div class="row">
     <div class="col-sm-5">
-      <label>{{yaml_left_type}}</label>
+      <label class="title">{{yaml_left_type}}</label>
       <textarea id="left_parts" class="form-control" rows="6" v-model="yaml_left_parts"></textarea>
     </div>
     <span class="btn-group-vertical col-sm-1">
@@ -44,7 +44,7 @@ export default {
       </table>
     </span>
     <div class="col-sm-6">
-      <label>{{yaml_right_type}}</label>
+      <label class="title">{{yaml_right_type}}</label>
       <textarea id="right_parts" class="form-control" rows="6" v-model="yaml_right_parts"></textarea>
     </div>
   </div>
