@@ -32,7 +32,7 @@ export default {
             <button class="btn btn-secondary" v-on:click="cardinal_shift(2, 'right')">&gt;&gt;</button>&nbsp;&nbsp;
         </div>
         <div class="col-auto">
-            <input type="checkbox" v-model="cardinal_check_binary">0埋め
+            <input type="checkbox" v-model="cardinal_check_binary" id="cardinal_check_binary"><label for="cardinal_check_binary">0埋め</label>
         </div>
         <span class="col-auto">
             <input type="text" class="form-control" size="2" v-model="cardinal_binary_num">
@@ -54,7 +54,7 @@ export default {
             <button class="btn btn-secondary" v-on:click="cardinal_shift(16, 'right')">&gt;&gt;</button>&nbsp;&nbsp;
         </div>
         <span class="col-auto">
-            <input type="checkbox" v-model="cardinal_check_hexadecimal">0埋め
+            <input type="checkbox" v-model="cardinal_check_hexadecimal" id="cardinal_check_hexadecimal"><label for="cardinal_check_hexadecimal">0埋め<label>
         </span>
         <span class="col-auto">
             <input type="text" class="form-control" size="2" v-model="cardinal_hexadecimal_num">
@@ -101,9 +101,15 @@ export default {
       this.cardinal_decimal = this.base_decimal;
 
       var temp = this.base_decimal.toString(2);
-      this.cardinal_binary = temp.padStart(this.cardinal_binary_num, '0');
+      if( this.cardinal_check_binary )
+        this.cardinal_binary = temp.padStart(this.cardinal_binary_num, '0');
+      else
+        this.cardinal_binary = temp;
       var temp = this.base_decimal.toString(16);
-      this.cardinal_hexadecimal = temp.padStart(this.cardinal_hexadecimal_num, '0');
+      if( this.cardinal_check_hexadecimal )
+        this.cardinal_hexadecimal = temp.padStart(this.cardinal_hexadecimal_num, '0');
+      else
+        this.cardinal_hexadecimal = temp;
     },
   }
 };
