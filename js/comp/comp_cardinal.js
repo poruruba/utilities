@@ -54,7 +54,7 @@ export default {
             <button class="btn btn-secondary" v-on:click="cardinal_shift(16, 'right')">&gt;&gt;</button>&nbsp;&nbsp;
         </div>
         <span class="col-auto">
-            <input type="checkbox" v-model="cardinal_check_hexadecimal" id="cardinal_check_hexadecimal"><label for="cardinal_check_hexadecimal">0埋め<label>
+            <input type="checkbox" v-model="cardinal_check_hexadecimal" id="cardinal_check_hexadecimal"><label for="cardinal_check_hexadecimal">0埋め</label>
         </span>
         <span class="col-auto">
             <input type="text" class="form-control" size="2" v-model="cardinal_hexadecimal_num">
