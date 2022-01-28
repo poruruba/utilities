@@ -4,7 +4,14 @@ export default {
 <div>
   <h2 class="modal-header">Regex</h2>
   <label class="title">Pattern</label> <input type="text" class="form-control" v-model="regex_pattern" placeholder="正規表現を入力してください。">
+  <hr>
   <div class="row">
+    <div class="col-auto">
+      <select class="form-select" v-model="regex_type" v-on:change="regex_change">
+        <option value="exec">exec</option>
+        <option value="test">test</option>
+      </select>
+    </div>
     <div class="col-auto">
       <button class="btn btn-primary" v-on:click="regex_change">実行</button>
     </div>
@@ -25,15 +32,6 @@ export default {
         <option>0-9 数字</option>
         <option>- 範囲</option>
         <option>^ 否定</option>
-      </select>
-    </div>
-  </div>
-  <hr>
-  <div class="row">
-    <div class="col-auto">
-      <select class="form-select" v-model="regex_type" v-on:change="regex_change">
-        <option value="exec">exec</option>
-        <option value="test">test</option>
       </select>
     </div>
   </div>
