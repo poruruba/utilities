@@ -73,40 +73,48 @@ export default {
       }
     },
     yaml_transform: function(){
-      if( this.yaml_dir_type == "yaml2json"){
-        var object = YAML.parse(this.yaml_left_text);
-        this.yaml_right_text = JSON.stringify(object, null , "\t");
-      }else{
-        var object = JSON.parse(this.yaml_left_text);
-        this.yaml_right_text = YAML.stringify(object, this.yaml_depth);
+      try{
+        if( this.yaml_dir_type == "yaml2json"){
+          var object = YAML.parse(this.yaml_left_text);
+          this.yaml_right_text = JSON.stringify(object, null , "\t");
+        }else{
+          var object = JSON.parse(this.yaml_left_text);
+          this.yaml_right_text = YAML.stringify(object, this.yaml_depth);
+        }
+        var left_text = document.querySelector("#left_text");
+        var right_text = document.querySelector("#right_text");
+        right_text.style.height = left_text.style.height;
+      }catch(error){
+        alert(error);
       }
-      var left_text = document.querySelector("#left_text");
-      var right_text = document.querySelector("#right_text");
-      right_text.style.height = left_text.style.height;
     },
     yaml_transform_parts: function(to_left_dir){
-      if( !to_left_dir ){
-        if( this.yaml_dir_type == "yaml2json" ){
-          var object = YAML.parse(this.yaml_left_parts);
-          this.yaml_right_parts = JSON.stringify(object, null , "\t");
+      try{
+        if( !to_left_dir ){
+          if( this.yaml_dir_type == "yaml2json" ){
+            var object = YAML.parse(this.yaml_left_parts);
+            this.yaml_right_parts = JSON.stringify(object, null , "\t");
+          }else{
+            var object = JSON.parse(this.yaml_left_parts);
+            this.yaml_right_parts = YAML.stringify(object, this.yaml_depth);
+          }
+          var left_parts = document.querySelector("#left_parts");
+          var right_parts = document.querySelector("#right_parts");
+          right_parts.style.height = left_parts.style.height;
         }else{
-          var object = JSON.parse(this.yaml_left_parts);
-          this.yaml_right_parts = YAML.stringify(object, this.yaml_depth);
+          if( this.yaml_dir_type == "yaml2json" ){
+            var object = JSON.parse(this.yaml_right_parts);
+            this.yaml_left_parts = YAML.stringify(object, this.yaml_depth);
+          }else{
+            var object = YAML.parse(this.yaml_right_parts);
+            this.yaml_left_parts = JSON.stringify(object, null , "\t");
+          }
+          var left_parts = document.querySelector("#left_parts");
+          var right_parts = document.querySelector("#right_parts");
+          left_parts.style.height = right_parts.style.height;
         }
-        var left_parts = document.querySelector("#left_parts");
-        var right_parts = document.querySelector("#right_parts");
-        right_parts.style.height = left_parts.style.height;
-      }else{
-        if( this.yaml_dir_type == "yaml2json" ){
-          var object = JSON.parse(this.yaml_right_parts);
-          this.yaml_left_parts = YAML.stringify(object, this.yaml_depth);
-        }else{
-          var object = YAML.parse(this.yaml_right_parts);
-          this.yaml_left_parts = JSON.stringify(object, null , "\t");
-        }
-        var left_parts = document.querySelector("#left_parts");
-        var right_parts = document.querySelector("#right_parts");
-        left_parts.style.height = right_parts.style.height;
+      }catch(error){
+        alert(error);
       }
     },
   }
