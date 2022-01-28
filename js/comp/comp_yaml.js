@@ -85,6 +85,7 @@ export default {
         var right_text = document.querySelector("#right_text");
         right_text.style.height = left_text.style.height;
       }catch(error){
+        console.log(error);
         alert(error);
       }
     },
@@ -114,6 +115,7 @@ export default {
           left_parts.style.height = right_parts.style.height;
         }
       }catch(error){
+        console.log(error);
         alert(error);
       }
     },
