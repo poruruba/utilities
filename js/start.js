@@ -28,6 +28,7 @@ const TAB_LIST = [
 	{ id: 'ocrshare', name: 'OCR' },
 	{ id: 'dataurl', name: 'DataURL' },
 	{ id: 'yaml', name: 'YAML' },
+	{ id: 'regex', name: 'Regex' },
 	{ id: 'help', name: 'ヘルプ' },
 ];
 
@@ -115,6 +116,7 @@ import comp_jwt from './comp/comp_jwt.js';
 import comp_ocrshare from './comp/comp_ocrshare.js';
 import comp_dataurl from './comp/comp_dataurl.js';
 import comp_yaml from './comp/comp_yaml.js';
+import comp_regex from './comp/comp_regex.js';
 vue_add_component(vue_options, "comp_arrange", comp_arrange);
 vue_add_component(vue_options, "comp_blecent", comp_blecent);
 vue_add_component(vue_options, "comp_uuid", comp_uuid);
@@ -138,5 +140,6 @@ vue_add_component(vue_options, "comp_jwt", comp_jwt);
 vue_add_component(vue_options, "comp_ocrshare", comp_ocrshare);
 vue_add_component(vue_options, "comp_dataurl", comp_dataurl);
 vue_add_component(vue_options, "comp_yaml", comp_yaml);
+vue_add_component(vue_options, "comp_regex", comp_regex);
 
 window.vue = new Vue( vue_options );
