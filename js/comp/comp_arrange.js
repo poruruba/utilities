@@ -113,12 +113,12 @@ export default {
       try {
         if (type == 'marked_view') {
           this.marked_show_type = type;
-          this.marked_content = marked(this.marked_inout);
+          this.marked_content = marked.parse(this.marked_inout);
           this.dialog_open('#marked_dialog');
         } else
           if (type == 'marked_html') {
             this.marked_show_type = type;
-            this.marked_html = marked(this.marked_inout);;
+            this.marked_html = marked.parse(this.marked_inout);;
             this.dialog_open('#marked_dialog');
           }
       } catch (error) {
