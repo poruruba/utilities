@@ -29,6 +29,7 @@ const TAB_LIST = [
 	{ id: 'dataurl', name: 'DataURL' },
 	{ id: 'yaml', name: 'YAML' },
 	{ id: 'regex', name: 'Regex' },
+	{ id: 'oidc', name: 'OIDC' },
 	{ id: 'help', name: 'ヘルプ' },
 ];
 
@@ -58,6 +59,10 @@ var vue_options = {
 			
             this.favorite_link.unshift(link);
             Cookies.set('favorite_link', JSON.stringify(this.favorite_link), { expires: 365 });
+        },
+        oidc_do_token: function(message){
+            console.log(message);
+            this.$refs.oidc.oidc_do_token(message);
         },
     },
     created: function(){
@@ -117,6 +122,7 @@ import comp_ocrshare from './comp/comp_ocrshare.js';
 import comp_dataurl from './comp/comp_dataurl.js';
 import comp_yaml from './comp/comp_yaml.js';
 import comp_regex from './comp/comp_regex.js';
+import comp_oidc from './comp/comp_oidc.js';
 vue_add_component(vue_options, "comp_arrange", comp_arrange);
 vue_add_component(vue_options, "comp_blecent", comp_blecent);
 vue_add_component(vue_options, "comp_uuid", comp_uuid);
@@ -141,5 +147,6 @@ vue_add_component(vue_options, "comp_ocrshare", comp_ocrshare);
 vue_add_component(vue_options, "comp_dataurl", comp_dataurl);
 vue_add_component(vue_options, "comp_yaml", comp_yaml);
 vue_add_component(vue_options, "comp_regex", comp_regex);
+vue_add_component(vue_options, "comp_oidc", comp_oidc);
 
 window.vue = new Vue( vue_options );
