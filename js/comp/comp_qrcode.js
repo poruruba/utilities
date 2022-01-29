@@ -31,7 +31,7 @@ export default {
               <button class="btn btn-primary" v-on:click="qrcode_scan()">{{qrcode_btn}}</button><br>
               <div>
                   <img class="img-fluid" v-show="!qrcode_running && qrcode_scaned_data==''" id="qrcode_start" src="./img/qrcode_start.png"><br>
-                  <video class="img-fluid" v-show="qrcode_running" id="qrcode_camera" autoplay></video>
+                  <video class="img-fluid" v-show="qrcode_running" id="qrcode_camera" autoplay playsinline></video>
                   <canvas class="img-fluid" v-show="!qrcode_running && qrcode_scaned_data!=''" id="qrcode_canvas"></canvas>
               </div>
           </div>
