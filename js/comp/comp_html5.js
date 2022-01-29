@@ -183,7 +183,7 @@ export default {
           </label>
         </div>
         <br>
-        <video class="img-fluid" id="record_preview" v-show="record_previewing" autoplay></video>
+        <video class="img-fluid" id="record_preview" v-show="record_previewing" autoplay playsinline></video>
       </div>
     </span>
   </collapse-panel>
