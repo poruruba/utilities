@@ -168,6 +168,7 @@ export default {
       return do_post_urlencoded_basic(this.oidc_token_endpoint, params, this.oidc_client_id, this.oidc_client_secret )
       .then(result =>{
           console.log(result);
+          this.oidc_expires_in = result.expires_in;
           this.oidc_idtoken = result.id_token;
           this.oidc_accesstoken = result.access_token;
           this.oidc_refreshtoken = result.refresh_token;
@@ -199,6 +200,7 @@ export default {
         return;
       }
       if(message.access_token){
+        this.oidc_expires_in = message.expires_in;
         this.oidc_idtoken = message.id_token;
         this.oidc_accesstoken = message.access_token;
         this.oidc_refreshtoken = null;
