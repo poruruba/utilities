@@ -35,7 +35,8 @@ var vue_options = {
           };
           window.opener.vue.oidc_do_token(message);
           window.close();
-      }else{
+      }else
+      if( searchs.client_id ){
           var params = {
             client_id: searchs.client_id,
             redirect_uri: searchs.redirect_uri,
