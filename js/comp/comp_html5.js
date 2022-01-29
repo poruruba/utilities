@@ -194,7 +194,7 @@ export default {
       audio_type: "",
       video_type: "",
       image_type: "",
-      image_src: "",
+      image_src: null,
       location: {},
       battery: {},
       motion_supported: true,
@@ -279,7 +279,7 @@ export default {
     image_read: function (files) {
       if (files.length <= 0) {
         this.image_type = "";
-        this.image_src = "";
+        this.image_src = null;
         return;
       }
       var file = files[0];
