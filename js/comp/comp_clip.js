@@ -78,7 +78,7 @@ export default {
     clip_save: function (index) {
       console.log("console saved");
       this.message = "saved";
-      Cookies.set('clip_data' + index, this.clip_data[index], { expires: 365 });
+      localStorage.setItem('clip_data' + index, this.clip_data[index]);
     },
     clip_clearall: function () {
       for (var i = 0; i <= 6; i++)
@@ -87,13 +87,13 @@ export default {
     },
     clip_clear: function (index) {
       this.clip_data[index] = '';
-      Cookies.remove('clip_data' + index);
+      localStorage.removeItem('clip_data' + index);
       this.clip_data = JSON.parse(JSON.stringify(this.clip_data));
     },
   },
   mounted: function () {
     for (var i = 0; i <= 6; i++) {
-      this.$set(this.clip_data, i, Cookies.get('clip_data' + i));
+      this.$set(this.clip_data, i, localStorage.getItem('clip_data' + i));
     }
   }
 };
