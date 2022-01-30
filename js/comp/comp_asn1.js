@@ -59,7 +59,7 @@ Vue.component('asn1-card', {
   `,
   computed:{
     tagNumberName: function(){
-      if( this.payload.tagClass != 0x00 ){
+      if( this.payload.tagClass != 0x00 )
           return "Unknown";
       switch(this.payload.tagNumber){
         case 0: return "EOC";
