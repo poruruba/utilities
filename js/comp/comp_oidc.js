@@ -1,7 +1,6 @@
 const REDIRECT_URL = "oidc_redirect.html";
 var decoder = new TextDecoder('utf-8');
 var new_win;
-const EXPIRES = 365;
 
 export default {
   mixins: [mixins_bootstrap],
