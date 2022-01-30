@@ -262,8 +262,8 @@ export default {
             };
             console.log("data_url=" + data_url.length);
             await do_post(this.base_url + "/share-set", params);
-            Cookies.set('share_base_url', this.base_url, { expires: 365 });
-            Cookies.set('share_secret', this.share_secret, { expires: 365 });
+            localStorage.setItem('share_base_url', this.base_url);
+            localStorage.setItem('share_secret', this.share_secret);
             alert('共有しました。');
         }catch(error){
             alert(error);
@@ -288,8 +288,8 @@ export default {
             }
             this.set_dataurl(json.result.data_url);
             this.result_text = json.result.result_text;
-            Cookies.set('share_base_url', this.base_url, { expires: 365 });
-            Cookies.set('share_secret', this.share_secret, { expires: 365 });
+            localStorage.setItem('share_base_url', this.base_url);
+            localStorage.setItem('share_secret', this.share_secret);
         }catch(error){
             alert(error);
         }finally{
@@ -327,8 +327,8 @@ export default {
     },
   },
   mounted: function(){
-    this.share_secret = Cookies.get('share_secret');
-    this.base_url = Cookies.get('share_base_url');
+    this.share_secret = localStorage.getItem('share_secret');
+    this.base_url = localStorage.getItem('share_base_url');
 
     imageCanvas = document.querySelector("#image_canvas");
     drawingCanvas = document.querySelector("#region_canvas");
