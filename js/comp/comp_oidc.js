@@ -182,11 +182,11 @@ export default {
 
           if( this.oidc_token_endpoint_list.indexOf(this.oidc_token_endpoint) < 0 ){
             this.oidc_token_endpoint_list.push(this.oidc_token_endpoint);
-            Cookies.set("oidc_token_endpoint_list", this.oidc_token_endpoint_list, { expires: EXPIRES });
+            localStorage.setItem("oidc_token_endpoint_list", JSON.stringify(this.oidc_token_endpoint_list));
           }
           if( this.oidc_client_secret_list.indexOf(this.oidc_client_secret) < 0 ){
             this.oidc_client_secret_list.push(this.oidc_client_secret);
-            Cookies.set("oidc_client_secret_list", this.oidc_client_secret_list, { expires: EXPIRES });
+            localStorage.setItem("oidc_client_secret_list", JSON.stringify(this.oidc_client_secret_list));
           }
       })
       .catch(error =>{
@@ -224,11 +224,11 @@ export default {
 
       if( this.oidc_authorize_endpoint_list.indexOf(this.oidc_authorize_endpoint) < 0 ){
         this.oidc_authorize_endpoint_list.push(this.oidc_authorize_endpoint);
-        Cookies.set("oidc_authorize_endpoint_list", this.oidc_authorize_endpoint_list, { expires: EXPIRES });
+        localStorage.setItem("oidc_authorize_endpoint_list", JSON.stringify(this.oidc_authorize_endpoint_list));
       }
       if( this.oidc_client_id_list.indexOf(this.oidc_client_id) < 0 ){
         this.oidc_client_id_list.push(this.oidc_client_id);
-        Cookies.set("oidc_client_id_list", this.oidc_client_id_list, { expires: EXPIRES });
+        localStorage.setItem("oidc_client_id_list", JSON.stringify(this.oidc_client_id_list));
       }
     },
     oidc_select_item: function(target, type, index){
@@ -238,7 +238,7 @@ export default {
             this.oidc_authorize_endpoint = this.oidc_authorize_endpoint_list[index];
           }else if( type == "delete"){
             this.oidc_authorize_endpoint_list.splice(index, 1);
-            Cookies.set("oidc_authorize_endpoint_list", this.oidc_authorize_endpoint_list, { expires: EXPIRES });
+            localStorage.setItem("oidc_authorize_endpoint_list", JSON.stringify(this.oidc_authorize_endpoint_list));
           }
           break;
         }
@@ -247,7 +247,7 @@ export default {
             this.oidc_token_endpoint = this.oidc_token_endpoint_list[index];
           }else if( type == "delete"){
             this.oidc_token_endpoint_list.splice(index, 1);
-            Cookies.set("oidc_token_endpoint_list", this.oidc_token_endpoint_list, { expires: EXPIRES });
+            localStorage.setItem("oidc_token_endpoint_list", JSON.stringify(this.oidc_token_endpoint_list));
           }
           break;
         }
@@ -256,7 +256,7 @@ export default {
             this.oidc_client_id = this.oidc_client_id_list[index];
           }else if( type == "delete"){
             this.oidc_client_id_list.splice(index, 1);
-            Cookies.set("oidc_client_id_list", this.oidc_client_id_list, { expires: EXPIRES });
+            localStorage.setItem("oidc_client_id_list", JSON.stringify(this.oidc_client_id_list));
           }
           break;
         }
@@ -265,7 +265,7 @@ export default {
             this.oidc_client_secret = this.oidc_client_secret_list[index];
           }else if( type == "delete"){
             this.oidc_client_secret_list.splice(index, 1);
-            Cookies.set("oidc_client_secret_list", this.oidc_client_secret_list, { expires: EXPIRES });
+            localStorage.setItem("oidc_client_secret_list", JSON.stringify(this.oidc_client_secret_list));
           }
           break;
         }
@@ -276,16 +276,16 @@ export default {
     var url = new URL("./", location);
     this.oidc_redirect_uri = url.href + REDIRECT_URL;
 
-    var list = Cookies.get('oidc_authorize_endpoint_list');
+    var list = localStorage.getItem('oidc_authorize_endpoint_list');
     if( list )
       this.oidc_authorize_endpoint_list = JSON.parse(list);
-    var list = Cookies.get('oidc_token_endpoint_list');
+    list = localStorage.getItem('oidc_token_endpoint_list');
     if( list )
       this.oidc_token_endpoint_list = JSON.parse(list);
-    var list = Cookies.get('oidc_client_id_list');
+    list = localStorage.getItem('oidc_client_id_list');
     if( list )
       this.oidc_client_id_list = JSON.parse(list);
-    var list = Cookies.get('oidc_client_secret_list');
+    list = localStorage.getItem('oidc_client_secret_list');
     if( list )
       this.oidc_client_secret_list = JSON.parse(list);
   }
