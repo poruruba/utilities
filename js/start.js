@@ -58,7 +58,7 @@ var vue_options = {
 				this.favorite_link.pop();
 			
             this.favorite_link.unshift(link);
-            Cookies.set('favorite_link', JSON.stringify(this.favorite_link), { expires: 365 });
+            localStorage.setItem('favorite_link', JSON.stringify(this.favorite_link));
         },
         oidc_do_token: function(message){
             console.log(message);
@@ -72,7 +72,7 @@ var vue_options = {
 
         history.replaceState(null, null, location.pathname);
 
-		var link = Cookies.get('favorite_link');
+		var link = localStorage.getItem('favorite_link');
 		if( !link )
             this.favorite_add(this.tab_list[0].id)
 		else
