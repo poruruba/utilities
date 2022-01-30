@@ -59,6 +59,8 @@ Vue.component('asn1-card', {
   `,
   computed:{
     tagNumberName: function(){
+      if( this.payload.tagClass != 0x00 ){
+          return "Unknown";
       switch(this.payload.tagNumber){
         case 0: return "EOC";
         case 1: return "BOOLEAN";
@@ -96,7 +98,7 @@ Vue.component('asn1-card', {
         case 34: return "DURATION";
         case 35: return "OID-IRI";
         case 36: return "RELATIVE-OID-IRI";
-        default: return "unknown";
+        default: return "Unknown";
       }
     }
   }
