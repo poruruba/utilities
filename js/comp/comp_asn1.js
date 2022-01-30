@@ -214,5 +214,5 @@ function decodePEM(pem){
     list.pop();
   if( list[list.length - 1].startsWith("-----") )
     list.pop();
-  return base64ToBuffer(list.join(""));
+  return base64ToBuffer(list.join("").replace(/\r?\n/g, ''));
 }
