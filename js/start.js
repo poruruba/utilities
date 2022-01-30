@@ -24,6 +24,7 @@ const TAB_LIST = [
     { id: 'websocket', name: 'WebSocket' },
     { id: 'html5', name: 'HTML5' },
     { id: 'x509', name: 'X.509' },
+    { id: 'asn1', name: 'ASN.1' },
     { id: 'jwt', name: 'JWT' },
 	{ id: 'ocrshare', name: 'OCR' },
 	{ id: 'dataurl', name: 'DataURL' },
@@ -117,6 +118,7 @@ import comp_clip from './comp/comp_clip.js';
 import comp_websocket from './comp/comp_websocket.js';
 import comp_html5 from './comp/comp_html5.js';
 import comp_x509 from './comp/comp_x509.js';
+import comp_asn1 from './comp/comp_asn1.js';
 import comp_jwt from './comp/comp_jwt.js';
 import comp_ocrshare from './comp/comp_ocrshare.js';
 import comp_dataurl from './comp/comp_dataurl.js';
@@ -142,6 +144,7 @@ vue_add_component(vue_options, "comp_clip", comp_clip);
 vue_add_component(vue_options, "comp_websocket", comp_websocket);
 vue_add_component(vue_options, "comp_html5", comp_html5);
 vue_add_component(vue_options, "comp_x509", comp_x509);
+vue_add_component(vue_options, "comp_asn1", comp_asn1);
 vue_add_component(vue_options, "comp_jwt", comp_jwt);
 vue_add_component(vue_options, "comp_ocrshare", comp_ocrshare);
 vue_add_component(vue_options, "comp_dataurl", comp_dataurl);
