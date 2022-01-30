@@ -99,7 +99,7 @@ export class Asn1{
       var list = [];
       var position = 0;
       while (position < length) {
-          var nextPiece = new Asn1(bArray.subarray(startIndex + position, bArray.length), startIndex + position);
+          var nextPiece = new Asn1(bArray.subarray(startIndex + position, bArray.length), offset + startIndex + position);
           list.push(nextPiece);
           position += nextPiece.totalLength;
       }
