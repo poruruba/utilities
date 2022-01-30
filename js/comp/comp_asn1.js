@@ -3,7 +3,7 @@ import { Asn1 } from '../asn1.js';
 Vue.component('asn1-card', {
   props: ['payload', 'id'],
   template: `
-  <collapse-panel v-bind:id="id" v-bind:title="tagNumberName">
+  <collapse-panel v-bind:id="id" v-bind:title="tagClassName + ' : ' + tagNumberName">
     <span slot="content">
         <div class="card-body">
             <button class="btn btn-secondary btn-sm float-end" data-bs-toggle="collapse" v-bind:href="'#' + id">閉じる</button>
@@ -58,6 +58,15 @@ Vue.component('asn1-card', {
   </collapse-panel>
   `,
   computed:{
+    tagClassName: function(){
+      switch(this.payload.tagClass ){
+        case 0: return "Universal";
+        case 1: return "Application";
+        case 2: return "Context-specific";
+        case 3: return "Private";
+        default: return "Unknown";
+      }
+    },
     tagNumberName: function(){
       if( this.payload.tagClass != 0x00 )
           return "Unknown";
