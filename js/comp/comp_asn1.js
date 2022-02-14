@@ -162,7 +162,7 @@ export default {
       if (this.asn1_input_type == 'string' )
         der = decodePEM(this.asn1_input);
       else
-        der = hex2ba(this.asn1_input);
+        der = tihs.hex2ba(this.asn1_input);
       try{
         this.asn1 = null;
         this.asn1 = new Asn1(new Uint8Array(der));
