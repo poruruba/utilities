@@ -45,7 +45,7 @@ export class Asn1{
       if( this.tagClass == 0 ){
         switch(this.tagNumber){
           case 1: { // BOOL
-            this.contens = {
+            this.contents = {
               boolean: (buffer[0] == 0xff)
             };
             break;
