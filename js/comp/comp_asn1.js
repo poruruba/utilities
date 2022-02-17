@@ -159,7 +159,7 @@ export default {
   methods: {
     /* ASN1 */
     asn1_save: function () {
-      var json = JSON.stringify(asn1, null, '\t');
+      var json = JSON.stringify(this.asn1, null, '\t');
       var blob = new Blob([json], { type: "text/plain" });
       var url = window.URL.createObjectURL(blob);
 
