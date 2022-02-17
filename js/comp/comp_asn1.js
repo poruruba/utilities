@@ -143,8 +143,8 @@ export default {
     </div>
     <button class="btn btn-primary" v-on:click="asn1_parse()">解析</button>
   </div>
-  <br>
   <button v-if="asn1" class="btn btn-secondary float-end" v-on:click="asn1_save()">ファイルに保存</button>
+  <br>
   <asn1-card v-if="asn1" v-bind:payload="asn1" id="start"></asn1-card>
 </div>`,
   data: function () {
