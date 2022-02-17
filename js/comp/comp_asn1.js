@@ -144,6 +144,7 @@ export default {
     <button class="btn btn-primary" v-on:click="asn1_parse()">解析</button>
   </div>
   <br>
+  <button class="btn btn-secondary pull-right" v-on:click="asn1_save()">ファイルに保存</button>
   <asn1-card v-if="asn1" v-bind:payload="asn1" id="start"></asn1-card>
 </div>`,
   data: function () {
@@ -157,6 +158,18 @@ export default {
   },
   methods: {
     /* ASN1 */
+    asn1_save: function () {
+      var json = JSON.stringify(asn1, null, '\t');
+      var blob = new Blob([json], { type: "text/plain" });
+      var url = window.URL.createObjectURL(blob);
+
+      var a = document.createElement("a");
+      a.href = url;
+      a.target = '_blank';
+      a.download = "asn1.json";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },    
     asn1_parse: function(){
       var der;
       if (this.asn1_input_type == 'string' )
