@@ -15,19 +15,6 @@ export default {
 <div>
   <h2 class="modal-header">OCR</h2>
 
-  <div class="row float-end">
-    <div class="col-auto">
-      <input type="text" class="form-control" v-model="base_url" placeholder="base_url">
-    </div>
-    <div class="col-auto">
-      <label class="title">secret</label>
-    </div>
-    <div class="col-auto">
-      <input type="password" class="form-control" v-model="share_secret">
-    </div>
-  </div>
-  <br>
-  <br>
   <div class="row">
     <div class="col-4">
       <comp_file id="image_file" v-bind:callback="image_open_files" ref="image_file"></comp_file><br>
@@ -45,8 +32,6 @@ export default {
   <div class="row">
     <button class="btn btn-secondary btn-sm col-auto" v-on:click="all_region">全選択</button>
     <button class="btn btn-secondary btn-sm col-auto" v-on:click="clear_region">範囲クリア</button>
-    <button v-bind:disabled="!share_secret" class="btn btn-secondary btn-sm col-auto" v-on:click="do_share">共有</button>
-    <button v-bind:disabled="!share_secret" class="btn btn-secondary btn-sm col-auto" v-on:click="get_share">取得</button>
     <span class="col-auto">
         <select class="form-select" v-model="ocr_lang">
             <option value="jpn">jpn</option>
@@ -65,10 +50,8 @@ export default {
   data: function () {
     return {
       result_text: "",
-      share_secret: "",
       canvasWidth: 0,
       canvasHeight: 0,
-      base_url: "",
       ocr_lang: "jpn",
     }
   },
@@ -152,12 +135,12 @@ export default {
 		            }else{
 		            	do_get_blob(src)
 		            	.then(blob =>{
-							var reader2 = new FileReader();
-							reader2.onload = (e) => {
+					var reader2 = new FileReader();
+					reader2.onload = (e) => {
 				                var data_url = e.target.result;
 				                this.set_dataurl(data_url);
-							}
-							reader2.readAsDataURL(blob) ;
+					}
+					reader2.readAsDataURL(blob) ;
 		            	});
 		            }
 		        }else{
@@ -239,63 +222,6 @@ export default {
 
         this.do_scan();
     },
-    do_share: async function(){
-        if( !this.share_secret ){
-            alert('secretを入力してください。');
-            return;
-        }
-        try{
-            this.progress_open();
-            var element = document.createElement('canvas');
-            var scale = this.auto_scale(this.canvasWidth, this.canvasHeight, MAX_UPLOAD_IMAGE_SIZE);
-            element.width = Math.floor(this.canvasWidth / scale);
-            element.height = Math.floor(this.canvasHeight / scale);
-            var ctx = element.getContext('2d');
-            ctx.width = Math.floor(this.canvasWidth / scale);
-            ctx.height = Math.floor(this.canvasHeight / scale);
-            ctx.drawImage(imageCanvas, 0, 0, this.canvasWidth, this.canvasHeight, 0, 0, element.width, element.height);
-            var data_url = element.toDataURL('image/jpeg');
-            var params = {
-                secret: this.share_secret,
-                data_url: data_url,
-                result_text: this.result_text,
-            };
-            console.log("data_url=" + data_url.length);
-            await do_post(this.base_url + "/share-set", params);
-            localStorage.setItem('share_base_url', this.base_url);
-            localStorage.setItem('share_secret', this.share_secret);
-            alert('共有しました。');
-        }catch(error){
-            alert(error);
-        }finally{
-            this.progress_close();
-        }
-    },
-    get_share: async function(){
-        if( !this.share_secret ){
-            alert('secretを入力してください。');
-            return;
-        }
-        try{
-            this.progress_open();
-            var params = {
-                secret: this.share_secret,
-            };
-            var json = await do_post(this.base_url + "/share-get", params);
-            if( json.status != 'ok' ){
-                alert(json.message);
-                return;
-            }
-            this.set_dataurl(json.result.data_url);
-            this.result_text = json.result.result_text;
-            localStorage.setItem('share_base_url', this.base_url);
-            localStorage.setItem('share_secret', this.share_secret);
-        }catch(error){
-            alert(error);
-        }finally{
-            this.progress_close();
-        }
-    },
     set_dataurl: function(data_url){
         var image = new Image();
         image.onload = () =>{
@@ -327,34 +253,12 @@ export default {
     },
   },
   mounted: function(){
-    this.share_secret = localStorage.getItem('share_secret');
-    this.base_url = localStorage.getItem('share_base_url');
-
     imageCanvas = document.querySelector("#image_canvas");
     drawingCanvas = document.querySelector("#region_canvas");
     drawingCtx = drawingCanvas.getContext("2d");
     drawingCtx.lineWidth = 3;
   }
 };
-
-function do_get_blob(url, qs) {
-  const params = new URLSearchParams(qs);
-
-  var params_str = params.toString();
-  var postfix = (params_str == "") ? "" : ((url.indexOf('?') >= 0) ? ('&' + params_str) : ('?' + params_str));
-  return fetch(url + postfix, {
-
-    method: 'GET',
-  })
-  .then((response) => {
-    if (!response.ok)
-      throw 'status is not 200';
-//    return response.json();
-//    return response.text();
-    return response.blob();
-//    return response.arrayBuffer();
- });
-}
 
 function parse_htmlclipboard(html, type="text/html"){
 	let parser = new DOMParser()
