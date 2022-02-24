@@ -260,6 +260,25 @@ export default {
   }
 };
 
+function do_get_blob(url, qs) {
+  const params = new URLSearchParams(qs);
+
+  var params_str = params.toString();
+  var postfix = (params_str == "") ? "" : ((url.indexOf('?') >= 0) ? ('&' + params_str) : ('?' + params_str));
+  return fetch(url + postfix, {
+
+    method: 'GET',
+  })
+  .then((response) => {
+    if (!response.ok)
+      throw 'status is not 200';
+//    return response.json();
+//    return response.text();
+    return response.blob();
+//    return response.arrayBuffer();
+ });
+}
+
 function parse_htmlclipboard(html, type="text/html"){
 	let parser = new DOMParser()
 	var doc = parser.parseFromString(html, type);
