@@ -7,7 +7,7 @@ export default {
   <h2 class="modal-header">シリアル</h2>
   <div class="row">
     <button class="btn btn-secondary col-auto" v-on:click="connect(!connected)"><span v-if="!connected">Connect</span><span v-else>Disconnect</span></button>
-    <label class="title"> baudrate: </label>
+    <label class="title col-auto"> baudrate: </label>
     <span class="col-auto">
       <select v-if="!connected" class="form-select" v-model.number="baud">
         <option value="9600">9600</option>
@@ -17,7 +17,7 @@ export default {
         <option value="921600">921600</option>
       </select>
     </span>
-    <label class="title"> connected:</label> {{connected}}
+    <label class="title col-auto"> connected:</label> {{connected}}
     <button class="btn btn-secondary btn-sm col-auto float-end" v-on:click="text_clear">clear</button>
     <span class="float-end"><input type="checkbox" v-model="auto_scroll" id="auto_scroll"><label for="auto_scroll"> auto-scroll </label></span>
   </div>
