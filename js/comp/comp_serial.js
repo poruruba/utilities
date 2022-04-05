@@ -5,7 +5,8 @@ export default {
   template: `
 <div>
   <h2 class="modal-header">シリアル</h2>
-  <div class="row">
+  <div class="row" v-if="!connected">
+    <button class="btn btn-secondary col-auto" v-on:click="connect()">Connect</button>
     <label class="title col-auto">baudrate:</label>
     <span class="col-auto">
       <select v-if="!connected" class="form-select" v-model.number="baud">
@@ -17,7 +18,7 @@ export default {
       </select>
     </span>
   </div>
-  <button class="btn btn-secondary" v-on:click="connect(!connected)"><span v-if="!connected">Connect</span><span v-else>Disconnect</span></button>
+  <button class="btn btn-secondary" v-on:click="disconnect()">Disconnect</button>
   <label class="title"> connected:</label> {{connected}}
   <button class="btn btn-secondary btn-sm float-end" v-on:click="text_clear">clear</button>
   <span class="float-end"><input type="checkbox" v-model="auto_scroll" id="auto_scroll"><label for="auto_scroll"> auto-scroll </label></span>
