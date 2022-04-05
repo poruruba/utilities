@@ -6,6 +6,7 @@ export default {
 <div>
   <h2 class="modal-header">シリアル</h2>
   <button class="btn btn-secondary" v-on:click="connect(!connected)"><span v-if="!connected">Connect</span><span v-else>Disconnect</span></button>
+  <label class="title"> baudrate: </label>
   <span class="col-auto">
     <select v-if="!connected" class="form-select" v-model.number="baud">
       <option value="9600">9600</option>
