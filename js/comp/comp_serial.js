@@ -13,6 +13,7 @@ export default {
     return {
         console_text: "",
         connected: false,
+        auto_scroll: true,
     }
   },
   methods: {
@@ -49,8 +50,10 @@ export default {
 
         data_process: function(value){
             this.console_text += decoder.decode(value);
-            const el = document.getElementById('el');
-            el.scrollTo(0, el.scrollHeight);
+            if( this.auto_scroll ){
+              const el = document.getElementById('el');
+              el.scrollTo(0, el.scrollHeight);
+            }
         },
 
         receiveLoop: async function(){
