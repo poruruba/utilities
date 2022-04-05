@@ -29,6 +29,7 @@ export default {
                 await port.open({ baudRate: 115200 });
                 this.port = port;
                 this.connected = true;
+                this.console_text += "[[connected]]\n";
                 this.receiveLoop();
             }catch(error){
                 console.log(error);
