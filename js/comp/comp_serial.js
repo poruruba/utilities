@@ -18,7 +18,7 @@ export default {
       </select>
     </span>
   </div>
-  <button class="btn btn-secondary" v-on:click="disconnect()">Disconnect</button>
+  <button v-if="connected" class="btn btn-secondary" v-on:click="disconnect()">Disconnect</button>
   <label class="title"> connected:</label> {{connected}}
   <button class="btn btn-secondary btn-sm float-end" v-on:click="text_clear">clear</button>
   <span class="float-end"><input type="checkbox" v-model="auto_scroll" id="auto_scroll"><label for="auto_scroll"> auto-scroll </label></span>
