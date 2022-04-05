@@ -5,8 +5,7 @@ export default {
   template: `
 <div>
   <h2 class="modal-header">シリアル</h2>
-  <button class="btn btn-secondary" v-on:click="connect(!connected)">
-  <span v-if="!connected">Connect</span><span v-else>Disconnect</span></button>
+  <button class="btn btn-secondary" v-on:click="connect(!connected)"><span v-if="!connected">Connect</span><span v-else>Disconnect</span></button>
   <select v-if="!connected" class="form-select" v-model.number="baud">
     <option value="9600">9600</option>
     <option value="57600">57600</option>
