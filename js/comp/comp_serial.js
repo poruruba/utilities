@@ -8,7 +8,7 @@ export default {
   <button class="btn btn-secondary" v-on:click="connect(!connected)">
   <select v-if="!connected" class="form-select" v-model.number="baud">
     <option value="9600">9600</option>
-    <option value="57500">57500</option>
+    <option value="57600">57600</option>
     <option value="115200">115200</option>
     <option value="230400">230400</option>
     <option value="921600">921600</option>
