@@ -6,7 +6,7 @@ export default {
 <div>
   <h2 class="modal-header">シリアル</h2>
   <div class="row">
-    <button class="btn btn-secondary" v-on:click="connect(!connected)"><span v-if="!connected">Connect</span><span v-else>Disconnect</span></button>
+    <button class="btn btn-secondary col-auto" v-on:click="connect(!connected)"><span v-if="!connected">Connect</span><span v-else>Disconnect</span></button>
     <label class="title"> baudrate: </label>
     <span class="col-auto">
       <select v-if="!connected" class="form-select" v-model.number="baud">
@@ -18,7 +18,7 @@ export default {
       </select>
     </span>
     <label class="title"> connected:</label> {{connected}}
-    <button class="btn btn-secondary btn-sm float-end" v-on:click="text_clear">clear</button>
+    <button class="btn btn-secondary btn-sm col-auto float-end" v-on:click="text_clear">clear</button>
     <span class="float-end"><input type="checkbox" v-model="auto_scroll" id="auto_scroll"><label for="auto_scroll"> auto-scroll </label></span>
   </div>
   <textarea class="form-control" style="height: 70vh" id="el" readonly>{{console_text}}</textarea>
