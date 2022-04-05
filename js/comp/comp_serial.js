@@ -15,6 +15,7 @@ export default {
         console_text: "",
         connected: false,
         auto_scroll: true,
+        baud: 115200,
     }
   },
   methods: {
@@ -28,7 +29,7 @@ export default {
 
             try{
                 var port = await navigator.serial.requestPort();
-                await port.open({ baudRate: 115200 });
+                await port.open({ baudRate: this.baud });
                 this.port = port;
                 this.connected = true;
                 this.console_text += "[[connected]]\n";
