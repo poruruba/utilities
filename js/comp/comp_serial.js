@@ -6,7 +6,7 @@ export default {
 <div>
   <h2 class="modal-header">シリアル</h2>
   <button class="btn btn-secondary" v-on:click="connect(!connected)"><span v-if="!connected">Connect</span><span v-else>Disconnect</span></button> <label class="title">connected:</label> {{connected}}
-  <input type="checkbox" class="float-end" v-model="auto_scroll" id="auto_scroll"><label for="auto_scroll">auto-scroll</label>
+  <span class="float-end"><input type="checkbox" v-model="auto_scroll" id="auto_scroll"><label for="auto_scroll">auto-scroll</label></span>
   <button class="btn btn-secondary btn-sm float-end" v-on:click="text_clear">clear</button>
   <textarea class="form-control" style="height: 70vh" id="el" readonly>{{console_text}}</textarea>
 </div>`,
