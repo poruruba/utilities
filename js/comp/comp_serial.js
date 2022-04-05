@@ -34,12 +34,10 @@ export default {
   },
   methods: {
     /* シリアル */
-        connect: async function(enable){
+        connect: async function(){
             try{
                 await this.disconnect();
             }catch(error){}
-            if( !enable )
-                return;
 
             try{
                 var port = await navigator.serial.requestPort();
