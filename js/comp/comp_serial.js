@@ -88,6 +88,8 @@ export default {
                         this.data_process(value);
                     }catch(error){
                         console.log(error);
+                        this.connected = false;
+                        return reject(error);
                     }
                 }while(true);
             })
