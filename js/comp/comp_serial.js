@@ -89,6 +89,7 @@ export default {
                     }catch(error){
                         console.log(error);
                         this.connected = false;
+                        this.console_text += '[[throw exception]]\n';
                         return reject(error);
                     }
                 }while(true);
