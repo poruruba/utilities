@@ -100,11 +100,11 @@ export default {
         if (type == 'json')
           this.json_inout = JSON.stringify(JSON.parse(this.json_inout), null, '\t');
         else if (type == 'javascript')
-          this.js_inout = js_beautify(this.js_inout, { indent_size: 2, space_in_empty_paren: true });
+          this.js_inout = js_beautify(this.js_inout, { indent_size: 4, space_in_empty_paren: true });
         else if (type == 'css')
-          this.css_inout = css_beautify(this.css_inout, { indent_size: 2, space_in_empty_paren: true });
+          this.css_inout = css_beautify(this.css_inout, { indent_size: 4, space_in_empty_paren: true });
         else if (type == 'html')
-          this.html_inout = html_beautify(this.html_inout, { indent_size: 2, space_in_empty_paren: true });
+          this.html_inout = html_beautify(this.html_inout, { indent_size: 4, space_in_empty_paren: true });
       } catch (error) {
         alert(error);
       }
