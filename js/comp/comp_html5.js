@@ -257,7 +257,7 @@ export default {
         this.screen_wl = await navigator.wakeLock.request('screen');
         this.is_screen_locked = true;
       }else{
-        if( screen_wl ){
+        if( this.screen_wl ){
           this.screen_wl.release();
           this.screen_wl = null;
         }
