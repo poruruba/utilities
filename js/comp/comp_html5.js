@@ -355,6 +355,10 @@ export default {
       }
     },
     vibration_start: function(){
+      if(!('vibration' in navigator) ){
+        alert('サポートしていません。');
+        return;
+      }
       navigator.vibrate(this.vibration_duration);
     },
     speech_reset: function(){
