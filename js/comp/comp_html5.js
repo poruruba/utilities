@@ -133,6 +133,23 @@ export default {
     </span>
   </collapse-panel>
 
+  <collapse-panel id="html5_screenlock" title="Screen Lock" collapse="true">
+    <span slot="content">
+      <div class="card-body">
+        <div class="row">
+          <span class="col-auto">
+            <button v-if="!is_screen_locked" class="btn btn-secondary" v-on:click="screen_lock(true)">ロック</button>
+            <button v-else class="btn btn-secondary" v-on:click="screen_lock(false)">ロック</button>
+          </span>
+          <span class="col-auto">
+            <input type="number" class="form-control" v-model="vibration_duration">
+          </span>
+          msec
+        </div>
+      </div>
+    </span>
+  </collapse-panel>
+
   <collapse-panel id="html5_synthesis" title="SpeechSynthesis" collapse="true">
     <span slot="content">
       <div class="card-body">
@@ -221,6 +238,9 @@ export default {
       record_previewing: false,
       record_facing: "environment",
       record_audio: true,
+      
+      screen_wl: null,
+      is_screen_locked: false,
     }
   },
   computed: {
@@ -232,6 +252,22 @@ export default {
     }
   },
   methods: {
+    screen_lock: function(enable){
+      if ( !('wakeLock' in navigator) ){
+        alert('サポートしていません');
+        return;
+      }
+      if( enable ){
+        this.screen_wl = await navigator.wakeLock.request('screen');
+        this.is_screen_locked = true;
+      }else{
+        if( screen_wl ){
+          this.screen_wl.release();
+          this.screen_wl = null;
+        }
+        this.is_screen_locked = false;
+      }
+    },
     tofixed: function (f, digits = 2) {
       if (f === undefined || f == null)
         return "";
