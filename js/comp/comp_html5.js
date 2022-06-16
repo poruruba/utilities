@@ -137,14 +137,10 @@ export default {
     <span slot="content">
       <div class="card-body">
         <div class="row">
-          <span class="col-auto">
-            <button v-if="!is_screen_locked" class="btn btn-secondary" v-on:click="screen_lock(true)">ロック</button>
-            <button v-else class="btn btn-secondary" v-on:click="screen_lock(false)">ロック</button>
-          </span>
-          <span class="col-auto">
-            <input type="number" class="form-control" v-model="vibration_duration">
-          </span>
-          msec
+          <button v-if="!is_screen_locked" class="btn btn-secondary" v-on:click="screen_lock(true)">ロック</button>
+          <button v-else class="btn btn-secondary" v-on:click="screen_lock(false)">アンロック</button>
+          <br>
+          <label>lock status</label> {{is_screen_locked}}
         </div>
       </div>
     </span>
