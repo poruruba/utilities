@@ -388,7 +388,7 @@ export default {
       }
     },
     vibration_start: function(){
-      if(!('vibration' in navigator) ){
+      if(!('vibrate' in navigator) ){
         alert('サポートしていません。');
         return;
       }
