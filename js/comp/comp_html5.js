@@ -524,6 +524,10 @@ export default {
       a.click();
     },
     battery_refresh: function(){
+      if( !( 'getBattery' in navigator ) ){
+        alert('サポートしていません。');
+        return;
+      }
       navigator.getBattery()
         .then(battery => {
           this.battery = battery;
