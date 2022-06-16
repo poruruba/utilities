@@ -248,7 +248,21 @@ export default {
     }
   },
   methods: {
-    screen_lock: function(enable){
+    tofixed: function (f, digits = 2) {
+      if (f === undefined || f == null)
+        return "";
+      else
+        return f.toFixed(digits);
+    },
+    issuppoted: function(f) {
+      if( f === undefined || f == null )
+        return false;
+      else
+        return true;
+    },
+
+    /* HTML5 */
+    screen_lock: async function(enable){
       if ( !('wakeLock' in navigator) ){
         alert('サポートしていません');
         return;
@@ -264,20 +278,6 @@ export default {
         this.is_screen_locked = false;
       }
     },
-    tofixed: function (f, digits = 2) {
-      if (f === undefined || f == null)
-        return "";
-      else
-        return f.toFixed(digits);
-    },
-    issuppoted: function(f) {
-      if( f === undefined || f == null )
-        return false;
-      else
-        return true;
-    },
-
-    /* HTML5 */
     audio_read: function (files) {
       if (files.length <= 0){
         this.audio_type = "";
