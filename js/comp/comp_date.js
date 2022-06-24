@@ -194,9 +194,8 @@ export default {
                 <div class="row">
                     <label class="col-auto col-form-label title">フリー入力</label>
                     <span class="col-auto">
-                        <input type="text" class="form-control" v-model="date_input_free">
+                        <input type="text" class="form-control" v-model="date_input_free">msec
                     </span>
-                    msec
                     <button class="col-auto btn btn-primary" v-on:click="date_input_process('free')">入力</button>
                 </div>
                 <br>
