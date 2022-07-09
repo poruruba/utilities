@@ -192,9 +192,9 @@ export default {
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <label class="col-auto col-form-label title">フリー入力</label>
+                    <label class="col-auto col-form-label title">フリー入力(msec)</label>
                     <span class="col-auto">
-                        <input type="text" class="form-control" v-model="date_input_free">msec
+                        <input type="text" class="form-control" v-model="date_input_free">
                     </span>
                     <button class="col-auto btn btn-primary" v-on:click="date_input_process('free')">入力</button>
                 </div>
