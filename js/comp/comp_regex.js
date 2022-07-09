@@ -61,13 +61,13 @@ export default {
       switch(this.regex_type){
         case "exec":{
           for( var i = 0 ; i < this.regex_test.length ; i++ ){
-            this.$set(this.regex_test[i], "result", regex.exec(this.regex_test[i].input));
+            this.$set(this.regex_test[i], "result", (this.regex_test[i].input) ? regex.exec(this.regex_test[i].input) : "");
           }
           break;
         }
         case "test":{
           for( var i = 0 ; i < this.regex_test.length ; i++ ){
-            this.$set(this.regex_test[i], "result", regex.test(this.regex_test[i].input));
+            this.$set(this.regex_test[i], "result", (this.regex_test[i].input) ? regex.test(this.regex_test[i].input) : "");
           }
           break;
         }
