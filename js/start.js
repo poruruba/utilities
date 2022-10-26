@@ -38,6 +38,7 @@ const TAB_LIST = [
 var vue_options = {
     el: "#top",
     mixins: [mixins_bootstrap],
+    store: vue_store,
     data: {
 		tab_list: TAB_LIST,
         favorite_link: [],
