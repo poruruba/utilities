@@ -26,7 +26,6 @@ export default {
       </div>
       <div class="card-body">
           <div class="row">
-              <button class="col-auto btn btn-secondary btn-sm" v-on:click="date_duration_reset">リセット</button>
               <span class="col-auto">
                   <select class="form-select" v-model="date_duration_unit">
                       <option value="year">年</option>
@@ -44,6 +43,11 @@ export default {
               <button class="col-auto btn btn-primary btn-sm" v-on:click="date_process()">経過期間→経過後日時</button>
               &nbsp;
               <button class="col-auto btn btn-primary btn-sm" v-on:click="date_elapsed_process()">経過後日時→経過期間</button>
+              &nbsp;
+              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_duration_calc">経過期間算出</button>
+          </div>
+          <div class="row">
+              <span class="col-auto"><label class="title">差分期間</label> {{date_duration_str}}</span>
           </div>
       </div>
   </div>
@@ -227,6 +231,7 @@ export default {
       date_input_free: null,
       date_input_date: null,
       date_input_time: null,
+      date_duration_str: "",
       date_localestring: new Date().toLocaleString("ja-JP"),
       date_option: {},
       date_locales: "ja-JP",
@@ -329,9 +334,23 @@ export default {
       this.date_input_time = temp.format('HH:mm:ss');
       this.dialog_open('#date_input_dialog');
     },
-    date_duration_reset: function () {
-      this.date_duration = 0;
-      this.date_process();
+    date_duration_calc: function () {
+      var base = moment(this.date_moment);
+      var after = moment(this.date_moment_after);
+      var elapsed_year = after.diff(base, 'years');
+      var elapsed_month = after.diff(base, 'months');
+      var elapsed_day = after.diff(base, 'days');
+      var elapsed_hour = after.diff(base, 'hours');
+      var elapsed_minute = after.diff(base, 'minutes');
+      var elapsed_second = after.diff(base, 'seconds');
+      var temp = "";
+      if( elapsed_year > 0 ) temp += elapsed_year + "年";
+      if( elapsed_month > 0 ) temp += elapsed_month + "か月";
+      if( elapsed_day > 0 ) temp += elapsed_day + "日";
+      if( elapsed_hour > 0 ) temp += elapsed_hour + "時間";
+      if( elapsed_minute > 0 ) temp += elapsed_minute + "分";
+      if( elapsed_second > 0 ) temp += elapsed_second + "秒";
+      this.date_duration_str = temp;
     },
     date_process: function () {
       var temp = moment(this.date_moment);
@@ -348,6 +367,7 @@ export default {
       else if (this.date_duration_unit == 'second')
         temp.add(this.date_duration, 'seconds');
       this.date_moment_after = temp;
+      this.date_duration_calc();
     },
     date_input_process: function (target) {
       var date;
