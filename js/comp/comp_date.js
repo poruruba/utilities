@@ -40,9 +40,7 @@ export default {
                   <input type="number" class="form-control" v-model.number="date_duration">
               </span>
               &nbsp;&nbsp;
-              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_process()">経過期間→経過後日時</button>
-              &nbsp;
-              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_elapsed_process()">経過後日時→経過期間</button>
+              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_process()">経過後日時算出</button>
               &nbsp;
               <button class="col-auto btn btn-primary btn-sm" v-on:click="date_duration_calc">経過期間算出</button>
           </div>
@@ -399,22 +397,6 @@ export default {
           this.date_moment_after = moment(date);
       }
       this.dialog_close('#date_input_dialog');
-    },
-    date_elapsed_process: function () {
-      var base = moment(this.date_moment);
-      var after = moment(this.date_moment_after);
-      if (this.date_duration_unit == 'year')
-        this.date_duration = after.diff(base, 'years');
-      else if (this.date_duration_unit == 'month')
-        this.date_duration = after.diff(base, 'months');
-      else if (this.date_duration_unit == 'day')
-        this.date_duration = after.diff(base, 'days');
-      else if (this.date_duration_unit == 'hour')
-        this.date_duration = after.diff(base, 'hours');
-      else if (this.date_duration_unit == 'minute')
-        this.date_duration = after.diff(base, 'minutes');
-      else if (this.date_duration_unit == 'second')
-        this.date_duration = after.diff(base, 'seconds');
     },
   },
   mouted: function () {
