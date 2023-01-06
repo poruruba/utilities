@@ -41,7 +41,7 @@ export default {
               </span>
               &nbsp;&nbsp;
               <button class="col-auto btn btn-primary btn-sm" v-on:click="date_process()">経過後日時算出</button>
-              &nbsp;
+              &nbsp;&nbsp;
           </div>
           <div class="row">
               <button class="col-auto btn btn-primary btn-sm" v-on:click="date_duration_calc">経過期間算出</button> {{date_duration_str}}
