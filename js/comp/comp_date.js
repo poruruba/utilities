@@ -344,12 +344,12 @@ export default {
       var elapsed_minute = after.diff(base, 'minutes');
       var elapsed_second = after.diff(base, 'seconds');
       var temp = "";
-      if( elapsed_year > 0 ) temp += elapsed_year + "年";
-      if( elapsed_month > 0 ) temp += elapsed_month + "か月";
-      if( elapsed_day > 0 ) temp += elapsed_day + "日";
-      if( elapsed_hour > 0 ) temp += elapsed_hour + "時間";
-      if( elapsed_minute > 0 ) temp += elapsed_minute + "分";
-      if( elapsed_second > 0 ) temp += elapsed_second + "秒";
+      if( elapsed_year > 0 ) temp += elapsed_year + "年 ";
+      if( elapsed_month > 0 ) temp += elapsed_month + "か月 ";
+      if( elapsed_day > 0 ) temp += elapsed_day + "日 ";
+      if( elapsed_hour > 0 ) temp += elapsed_hour + "時間 ";
+      if( elapsed_minute > 0 ) temp += elapsed_minute + "分 ";
+      if( elapsed_second > 0 ) temp += elapsed_second + "秒 ";
       this.date_duration_str = temp;
     },
     date_process: function () {
