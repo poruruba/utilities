@@ -42,12 +42,9 @@ export default {
               &nbsp;&nbsp;
               <button class="col-auto btn btn-primary btn-sm" v-on:click="date_process()">経過後日時算出</button>
               &nbsp;
-              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_duration_calc">経過期間算出</button>
           </div>
           <div class="row">
-              <p>
-                  {{date_duration_str}}
-              </p>
+              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_duration_calc">経過期間算出</button> {{date_duration_str}}
           </div>
       </div>
   </div>
