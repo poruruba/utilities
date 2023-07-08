@@ -19,7 +19,7 @@ label.title {
 }
 
 .loader-loaded {
-  animation: fadeout-anim 1s linear forwards;
+  animation: fadeout-anim 0.5s linear forwards;
 }
 
 @keyframes fadeout-anim {
