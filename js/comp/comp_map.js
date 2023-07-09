@@ -89,17 +89,16 @@ export default {
           target_circle.setLatLng([e.latlng.lat, e.latlng.lng]);
           target_circle.setRadius(this.outer_distance);
           localStorage.setItem("default_latlng", JSON.stringify({ lat: e.latlng.lat, lng: e.latlng.lng}));
-        }else{
-          if( list.length >= 2){
-            this.end_latlng = e.latlng;
-            this.direct_distance = this.start_latlng.distanceTo(this.end_latlng);
-            this.total_distance = list.reduce((total, item, index) =>{
-              if( index < 1 )
-                return total;
-              else
-                return total += list[index - 1].distanceTo(item);
-            }, 0.0);
-          }
+        }else
+        if( list.length >= 2){
+          this.end_latlng = e.latlng;
+          this.direct_distance = this.start_latlng.distanceTo(this.end_latlng);
+          this.total_distance = list.reduce((total, item, index) =>{
+            if( index < 1 )
+              return total;
+            else
+              return total += list[index - 1].distanceTo(item);
+          }, 0.0);
         }
       });
       map.setView([this.default_lat, this.default_lng], 10, true);
