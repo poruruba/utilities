@@ -32,6 +32,7 @@ const TAB_LIST = [
 	{ id: 'regex', name: 'Regex' },
 	{ id: 'oidc', name: 'OIDC' },
 	{ id: 'serial', name: 'シリアル' },
+	{ id: 'map', name: 'マップ' },
 	{ id: 'help', name: 'ヘルプ' },
 ];
 
@@ -127,6 +128,7 @@ import comp_yaml from './comp/comp_yaml.js';
 import comp_regex from './comp/comp_regex.js';
 import comp_oidc from './comp/comp_oidc.js';
 import comp_serial from './comp/comp_serial.js';
+import comp_map from './comp/comp_map.js';
 vue_add_component(vue_options, "comp_arrange", comp_arrange);
 vue_add_component(vue_options, "comp_blecent", comp_blecent);
 vue_add_component(vue_options, "comp_uuid", comp_uuid);
@@ -154,5 +156,6 @@ vue_add_component(vue_options, "comp_yaml", comp_yaml);
 vue_add_component(vue_options, "comp_regex", comp_regex);
 vue_add_component(vue_options, "comp_oidc", comp_oidc);
 vue_add_component(vue_options, "comp_serial", comp_serial);
+vue_add_component(vue_options, "comp_map", comp_map);
 
 window.vue = new Vue( vue_options );
