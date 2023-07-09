@@ -123,7 +123,7 @@ export default {
       target_circle.setRadius(0);
       target_pline.setLatLngs([]);
       this.total_distance = 0.0;
-      this.distance_change = 0.0;
+      this.direct_distance = 0.0;
       this.start_latlng = {};
       this.end_latlng = {};
     },
