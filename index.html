@@ -58,6 +58,9 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <script src="https://cdn.jsdelivr.net/npm/pwacompat" crossorigin="anonymous"></script></head>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
+	
     <title>ユーティリティ</title>
 </head>
 <body>
@@ -278,6 +281,13 @@
             -->
             <div id="serial" class="tab-pane fade">
                 <comp_serial></comp_serial>
+            </div>
+
+            <!--
+                マップ
+            -->
+            <div id="map" class="tab-pane fade">
+                <comp_map></comp_map>
             </div>
 		
             <!--
