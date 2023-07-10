@@ -43,7 +43,6 @@ export default {
       started: false,
       total_distance: 0.0,
       direct_distance: 0.0,
-      inner_distance: 1000,
       outer_distance: 10000,
       start_latlng: {},
       end_latlng: {},
