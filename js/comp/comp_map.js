@@ -21,13 +21,9 @@ export default {
         </span>
     </div>
     <label class="col-auto title">合算距離</label> {{(total_distance / 1000).toFixed(2)}} km <label class="col-auto title">直線距離</label> {{(direct_distance / 1000).toFixed(2)}} km<br>
-    <label class="col-auto title">中心地点</label> {{center_latlng.lat}},{{center_latlng.lng}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(center_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(center_latlng)"></button><br>
-    <label class="col-auto title">スタート地点</label> <span v-if="start_latlng.lat">
-      {{start_latlng.lat}},{{start_latlng.lng}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(start_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(start_latlng)"></button>
-    </span><br>
-    <label class="col-auto title">ゴール地点</label> <span v-if="end_latlng.lat">
-      {{end_latlng.lat}},{{end_latlng.lng}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(end_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(end_latlng)"></button>
-    </span><br>
+    <label class="col-auto title">中心地点</label> {{center_latlng.lat?.toFixed(7)}},{{center_latlng.lng?.toFixed(7)}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(center_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(center_latlng)"></button><br>
+    <label class="col-auto title">スタート地点</label> {{start_latlng.lat?.toFixed(7)}},{{start_latlng.lng?.toFixed(7)}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(start_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(start_latlng)"></button><br>
+    <label class="col-auto title">ゴール地点</label> {{end_latlng.lat?.toFixed(7)}},{{end_latlng.lng?.toFixed(7)}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(end_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(end_latlng)"></button><br>
     <br>
     <button class="btn btn-primary" v-on:click="pline_clear">リセット</button>
     <button class="btn btn-secondary btn-sm" v-on:click="call_goto_current">現在地に移動</button>
@@ -67,12 +63,12 @@ export default {
       });
     },
     call_clip_copy: function(latlng){
-      var msg = latlng.lat + ',' + latlng.lng;
+      var msg = latlng.lat.toFixed(7) + ',' + latlng.lng.toFixed(7);
       this.clip_copy(msg);
       this.toast_show("クリップボードにコピーしました。");
     },
     call_googlemap: function(latlng){
-      var url = "http://maps.google.com/maps?q=" + latlng.lat + ',' + latlng.lng;
+      var url = "http://maps.google.com/maps?q=" + latlng.lat.toFixed(7) + ',' + latlng.lng.toFixed(7);
       window.open(url);
     },
     distance_change: function(){
