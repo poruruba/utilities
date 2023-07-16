@@ -21,7 +21,7 @@ export default {
         </span>
     </div>
     <label class="col-auto title">合算距離</label> {{(total_distance / 1000).toFixed(2)}} km <label class="col-auto title">直線距離</label> {{(direct_distance / 1000).toFixed(2)}} km<br>
-    <label class="col-auto title">中心地点</label> {{center_latlng.lat}},{{center_latlng.lng}}<br>
+    <label class="col-auto title">中心地点</label> {{center_latlng.lat}},{{center_latlng.lng}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(center_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(center_latlng)"></button><br>
     <label class="col-auto title">スタート地点</label> <span v-if="start_latlng.lat">
       {{start_latlng.lat}},{{start_latlng.lng}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(start_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(start_latlng)"></button>
     </span><br>
