@@ -21,6 +21,7 @@ export default {
         </span>
     </div>
     <label class="col-auto title">合算距離</label> {{(total_distance / 1000).toFixed(2)}} km <label class="col-auto title">直線距離</label> {{(direct_distance / 1000).toFixed(2)}} km<br>
+    <label class="col-auto title">中心地点</label> {{center_latlng.lat}},{{center_latlng.lng}}<br>
     <label class="col-auto title">スタート地点</label> <span v-if="start_latlng.lat">
       {{start_latlng.lat}},{{start_latlng.lng}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(start_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(start_latlng)"></button>
     </span><br>
@@ -30,7 +31,6 @@ export default {
     <br>
     <button class="btn btn-primary" v-on:click="pline_clear">リセット</button>
     <button class="btn btn-secondary btn-sm" v-on:click="call_goto_current">現在地に移動</button>
-    <button class="btn btn-secondary btn-sm" v-on:click="call_set_current">現在地をセット</button>
     <button class="btn btn-secondary btn-sm" v-on:click="call_set_center">中心地点をセット</button>
   </div>
   <br>
@@ -49,6 +49,7 @@ export default {
       outer_distance: 10000,
       start_latlng: {},
       end_latlng: {},
+      center_latlng: {},
     }
   },
   methods: {
@@ -56,15 +57,6 @@ export default {
     call_set_center: function(){
       var latlng = map.getCenter();
       this.add_point(latlng.lat, latlng.lng);
-    },
-    call_set_current: function(){
-      navigator.geolocation.getCurrentPosition((position) =>{
-        map.setView([ position.coords.latitude, position.coords.longitude ]);
-        this.add_point(position.coords.latitude, position.coords.longitude );
-      }, (error) =>{
-        console.error(error);
-        alert(error);
-      });
     },
     call_goto_current: function(){
       navigator.geolocation.getCurrentPosition((position) =>{
@@ -98,8 +90,10 @@ export default {
           this.add_point(e.latlng.lat, e.latlng.lng);
       }).on('move', (e) =>{
         console.log(e);
-        if( center_marker )
-          center_marker.setLatLng(map.getCenter());
+        if( center_marker ){
+          this.center_latlng = map.getCenter();
+          center_marker.setLatLng(this.center_latlng);
+        }
       });
       map.setView([this.default_lat, this.default_lng], 10, true);
   
