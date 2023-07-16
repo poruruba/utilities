@@ -1,4 +1,5 @@
 let map;
+let center_marker;
 let target_marker;
 let target_pline;
 let target_circle;
@@ -95,6 +96,10 @@ export default {
       }).on('click', (e) =>{
 //        console.log(e);
           this.add_point(e.latlng.lat, e.latlng.lng);
+      }).on('move', (e) =>{
+        console.log(e);
+        if( center_marker )
+          center_marker.setLatLng(map.getCenter());
       });
       map.setView([this.default_lat, this.default_lng], 10, true);
   
@@ -106,6 +111,7 @@ export default {
           attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank' rel='noopener noreferrer'>地理院タイル</a>"
       }).addTo(map);
 
+      center_marker = L.marker([this.default_lat, this.default_lng]).addTo(map);
       target_marker = L.circleMarker([this.default_lat, this.default_lng], { radius: 0 }).addTo(map);
       target_circle = L.circle([this.default_lat, this.default_lng], { radius: 0, color: "#FF5555", fill: false, weight: 3} ).addTo(map);
       target_pline = L.polyline([], { color: 'blue', weight: 3 }).addTo(map);
