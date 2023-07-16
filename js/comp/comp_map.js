@@ -26,6 +26,7 @@ export default {
     <label class="col-auto title">ゴール地点</label> {{end_latlng.lat?.toFixed(7)}},{{end_latlng.lng?.toFixed(7)}} <button class="btn btn-secondary oi oi-paperclip" v-on:click="call_clip_copy(end_latlng)"></button> <button class="btn btn-secondary oi oi-map" v-on:click="call_googlemap(end_latlng)"></button><br>
     <br>
     <button class="btn btn-primary" v-on:click="pline_clear">リセット</button>
+    <button class="btn btn-primary" v-on:click="pline_previous">ひとつ前に戻る</button>
     <button class="btn btn-secondary btn-sm" v-on:click="call_goto_current">現在地に移動</button>
     <button class="btn btn-secondary btn-sm" v-on:click="call_set_center">中心地点をセット</button>
   </div>
@@ -107,6 +108,23 @@ export default {
       target_pline = L.polyline([], { color: 'blue', weight: 3 }).addTo(map);
 
       this.started = true;
+    },
+    pline_previous: function(){
+      var list = target_pline.getLatLngs();
+      if( list.length <= 0 ){
+        return;
+      }else if(list.length == 1){
+        this.pline_clear();
+      }else if(list.length == 2){
+        var latlng = list[0];
+        this.pline_clear();
+        this.add_point(latlng.lat, latlng.lng);
+      }else{
+        list.pop();
+        var latlng = list.pop();
+        target_pline.setLatLngs(list);
+        this.add_point(latlng.lat, latlng.lng);
+      }
     },
     pline_clear: function(){
       target_marker.setRadius(0);
