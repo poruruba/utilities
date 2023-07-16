@@ -33,8 +33,6 @@ export default {
   <br>
 
   <div id="mapcontainer" style="height:60vh"></div>
-</div>
-
 </div>`,
   data: function () {
     return {
