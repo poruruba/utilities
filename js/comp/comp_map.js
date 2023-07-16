@@ -86,7 +86,7 @@ export default {
 //        console.log(e);
           this.add_point(e.latlng.lat, e.latlng.lng);
       }).on('move', (e) =>{
-        console.log(e);
+//        console.log(e);
         if( center_marker ){
           this.center_latlng = map.getCenter();
           center_marker.setLatLng(this.center_latlng);
