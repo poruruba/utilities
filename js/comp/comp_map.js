@@ -28,7 +28,9 @@ export default {
     </span><br>
     <br>
     <button class="btn btn-primary" v-on:click="pline_clear">リセット</button>
-    <button class="btn btn-secondary btn-sm" v-on:click="call_goto_current">現在地</button>
+    <button class="btn btn-secondary btn-sm" v-on:click="call_goto_current">現在地に移動</button>
+    <button class="btn btn-secondary btn-sm" v-on:click="call_set_current">現在地をセット</button>
+    <button class="btn btn-secondary btn-sm" v-on:click="call_set_center">中心地点をセット</button>
   </div>
   <br>
 
@@ -50,6 +52,19 @@ export default {
   },
   methods: {
     /* Map */
+    call_set_center: function(){
+      var latlng = map.getCenter();
+      this.add_point(latlng.lat, latlng.lng);
+    },
+    call_set_current: function(){
+      navigator.geolocation.getCurrentPosition((position) =>{
+        map.setView([ position.coords.latitude, position.coords.longitude ]);
+        this.add_point(position.coords.latitude, position.coords.longitude );
+      }, (error) =>{
+        console.error(error);
+        alert(error);
+      });
+    },
     call_goto_current: function(){
       navigator.geolocation.getCurrentPosition((position) =>{
         map.setView([ position.coords.latitude, position.coords.longitude ]);
@@ -79,26 +94,7 @@ export default {
         zoomControl: true,
       }).on('click', (e) =>{
 //        console.log(e);
-        target_pline.addLatLng(e.latlng);
-        var list = target_pline.getLatLngs();
-        if( list.length == 1 ){
-          this.start_latlng = e.latlng;
-          target_marker.setRadius(10);
-          target_marker.setLatLng([e.latlng.lat, e.latlng.lng]);
-          target_circle.setLatLng([e.latlng.lat, e.latlng.lng]);
-          target_circle.setRadius(this.outer_distance);
-          localStorage.setItem("default_latlng", JSON.stringify({ lat: e.latlng.lat, lng: e.latlng.lng}));
-        }else
-        if( list.length >= 2){
-          this.end_latlng = e.latlng;
-          this.direct_distance = this.start_latlng.distanceTo(this.end_latlng);
-          this.total_distance = list.reduce((total, item, index) =>{
-            if( index < 1 )
-              return total;
-            else
-              return total += list[index - 1].distanceTo(item);
-          }, 0.0);
-        }
+          this.add_point(e.latlng.lat, e.latlng.lng);
       });
       map.setView([this.default_lat, this.default_lng], 10, true);
   
@@ -125,13 +121,36 @@ export default {
       this.start_latlng = {};
       this.end_latlng = {};
     },
+    add_point: function(lat, lng){
+      var latlng = L.latLng(lat, lng);
+      target_pline.addLatLng(latlng);
+      var list = target_pline.getLatLngs();
+      if( list.length == 1 ){
+        this.start_latlng = latlng;
+        target_marker.setRadius(10);
+        target_marker.setLatLng(latlng);
+        target_circle.setLatLng(latlng);
+        target_circle.setRadius(this.outer_distance);
+        localStorage.setItem("default_latlng", JSON.stringify({ lat: latlng.lat, lng: latlng.lng}));
+      }else
+      if( list.length >= 2){
+        this.end_latlng = latlng;
+        this.direct_distance = this.start_latlng.distanceTo(this.end_latlng);
+        this.total_distance = list.reduce((total, item, index) =>{
+          if( index < 1 )
+            return total;
+          else
+            return total += list[index - 1].distanceTo(item);
+        }, 0.0);
+      }
+    }
   },
   mounted: async function(){
     var latlng = localStorage.getItem('default_latlng');
     if( latlng ){
       latlng = JSON.parse(latlng);
-        this.default_lat = latlng.lat;
-        this.default_lng = latlng.lng;
+      this.default_lat = latlng.lat;
+      this.default_lng = latlng.lng;
     }
   }
 };
