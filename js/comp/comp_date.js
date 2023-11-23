@@ -197,6 +197,7 @@ export default {
                     <label class="col-auto col-form-label title">フリー入力(msec)</label>
                     <span class="col-auto">
                         <input type="text" class="form-control" v-model="date_input_free">
+                        <input type="checkbox" class="form-control" v-model="date_check_sec">
                     </span>
                     <button class="col-auto btn btn-primary" v-on:click="date_input_process('free')">入力</button>
                 </div>
@@ -234,6 +235,7 @@ export default {
       date_option: {},
       date_locales: "ja-JP",
       date_tostring: "toLocaleString",
+      date_check_sec: false,
     }
   },
   computed: {
