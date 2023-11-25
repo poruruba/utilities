@@ -200,8 +200,8 @@ export default {
                     </span>
                     <span class="col-auto">
                         <input type="checkbox" class="form-check-input" v-model="date_check_sec">
-                    </span>
-                    <span class="col-auto">sec</span> 
+                    </span>sec
+                    &nbsp;&nbsp;
                     <button class="col-auto btn btn-primary" v-on:click="date_input_process('free')">入力</button>
                 </div>
                 <br>
