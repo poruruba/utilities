@@ -197,7 +197,9 @@ export default {
                     <label class="col-auto col-form-label title">フリー入力(msec)</label>
                     <span class="col-auto">
                         <input type="text" class="form-control" v-model="date_input_free">
-                        <input type="checkbox" class="form-control" v-model="date_check_sec">
+                    </span>
+                    <span class="col-auto">
+                        <input type="checkbox" class="form-control" v-model="date_check_sec">sec
                     </span>
                     <button class="col-auto btn btn-primary" v-on:click="date_input_process('free')">入力</button>
                 </div>
@@ -377,6 +379,8 @@ export default {
           return;
         }
         date = this.date_input_free;
+        if( this.date_check_sec )
+          date *= 1000;
       } else {
         if (!this.date_input_date || !this.date_input_time) {
           alert('入力値が不正です。');
