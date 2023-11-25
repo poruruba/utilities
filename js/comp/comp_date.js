@@ -201,7 +201,7 @@ export default {
                     <span class="col-auto">
                         <input type="checkbox" v-model="date_check_sec">
                     </span>
-                    sec 
+                    <span class="col-auto">sec</span> 
                     <button class="col-auto btn btn-primary" v-on:click="date_input_process('free')">入力</button>
                 </div>
                 <br>
