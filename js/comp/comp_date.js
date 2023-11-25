@@ -199,7 +199,7 @@ export default {
                         <input type="text" class="form-control" v-model="date_input_free">
                     </span>
                     <span class="col-auto">
-                        <input type="checkbox" class="form-control" v-model="date_check_sec">
+                        <input type="checkbox" v-model="date_check_sec">
                     </span>
                     sec 
                     <button class="col-auto btn btn-primary" v-on:click="date_input_process('free')">入力</button>
