@@ -48,16 +48,17 @@ export default {
         if( !this.input_pluscode )
           return;
 
-        const index = this.input_pluscode.trim().indexOf(' ');
+        const pluscode = this.input_pluscode.trim(); 
+        const index = pluscode.indexOf(' ');
         let fullCode;
         if( index < 0 ){
           this.input_type = "Full";
-          fullCode = this.input_pluscode;
+          fullCode = pluscode;
         }else{
           this.input_type = "Short";
-          const codeFragment = this.input_pluscode.slice(0, index);
-          const locality = this.input_pluscode.slice(index + 1).trim();
-          
+          const codeFragment = pluscode.slice(0, index);
+          const locality = pluscode.slice(index + 1).trim();
+
           console.log(codeFragment, locality);
           const url = "https://msearch.gsi.go.jp/address-search/AddressSearch";
           const result = await do_get(url, {
