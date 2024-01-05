@@ -56,8 +56,8 @@ export default {
         }else{
           this.input_type = "Short";
           const codeFragment = this.input_pluscode.slice(0, index);
-          const locality = this.input_pluscode.slice(index);
-
+          const locality = this.input_pluscode.slice(index + 1).trim();
+          
           console.log(codeFragment, locality);
           const url = "https://msearch.gsi.go.jp/address-search/AddressSearch";
           const result = await do_get(url, {
