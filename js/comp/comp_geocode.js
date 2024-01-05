@@ -27,6 +27,10 @@ export default {
     <input type="text" class="form-control" v-model="output_pluscode" readonly>
     <a class="btn btn-secondary btn-sm" v-bind:href="'https://www.google.com/maps?q=' + encodeURIComponent(output_pluscode)" target="_blank">GoogleMap</a>
   </div>
+
+  <br>
+  <hr>
+  <p>※国土地理院のAPI(https://msearch.gsi.go.jp/address-search/AddressSearch)を利用しています。</p>
 </div>`,
   data: function () {
     return {
