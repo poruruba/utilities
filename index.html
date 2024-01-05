@@ -60,6 +60,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
+    <script src="dist/js/openlocationcode.min.js"></script>
 	
     <title>ユーティリティ</title>
 </head>
@@ -94,6 +95,13 @@
         
         <div class="tab-content">
 
+            <!--
+                Geocoding
+            -->
+            <div id="geocode" class="tab-pane fade">
+                <comp_geocode></comp_geocode>
+            </div>		
+		
             <!--
                 BLE Central
             -->
