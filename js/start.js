@@ -17,7 +17,6 @@ const TAB_LIST = [
 	{ id: 'array', name: 'バイト配列' },
 	{ id: 'date', name: '日時' },
 	{ id: 'cardinal', name: '基数' },
-	{ id: 'clip', name: 'クリップ' },
 	{ id: 'arrange', name: '整形' },
     { id: 'gengou', name: '元号' },
     { id: 'blecent', name: 'BLECentral' },
@@ -117,7 +116,6 @@ import comp_array from './comp/comp_array.js';
 import comp_date from './comp/comp_date.js';
 import comp_cardinal from './comp/comp_cardinal.js';
 import comp_gengou from './comp/comp_gengou.js';
-import comp_clip from './comp/comp_clip.js';
 import comp_websocket from './comp/comp_websocket.js';
 import comp_html5 from './comp/comp_html5.js';
 import comp_x509 from './comp/comp_x509.js';
@@ -146,7 +144,6 @@ vue_add_component(vue_options, "comp_array", comp_array);
 vue_add_component(vue_options, "comp_date", comp_date);
 vue_add_component(vue_options, "comp_cardinal", comp_cardinal);
 vue_add_component(vue_options, "comp_gengou", comp_gengou);
-vue_add_component(vue_options, "comp_clip", comp_clip);
 vue_add_component(vue_options, "comp_websocket", comp_websocket);
 vue_add_component(vue_options, "comp_html5", comp_html5);
 vue_add_component(vue_options, "comp_x509", comp_x509);
