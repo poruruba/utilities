@@ -29,11 +29,15 @@ export default {
   methods: {
     /* JWT */
     jwt_parse: function(){
-      var jwt = this.jwt_input.split('.');
-      var header = decoder.decode(base64url.decode(jwt[0].trim()));
-      var payload = decoder.decode(base64url.decode(jwt[1].trim()));
-      this.jwt_output_header = JSON.stringify(JSON.parse(header), null, '\t');
-      this.jwt_output_payload = JSON.stringify(JSON.parse(payload), null, '\t');
+      try{
+        var jwt = this.jwt_input.split('.');
+        var header = decoder.decode(base64url.decode(jwt[0].trim()));
+        var payload = decoder.decode(base64url.decode(jwt[1].trim()));
+        this.jwt_output_header = JSON.stringify(JSON.parse(header), null, '\t');
+        this.jwt_output_payload = JSON.stringify(JSON.parse(payload), null, '\t');
+      }catch(error){
+        alert(error);
+      }
     }
   }
 };
