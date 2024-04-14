@@ -1,6 +1,6 @@
 'use strict';
 
-const vConsole = new VConsole();
+//const vConsole = new VConsole();
 //window.datgui = new dat.GUI();
 
 const FAVORITE_MAX = 5;
