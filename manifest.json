@@ -14,5 +14,14 @@
             "sizes": "512x512",
             "type": "image/png"
         }
-    ]
+    ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "id": "a84cfc03-4dd3-48f8-a44e-30f6a60cd66c",
+  "description": "This is Convenient Tool.",
+  "lang": "ja",
+  "categories": [
+    "utilities"
+  ],
+  "orientation": "any"
 }
