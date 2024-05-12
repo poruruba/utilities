@@ -1,6 +1,6 @@
 {
-    "short_name": "poruruba2.ConvenientTool",
-    "name": "poruruba2.ConvenientTool",
+    "short_name": "Convenient Tool",
+    "name": "Convenient Tool",
     "display": "standalone",
     "start_url": "index.html",
     "icons": [
