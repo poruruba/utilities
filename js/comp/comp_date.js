@@ -40,9 +40,9 @@ export default {
                   <input type="number" class="form-control" v-model.number="date_duration">
               </span>
               &nbsp;&nbsp;
-              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_process()">経過後日時設定</button>
+              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_process()">↓経過後日時設定</button>
               &nbsp;&nbsp;
-              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_duration_calc">経過期間算出</button>
+              <button class="col-auto btn btn-primary btn-sm" v-on:click="date_duration_calc">↑経過期間算出</button>
           </div>
           <div class="row">
               <p>{{date_duration_str}}</p>
