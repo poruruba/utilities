@@ -169,6 +169,24 @@ export default {
     </span>
   </collapse-panel>
 
+  <collapse-panel id="html5_usermedia" title="UserMedia" collapse="true">
+    <span slot="content">
+      <div class="card-body">
+        <button class="btn btn-secondary" v-on:click="do_usermedia_list">リスト取得</button><br>
+        <table class="table table-striped">
+          <thead>
+            <tr><th>#</th><th>kind</th><th>label</th></tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in usermedia_list">
+              <td>{{(index + 1)}}</td><td>{{item.kind}}</td><td>{{item.label}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </span>
+  </collapse-panel>
+
   <collapse-panel id="html5_record" title="VideoRecord" collapse="true">
     <span slot="content">
       <div class="card-body">
@@ -182,12 +200,14 @@ export default {
           <span class="col-auto" v-if="!record_previewing">
             <label class="title">解像度</label>
             <select class="form-select" v-model.number="record_resolution">
-              <option v-for="(item, index) in record_resolution_list" v-bind:value="index">{{item.disp}}</option>
+              <option value="0">default</option>
+              <option v-for="(item, index) in record_resolution_list" v-bind:value="item">{{item}}</option>
             </select>
           </span>
           <span class="col-auto" v-if="!record_previewing">
-            <label class="title">カメラ</label>
+            <label class="title">カメラ/画面</label>
             <select class="form-select" v-model="record_facing">
+<optionvalue="display">display</option>
               <option value="user">user</option>
               <option value="environment">environment</option>
             </select>
@@ -228,14 +248,14 @@ export default {
       speech_status: '',
       record_preview: null,
       record_chunks: [],
-      record_resolution_list: resolution_list,
+      record_resolution_list: [ 240, 480, 960, 1920 ],
       record_resolution: 0,
       record_stream: null,
       record_recording: false,
       record_previewing: false,
       record_facing: "environment",
       record_audio: true,
-      
+      usermedia_list: [],
       screen_wl: null,
       is_screen_locked: false,
     }
@@ -488,20 +508,43 @@ export default {
       });
       this.speech_status = '';
     },
+    do_usermedia_list: function(){
+      navigator.mediaDevices.enumerateDevices()
+      .then(devices =>{
+        console.log(devices);
+        this.usermedia_list = devices;
+      });
+    },
     record_prepare: function(){
       this.record_dispose();
 
       this.record_previewing = true;
-      var resolution = this.record_resolution_list[this.record_resolution];
-      navigator.mediaDevices.getUserMedia({ video: { facingMode: this.record_facing, width: resolution.width, height: resolution.height }, audio: this.record_audio })
+      var param_video = {};
+      if( this.record_resolution > 0 )
+        param_video.width = this.record_resolution;
+
+      if( this.record_facing == "display"){
+        navigator.mediaDevices.getDisplayMedia({ video: param_video, audio: this.record_audio })
         .then((stream) => {
-          g_stream = stream;
-          this.record_preview.srcObject = stream;
-        })
-        .catch(error =>{
-          this.record_previewing = false;
-          alert(error);
-        });
+            g_stream = stream;
+            this.record_preview.srcObject = stream;
+          })
+          .catch(error =>{
+            this.record_previewing = false;
+            alert(error);
+          });
+      }else{
+        param_video.facingMode = this.record_facing;
+        navigator.mediaDevices.getUserMedia({ video: param_video, audio: this.record_audio })
+        .then((stream) => {
+            g_stream = stream;
+            this.record_preview.srcObject = stream;
+          })
+          .catch(error =>{
+            this.record_previewing = false;
+            alert(error);
+          });
+        }
     },
     record_dispose: function(){
       if( g_recorder ){
@@ -571,10 +614,3 @@ export default {
     this.record_preview = document.querySelector('#record_preview');
   }
 };
-
-const resolution_list = [
-  { disp: "240x135", width: 240, height: 135 },
-  { disp: "480x270", width: 480, height: 270 },
-  { disp: "960x540", width: 960, height: 540 },
-  { disp: "1920x1080", width: 1920, height: 1080 },
-];
