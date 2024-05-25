@@ -207,7 +207,7 @@ export default {
           <span class="col-auto" v-if="!record_previewing">
             <label class="title">カメラ/画面</label>
             <select class="form-select" v-model="record_facing">
-<optionvalue="display">display</option>
+              <option value="display">display</option>
               <option value="user">user</option>
               <option value="environment">environment</option>
             </select>
