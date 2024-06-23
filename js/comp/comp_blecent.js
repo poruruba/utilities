@@ -116,6 +116,8 @@ export default {
           for (var i = 0; i < additional_services.length; i++) {
             if (additional_services[i].length == 4)
               additional_services[i] = parseInt(additional_services[i], 16);
+            else
+              additional_services[i] = additional_services[i].toLowerCase();
           }
         }
         var optionalServices = additional_services.concat(Object.keys(serviceUuidList).map(x => parseInt(x)));
