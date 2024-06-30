@@ -126,11 +126,12 @@ export default {
 
         console.log('Execute : requestDevice');
         var params = {
-          acceptAllDevices: true,
           optionalServices: optionalServices
         };
         if( this.ble_target_serviceuuid )
           params.filters = [{services: [this.ble_target_serviceuuid]}];
+        else
+          params.acceptAllDevices = true;
         var device = await navigator.bluetooth.requestDevice(params);
       } catch (error) {
         console.error(error);
