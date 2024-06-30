@@ -8,7 +8,7 @@ export default {
   <button class="btn btn-primary" v-on:click="ble_connect()" v-if="!ble_isConnected">Connect</button>
   <button class="btn btn-primary" v-on:click="ble_disconnect()" v-else>Disconnect</button>
   <br><br>
-  <label>ServiceUUID</label> <input type="text" class="form-control" v-model="ble_target_serviceuuid"><br>
+  <label class="title">ServiceUUID</label> <input type="text" class="form-control" v-model="ble_target_serviceuuid"><br>
   <collapse-panel id="additional_services_panel" title="Additional Services" collapse="true">
     <span slot="content">
       <div class="card-body">
