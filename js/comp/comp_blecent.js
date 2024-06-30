@@ -130,7 +130,7 @@ export default {
           optionalServices: optionalServices
         };
         if( this.ble_target_serviceuuid )
-          params.filters = [this.ble_target_serviceuuid];
+          params.filters = [{services: [this.ble_target_serviceuuid]];
         var device = await navigator.bluetooth.requestDevice(params);
       } catch (error) {
         console.error(error);
