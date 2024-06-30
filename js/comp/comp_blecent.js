@@ -8,6 +8,7 @@ export default {
   <button class="btn btn-primary" v-on:click="ble_connect()" v-if="!ble_isConnected">Connect</button>
   <button class="btn btn-primary" v-on:click="ble_disconnect()" v-else>Disconnect</button>
   <br><br>
+  <label>ServiceUUID</label> <input type="text" class="form-control" v-model="ble_target_serviceuuid"><br>
   <collapse-panel id="additional_services_panel" title="Additional Services" collapse="true">
     <span slot="content">
       <div class="card-body">
@@ -62,6 +63,7 @@ export default {
       ble_services: [],
       ble_isConnected: false,
       ble_additional_services: '',
+      ble_target_serviceuuid: "",
     }
   },
   methods: {
@@ -123,10 +125,13 @@ export default {
         var optionalServices = additional_services.concat(Object.keys(serviceUuidList).map(x => parseInt(x)));
 
         console.log('Execute : requestDevice');
-        var device = await navigator.bluetooth.requestDevice({
+        var params = {
           acceptAllDevices: true,
           optionalServices: optionalServices
-        });
+        };
+        if( this.target_serviceuuid )
+          params.filters = [this.target_serviceuuid];
+        var device = await navigator.bluetooth.requestDevice(params);
       } catch (error) {
         console.error(error);
         alert(error);
