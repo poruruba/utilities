@@ -129,8 +129,8 @@ export default {
           acceptAllDevices: true,
           optionalServices: optionalServices
         };
-        if( this.target_serviceuuid )
-          params.filters = [this.target_serviceuuid];
+        if( this.ble_target_serviceuuid )
+          params.filters = [this.ble_target_serviceuuid];
         var device = await navigator.bluetooth.requestDevice(params);
       } catch (error) {
         console.error(error);
