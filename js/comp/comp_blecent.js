@@ -109,6 +109,7 @@ export default {
       }
     },
     ble_connect: async function () {
+      var device;
       try {
         this.ble_disconnect();
 
@@ -132,7 +133,7 @@ export default {
           params.filters = [{services: [this.ble_target_serviceuuid]}];
         else
           params.acceptAllDevices = true;
-        var device = await navigator.bluetooth.requestDevice(params);
+        device = await navigator.bluetooth.requestDevice(params);
       } catch (error) {
         console.error(error);
         alert(error);
