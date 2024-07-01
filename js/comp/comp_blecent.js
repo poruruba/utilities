@@ -109,7 +109,6 @@ export default {
       }
     },
     ble_connect: async function () {
-      var device;
       try {
         this.ble_disconnect();
 
@@ -133,7 +132,7 @@ export default {
           params.filters = [{services: [this.ble_target_serviceuuid]}];
         else
           params.acceptAllDevices = true;
-        device = await navigator.bluetooth.requestDevice(params);
+        this.ble_device = await navigator.bluetooth.requestDevice(params);
       } catch (error) {
         console.error(error);
         alert(error);
@@ -144,7 +143,6 @@ export default {
       try {
         console.log("requestDevice OK");
         this.ble_services = [];
-        this.ble_device = device;
         this.ble_device.addEventListener('gattserverdisconnected', this.ble_onDisconnect.bind(this.ble_onDisconnect));
         var server = await this.ble_device.gatt.connect()
         console.log('Execute : getPrimaryServices');
