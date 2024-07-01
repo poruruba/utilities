@@ -116,7 +116,7 @@ export default {
         if (this.ble_additional_services) {
           additional_services = this.ble_additional_services.split(/\r\n|\r|\n/);
           for (var i = 0; i < additional_services.length; i++) {
-            if (additional_services[i].length == 4)
+            if (additional_services[i].length <= 4)
               additional_services[i] = parseInt(additional_services[i], 16);
             else
               additional_services[i] = additional_services[i].toLowerCase();
