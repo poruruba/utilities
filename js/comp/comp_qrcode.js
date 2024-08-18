@@ -52,7 +52,7 @@ export default {
               <comp_file id="image_file" v-bind:callback="image_open_files" ref="image_file"></comp_file><br>
               <div class="row">
                 <div class="col-4">
-                  <textarea placeholder="ここに画像かテキストをペースト(Ctrl-V)してください。" class="form-control" style="text-align: center; resize: none;" rows="5" 
+                  <textarea placeholder="ここに画像をペースト(Ctrl-V)してください。" class="form-control" style="text-align: center; resize: none;" rows="5" 
                     v-on:paste="do_paste" v-on:drop.prevent="do_file_paste" v-on:dragover.prevent readonly>
                   </textarea>
                   <br>
