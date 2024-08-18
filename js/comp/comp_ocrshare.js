@@ -124,42 +124,43 @@ export default {
         if (e.clipboardData.types.length == 0)
             return;
 
-        var item = e.clipboardData.items[0];
-        var type = item.type;
-        if( type.startsWith('text/')){
-            e.clipboardData.items[0].getAsString(str =>{
-            	if( type == "text/html" ){
-            		var src = parse_htmlclipboard(str, type);
-            		if( src == null ){
+        for( let item of e.clipboardData){
+	        var type = item.type;
+	        if( type.startsWith('text/')){
+	                item.getAsString(str =>{
+	            	if( type == "text/html" ){
+	            		var src = parse_htmlclipboard(str, type);
+	            		if( src == null ){
+			                this.result_text = str;
+			            }else{
+			            	do_get_blob(src)
+			            	.then(blob =>{
+						var reader2 = new FileReader();
+						reader2.onload = (e) => {
+					                var data_url = e.target.result;
+					                this.set_dataurl(data_url);
+						}
+						reader2.readAsDataURL(blob) ;
+			            	});
+			            }
+			        }else{
 		                this.result_text = str;
-		            }else{
-		            	do_get_blob(src)
-		            	.then(blob =>{
-					var reader2 = new FileReader();
-					reader2.onload = (e) => {
-				                var data_url = e.target.result;
-				                this.set_dataurl(data_url);
-					}
-					reader2.readAsDataURL(blob) ;
-		            	});
 		            }
-		        }else{
-	                this.result_text = str;
-	            }
-            });
-            return;
-        }else
-        if( item.type.startsWith('image/')){
-            var imageFile = e.clipboardData.items[0].getAsFile();
-            var reader = new FileReader();
-            reader.onload = (e) => {
-                var data_url = e.target.result;
-                this.set_dataurl(data_url);
-            };
-            reader.readAsDataURL(imageFile);
-        }else{
-            alert('サポートしていません。');
+	            });
+	            return;
+	        }else
+	        if( item.type.startsWith('image/')){
+	                var imageFile = item.getAsFile();
+	            var reader = new FileReader();
+	            reader.onload = (e) => {
+	                var data_url = e.target.result;
+	                this.set_dataurl(data_url);
+	            };
+	            reader.readAsDataURL(imageFile);
+	                return;
+	        }
         }
+        alert('サポートしていません。');
     },
     onMouseMove: function(e){
         console.log('onMouseMove');
