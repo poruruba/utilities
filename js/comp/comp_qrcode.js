@@ -75,6 +75,7 @@ export default {
       qrcode_input: '',
       qrcode_btn: 'QRスキャン開始',
       qrcode_video: null,
+      qrcode_canvas: null,
       qrcode_context: null,
       qrcode_scaned_data: '',
       qrcode_scaned_data2: '',
@@ -217,15 +218,15 @@ export default {
             requestAnimationFrame(this.qrcode_draw);
           return;
         }
-        var qrcode_canvas = document.querySelector('#qrcode_canvas');
-        qrcode_canvas.width = this.qrcode_video.videoWidth;
-        qrcode_canvas.height = this.qrcode_video.videoHeight;
+        
+        this.qrcode_canvas.width = this.qrcode_video.videoWidth;
+        this.qrcode_canvas.height = this.qrcode_video.videoHeight;
         this.qrcode_context = qrcode_canvas.getContext('2d');
       }
-      this.qrcode_context.drawImage(this.qrcode_video, 0, 0, qrcode_canvas.width, qrcode_canvas.height);
-      const imageData = this.qrcode_context.getImageData(0, 0, qrcode_canvas.width, qrcode_canvas.height);
+      this.qrcode_context.drawImage(this.qrcode_video, 0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
+      const imageData = this.qrcode_context.getImageData(0, 0, this.qrcode_canvas.width, this.qrcode_canvas.height);
 
-      const code = jsQR(imageData.data, qrcode_canvas.width, qrcode_canvas.height);
+      const code = jsQR(imageData.data, this.qrcode_canvas.width, this.qrcode_canvas.height);
       if (code && code.data != "") {
         this.qrcode_scaned_data = code.data;
         console.log(code);
@@ -265,5 +266,6 @@ export default {
     },
   },
   mounted: function(){
+    this.qrcode_canvas = document.querySelector('#qrcode_canvas');
   }
 };
