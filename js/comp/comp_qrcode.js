@@ -220,7 +220,7 @@ export default {
         var qrcode_canvas = document.querySelector('#qrcode_canvas');
         qrcode_canvas.width = this.qrcode_video.videoWidth;
         qrcode_canvas.height = this.qrcode_video.videoHeight;
-        qrcode_context = qrcode_canvas.getContext('2d');
+        this.qrcode_context = qrcode_canvas.getContext('2d');
       }
       this.qrcode_context.drawImage(this.qrcode_video, 0, 0, qrcode_canvas.width, qrcode_canvas.height);
       const imageData = this.qrcode_context.getImageData(0, 0, qrcode_canvas.width, qrcode_canvas.height);
