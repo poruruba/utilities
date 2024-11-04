@@ -145,10 +145,10 @@ export default {
       this.qrcode_scaned_data2 = "";
       var image = document.querySelector('#qrcode_start2');
       image.onload = () =>{
-        var qrcode_canvas = document.querySelector('#qrcode_canvas2');
-        qrcode_canvas.width = image.naturalWidth;
-        qrcode_canvas.height = image.naturalHeight;
-        var ctx = qrcode_canvas.getContext('2d');
+        var qrcode_canvas2 = document.querySelector('#qrcode_canvas2');
+        qrcode_canvas2.width = image.naturalWidth;
+        qrcode_canvas2.height = image.naturalHeight;
+        var ctx = qrcode_canvas2.getContext('2d');
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(image, 0, 0);
         const imageData = ctx.getImageData(0, 0, image.naturalWidth, image.naturalHeight);
