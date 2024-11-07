@@ -16,14 +16,14 @@ export default {
       </select>
     </span>
   </div><br>
-  <span v-if="bits_operation=='and' || bits_operation=='or'">
+  <span v-if="bits_operation=='and' || bits_operation=='or' || bits_operation=='exor'">
     <label class="title">入力2</label> <input type="text" class="form-control" v-model="bits_input2"></br>
   </span>
   <button class="btn btn-primary" v-on:click="bits_execute">実行</button><br>
   <br>
   <label class="title">結果</label> <input type="text" class="form-control" v-model="bits_output"></br>
   <button class="btn btn-secondary btn-sm" v-on:click="bits_copy(1)">入力1にコピー</button>
-  <span v-if="bits_operation=='and' || bits_operation=='or'">
+  <span v-if="bits_operation=='and' || bits_operation=='or' || bits_operation=='exor'">
     <button class="btn btn-secondary btn-sm" v-on:click="bits_copy(2)">入力2にコピー</button><br>
   </span>
 
