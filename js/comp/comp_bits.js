@@ -50,7 +50,7 @@ export default {
             value = input1[i] & input2[i];
           else if( this.bits_operation == "or")
             value = input1[i] | input2[i];
-          else if( this.bits_operation == "and")
+          else if( this.bits_operation == "exor")
             value = input1[i] ^ input2[i];
           else if( this.bits_operation == "not")
             value = ~input1[i];
