@@ -7,12 +7,12 @@ export default {
   <div class="row">
     <span class="col-auto">
       <select class="form-select" v-model="bits_operation">
-        <option value="and">AND</option>
-        <option value="or">OR</option>
-        <option value="exor">ExclusiveOr</option>
-        <option value="not">Not</option>
-        <option value="leftshift">LeftShift</option>
-        <option value="rightshift">RightShift</option>
+        <option value="and">AND(&amp;)</option>
+        <option value="or">OR(|)</option>
+        <option value="exor">ExclusiveOr(^)</option>
+        <option value="not">Not(~)</option>
+        <option value="leftshift">LeftShift(&lt;&lt;)</option>
+        <option value="rightshift">RightShift(&gt;&gt;&gt;)</option>
       </select>
     </span>
   </div><br>
@@ -78,5 +78,4 @@ export default {
         this.bits_input2 = this.bits_output;
     },
   }
-
 };
