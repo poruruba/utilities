@@ -11,7 +11,6 @@ export default {
     <li class="nav-item"><a class="nav-link active" href="#graph_graph" data-bs-toggle="tab">Graph</a></li>
     <li class="nab-item"><a href="#graph_scatter" class="nav-link" data-bs-toggle="tab">Scatter</a></li>
   </ul>
-  <br>
 
   <div class="tab-content">
     <div class="tab-pane active" id="graph_graph">
