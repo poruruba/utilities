@@ -131,3 +131,24 @@ function do_get(url, qs) {
 //    return response.arrayBuffer();
  });
 }
+
+function read_file(file, type = "text") {
+  return new Promise((resolve, reject) =>{
+    const reader = new FileReader();
+    reader.onload = function() {
+      resolve(reader.result);
+    };
+    reader.onerror = function() {
+      reject(reader.error);
+    };
+  
+    if( type == "text")
+      reader.readAsText(file);
+    else if( type == "binary" )
+      reader.readAsArrayBuffer(file);
+    else if( type == "dataurl" )
+      reader.readAsDataURL(file);
+    else
+      reject("unknown type");
+  });
+}

@@ -49,8 +49,8 @@ export default {
     return {
       gengou_era_name: '令和',
       gengou_era_other: '',
-      gengou_era_year: 6,
-      gengou_anno_year: 2024,
+      gengou_era_year: 7,
+      gengou_anno_year: 2025,
       gengou_list: gengou_list.reverse(),
     }
   },

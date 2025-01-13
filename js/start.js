@@ -26,6 +26,7 @@ const TAB_LIST = [
         { id: 'x509', name: 'X.509' },
         { id: 'asn1', name: 'ASN.1' },
         { id: 'jwt', name: 'JWT' },
+        { id: 'graph', name: 'グラフ' },
 	{ id: 'ocrshare', name: 'OCR' },
 	{ id: 'dataurl', name: 'DataURL' },
 	{ id: 'yaml', name: 'YAML' },
@@ -131,6 +132,7 @@ import comp_serial from './comp/comp_serial.js';
 import comp_map from './comp/comp_map.js';
 import comp_geocode from './comp/comp_geocode.js';
 import comp_bits from './comp/comp_bits.js';
+import comp_graph from './comp/comp_graph.js';
 vue_add_component(vue_options, "comp_arrange", comp_arrange);
 vue_add_component(vue_options, "comp_blecent", comp_blecent);
 vue_add_component(vue_options, "comp_uuid", comp_uuid);
@@ -160,5 +162,6 @@ vue_add_component(vue_options, "comp_serial", comp_serial);
 vue_add_component(vue_options, "comp_map", comp_map);
 vue_add_component(vue_options, "comp_geocode", comp_geocode);
 vue_add_component(vue_options, "comp_bits", comp_bits);
+vue_add_component(vue_options, "comp_graph", comp_graph);
 
 window.vue = new Vue( vue_options );

@@ -61,9 +61,12 @@
     <link rel="manifest" href="manifest.webmanifest" />
     <script src="https://cdn.jsdelivr.net/npm/pwacompat" crossorigin="anonymous"></script></head>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlocationcode/1.0.3/openlocationcode.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.min.css"  async/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlocationcode/1.0.3/openlocationcode.min.js" async></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/csv@6.3.11/dist/umd/sync.min.js" async></script>
 	
     <title>便利ツール</title>
 </head>
@@ -308,6 +311,13 @@
                 <comp_map></comp_map>
             </div>
 		
+            <!--
+                グラフ
+            -->
+            <div id="graph" class="tab-pane fade">
+                <comp_graph></comp_graph>
+            </div>
+
             <!--
                 ヘルプ
             -->

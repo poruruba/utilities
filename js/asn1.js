@@ -7,7 +7,7 @@ export class Asn1{
     var tagClass = (bArray[index] & 0xc0) >> 6;
     var structured = (bArray[index] & 0x20) != 0x00;
     var tagNumber = bArray[index++] & 0x1f;
-    if (tagNumber === 0x1f) {
+    if (tagNumber == 0x1f) {
       tagNumber = 0;
         while (bArray[index] & 0x80) {
             tag = (tag << 7) + (bArray[index] & 0x7f);
