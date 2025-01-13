@@ -193,6 +193,9 @@ export default {
         scatter_chartjs.update();
     },
     clear_scatter_options: async function(){
+        this.chartjs_scatter_base0 = false;
+        this.chartjs_scatter_max = "";
+        this.chartjs_scatter_min = "";
         this.scatter_options = {
             scales : {
                 x: {},
@@ -232,6 +235,9 @@ export default {
         }
     },
     clear_options: async function(){
+        this.chartjs_base0 = false;
+        this.chartjs_max = "";
+        this.chartjs_min = "";
         this.graph_options = {
             scales : {
                 x: {},
