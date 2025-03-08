@@ -78,10 +78,11 @@ export default {
             </span>
             <span class="col-auto">
               <select class="form-select" v-model="qrcode_custom_type">
-                <option value="text">テキスト/メールアドレス</option>
                 <option value="wifi">WiFi</option>
                 <option value="url">URL(IDパスワード付き)</option>
-                <option value="android">Androidアプリ</option>
+                <option value="android">Androidアプリ検索</option>
+                <option value="mail">メール</option>
+                <option value="text">テキスト</option>
               </select>
             </span>
           </div>
@@ -99,7 +100,14 @@ export default {
           </div>
           <div v-else-if="qrcode_custom_type=='android'">
             <label class="title">キーワード</label> <input type="text" class="form-control" v-model="qrcode_custom_android.keyword">
-          </div><br>
+          </div>
+          <div v-else-if="qrcode_custom_type=='mail'">
+            <label class="title">メールアドレス</label> <input type="text" class="form-control" v-model="qrcode_custom_mail.mail">
+            <label class="title">CC</label> <input type="text" class="form-control" v-model="qrcode_custom_mail.cc">
+            <label class="title">件名</label> <input type="text" class="form-control" v-model="qrcode_custom_mail.subject">
+            <label class="title">本文</label> <input type="text" class="form-control" v-model="qrcode_custom_mail.body">
+          </div>
+          <br>
           <button class="btn btn-secondary" v-on:click="qrcode_cusom_generate">生成</button><br>
           <br>
           <div id="qrcode_custom_area"></div>
@@ -129,11 +137,12 @@ export default {
       qrcode_running: false,
       qrcode_timer: null,
 
-      qrcode_custom_type: 'text',
+      qrcode_custom_type: 'wifi',
       qrcode_custom_text: {},
       qrcode_custom_wifi: {},
       qrcode_custom_url: {},
       qrcode_custom_android: {},
+      qrcode_custom_mail: {},
       qrcode_custom_generated: '',
     }
   },
@@ -160,6 +169,22 @@ export default {
         }else{
           input = this.qrcode_custom_url.url;
         }
+      }else
+      if( this.qrcode_custom_type == 'mail'){
+        var mail = this.qrcode_custom_mail.mail;
+        var tail = "";
+        if( this.qrcode_custom_mail.cc ){
+          tail += (tail ? "&" : "?") + `cc=${this.qrcode_custom_mail.cc}`;
+        }
+        if( this.qrcode_custom_mail.subject ){
+          var subject = encodeURIComponent(this.qrcode_custom_mail.subject);
+          tail += (tail ? "&" : "?") + `subject=${subject}`;
+        }
+        if( this.qrcode_custom_mail.body ){
+          var body = encodeURIComponent(this.qrcode_custom_mail.body);
+          tail += (tail ? "&" : "?") + `body=${body}`;
+        }
+        input = `mailto:${mail}` + tail;
       }else
       if( this.qrcode_custom_type == 'android'){
         var keyword = encodeURIComponent(this.qrcode_custom_android.keyword);
