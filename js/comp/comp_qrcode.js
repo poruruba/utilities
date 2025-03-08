@@ -41,32 +41,78 @@ export default {
       </span>
   </collapse-panel>
 
-    <collapse-panel id="qrcode_file_panel" title="QRコードスキャン(画像)" collapse="true">
-      <span slot="content">
-          <div class="card-body">
-              <label class="title">scaned data2</label>
-              <div class="input-group">
-                  <button class="btn btn-secondary oi oi-paperclip" v-on:click="clip_copy(qrcode_scaned_data2)"></button>
-                  <input type="text" class="form-control" v-model="qrcode_scaned_data2" readonly>
-              </div><br>
-              <comp_file id="image_file" v-bind:callback="image_open_files" ref="image_file"></comp_file><br>
-              <div class="row">
-                <div class="col-4">
-                  <textarea placeholder="ここに画像をペースト(Ctrl-V)してください。" class="form-control" style="text-align: center; resize: none;" rows="5" 
-                    v-on:paste="do_paste" v-on:drop.prevent="do_file_paste" v-on:dragover.prevent readonly>
-                  </textarea>
-                  <br>
-                </div>
-                <div class="col-8">
-                  <img class="img-fluid" v-show="qrcode_scaned_data2==''" id="qrcode_start2" src="./img/qrcode_start.png">
-                  <canvas class="img-fluid" v-show="qrcode_scaned_data2!=''" id="qrcode_canvas2"></canvas>
-                </div>
+  <collapse-panel id="qrcode_file_panel" title="QRコードスキャン(画像)" collapse="true">
+    <span slot="content">
+        <div class="card-body">
+            <label class="title">scaned data2</label>
+            <div class="input-group">
+                <button class="btn btn-secondary oi oi-paperclip" v-on:click="clip_copy(qrcode_scaned_data2)"></button>
+                <input type="text" class="form-control" v-model="qrcode_scaned_data2" readonly>
+            </div><br>
+            <comp_file id="image_file" v-bind:callback="image_open_files" ref="image_file"></comp_file><br>
+            <div class="row">
+              <div class="col-4">
+                <textarea placeholder="ここに画像をペースト(Ctrl-V)してください。" class="form-control" style="text-align: center; resize: none;" rows="5" 
+                  v-on:paste="do_paste" v-on:drop.prevent="do_file_paste" v-on:dragover.prevent readonly>
+                </textarea>
+                <br>
               </div>
+              <div class="col-8">
+                <img class="img-fluid" v-show="qrcode_scaned_data2==''" id="qrcode_start2" src="./img/qrcode_start.png">
+                <canvas class="img-fluid" v-show="qrcode_scaned_data2!=''" id="qrcode_canvas2"></canvas>
+              </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-secondary" data-bs-toggle="collapse" href="#qrcode_file_panel">閉じる</button>
+        </div>
+    </span>
+  </collapse-panel>
+
+  <collapse-panel id="qrcode_custom_panel" title="QRコード生成(カスタム)" collapse="true">
+    <span slot="content">
+        <div class="card-body">
+          <div class="row">
+            <span class="col-auto">
+              <label class="title">タイプ</label>
+            </span>
+            <span class="col-auto">
+              <select class="form-select" v-model="qrcode_custom_type">
+                <option value="text">テキスト/メールアドレス</option>
+                <option value="wifi">WiFi</option>
+                <option value="url">URL(IDパスワード付き)</option>
+                <option value="android">Androidアプリ</option>
+              </select>
+            </span>
           </div>
-          <div class="card-footer">
-              <button class="btn btn-secondary" data-bs-toggle="collapse" href="#qrcode_file_panel">閉じる</button>
+          <div v-if="qrcode_custom_type=='text'">
+            <label class="title">テキスト</label> <input type="text" class="form-control" v-model="qrcode_custom_text.text">
           </div>
-      </span>
+          <div v-else-if="qrcode_custom_type=='wifi'">
+            <label class="title">SSID</label> <input type="text" class="form-control" v-model="qrcode_custom_wifi.ssid">
+            <label class="title">パスワード</label> <input type="text" class="form-control" v-model="qrcode_custom_wifi.password">
+          </div>
+          <div v-else-if="qrcode_custom_type=='url'">
+            <label class="title">URL</label> <input type="text" class="form-control" v-model="qrcode_custom_url.url">
+            <label class="title">ユーザ名</label> <input type="text" class="form-control" v-model="qrcode_custom_url.userid">
+            <label class="title">パスワード</label> <input type="text" class="form-control" v-model="qrcode_custom_url.password">
+          </div>
+          <div v-else-if="qrcode_custom_type=='android'">
+            <label class="title">キーワード</label> <input type="text" class="form-control" v-model="qrcode_custom_android.keyword">
+          </div><br>
+          <button class="btn btn-secondary" v-on:click="qrcode_cusom_generate">生成</button><br>
+          <br>
+          <div id="qrcode_custom_area"></div>
+          <label class="title">generated</label>
+          <div class="input-group">
+              <button class="btn btn-secondary oi oi-paperclip" v-on:click="clip_copy(qrcode_custom_generated)"></button>
+              <input type="text" class="form-control" v-model="qrcode_custom_generated" readonly>
+          </div><br>
+        </div>
+        <div class="card-footer">
+            <button class="btn btn-secondary" data-bs-toggle="collapse" href="#qrcode_custom_panel">閉じる</button>
+        </div>
+    </span>
   </collapse-panel>
 
 </div>`,
@@ -82,10 +128,49 @@ export default {
 
       qrcode_running: false,
       qrcode_timer: null,
+
+      qrcode_custom_type: 'text',
+      qrcode_custom_text: {},
+      qrcode_custom_wifi: {},
+      qrcode_custom_url: {},
+      qrcode_custom_android: {},
+      qrcode_custom_generated: '',
     }
   },
   methods: {
     /* QRコード */
+    qrcode_cusom_generate: function(){
+      var input = '';
+      if( this.qrcode_custom_type == 'text'){
+        input = this.qrcode_custom_text.text;
+      }else
+      if( this.qrcode_custom_type == 'wifi'){
+        var escapeWiFiString = (str) => {
+          return str.replace(/([\\;:])/g, '\\$1');
+        }
+        var ssid = escapeWiFiString(this.qrcode_custom_wifi.ssid);
+        var password = escapeWiFiString(this.qrcode_custom_wifi.password);
+        input = `WIFI:T:WPA;S:${ssid};P:${password};;`;
+      }else
+      if( this.qrcode_custom_type == 'url'){
+        var userid = encodeURIComponent(this.qrcode_custom_url.userid);
+        var password = encodeURIComponent(this.qrcode_custom_url.password);
+        if( this.qrcode_custom_url.userid ){
+          input = this.qrcode_custom_url.url.replace(/^(https?:\/\/)/, `$1${userid}:${password}@`);
+        }else{
+          input = this.qrcode_custom_url.url;
+        }
+      }else
+      if( this.qrcode_custom_type == 'android'){
+        var keyword = encodeURIComponent(this.qrcode_custom_android.keyword);
+        input = `https://play.google.com/store/search?c=apps&q=${keyword}`;
+      }
+
+      var element = document.querySelector('#qrcode_custom_area');
+      element.innerHTML = '';
+      new QRCode(element, input);
+      this.qrcode_custom_generated = input;
+    },
     image_open_files: function (files) {
       if( files.length == 0 ){
         return;
