@@ -379,6 +379,9 @@ export default {
         var rows =  csv_sync.parse(text, { delimiter: "\t" });
         console.log(rows);
 
+        this.scatter_data.datasets = [];
+        this.scatter_data.labels = [];
+
         var datum = [];
         for( var i = 1 ; i < rows[0].length ; i++ )
             datum[i - 1] = [];
@@ -415,3 +418,4 @@ export default {
     });
   }
 };
+
