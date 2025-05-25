@@ -36,7 +36,7 @@ export default {
           <div class="card-body">
             <button class="btn btn-primary btn-sm" v-on:click="clear_data">clear</button>
             <br>
-            <label class="title"><input type="checkbox" v-model="chk_header"> header</label> <label class="title"><input type="checkbox" v-model="chk_stepped"> stepped</label>
+            <label class="title"><input type="checkbox" v-model="chk_header"> header</label> <label class="title"><input type="checkbox" v-model="chk_label"> label</label> <label class="title"><input type="checkbox" v-model="chk_stepped"> stepped</label>
             <br>
             <label class="title">csv/tsv</label> <comp_file v-bind:callback="graph_callback" accept=".csv,.tsv"></comp_file>
             <br>
@@ -91,7 +91,7 @@ export default {
             <label class="title">tsv</label> <comp_file v-bind:callback="tsv_scatter_callback" accept=".tsv"></comp_file>
             <br>
             <ol>
-              <li v-for="(item, index) in graph_data.datasets"><button class="btn btn-secondary btn-xs" v-on:click="graph_delete_row(index)">del</button> {{item.label}}</li>
+              <li v-for="(item, index) in scatter_data.datasets"><button class="btn btn-secondary btn-xs" v-on:click="graph_delete_row(index)">del</button> {{item.label}}</li>
             </ol>
 
             </li>
@@ -141,6 +141,7 @@ export default {
       },        
       chk_header: false,
       chk_stepped: false,
+      chk_label: false,
       chartjs_stacked: false,
       chartjs_base0: false,
       chartjs_max: "",
@@ -185,6 +186,7 @@ export default {
         }
     },
     clear_scatter_data: async function(){
+        console.log("clear_scatter_data called");
         this.scatter_data = {
             labels: [],
             datasets: [],
@@ -193,6 +195,7 @@ export default {
         scatter_chartjs.update();
     },
     clear_scatter_options: async function(){
+        console.log("clear_scatter_options called");
         this.chartjs_scatter_base0 = false;
         this.chartjs_scatter_max = "";
         this.chartjs_scatter_min = "";
@@ -235,6 +238,7 @@ export default {
         }
     },
     clear_options: async function(){
+        console.log("clear_options called");
         this.chartjs_base0 = false;
         this.chartjs_max = "";
         this.chartjs_min = "";
@@ -250,6 +254,7 @@ export default {
         }
     },
     clear_data: async function(){
+        console.log("clear_data called");
         this.graph_data = {
             labels: [],
             datasets: [],
@@ -289,20 +294,37 @@ export default {
         console.log(text);
 
         var rows =  csv_sync.parse(text);
-        console.log(rows);
-        for( var i = 0 ; i < rows.length ; i++ ){
-            if( this.chk_header && i == 0 )
-                continue;
-            this.graph_data.datasets.push({
-                label: this.graph_data.datasets.length + 1,
-                data: rows[i],
-                stepped: this.chk_stepped
-            });
-        }
+        // console.log(rows);
+
+        this.graph_data.datasets = [];
+        this.graph_data.labels = [];
+
         for( var i = 0 ; i < rows[0].length ; i++ ){
-            if( this.graph_data.labels.length <= i )
-                this.graph_data.labels.push(this.chk_header ? rows[0][i] : i);
+          if( this.chk_label && i == 0)
+            continue;
+          var data = [];
+          var label = this.chk_header ? rows[0][i] : this.graph_data.datasets.length + 1;
+          for( var j = 0 ; j < rows.length ; j++ ){
+            if( this.chk_header && j == 0 )
+              continue;
+
+            data.push(parseInt(rows[j][i], 10));
+          }
+          this.graph_data.datasets.push({
+              label: label,
+              data: data,
+              stepped: this.chk_stepped
+          });
         }
+        for( var i = 0 ; i < rows.length ; i++ ){
+          if( this.chk_header && i == 0 )
+            continue;
+          if( this.chk_label )
+            this.graph_data.labels.push(rows[i][0]);
+          else
+            this.graph_data.labels.push(this.chk_header ? i : i + 1);
+        }
+
         if( graph_chartjs ){
             graph_chartjs.data = this.graph_data;
             graph_chartjs.update();
@@ -316,6 +338,9 @@ export default {
 
         var rows =  csv_sync.parse(text, { delimiter: "\t" });
         console.log(rows);
+
+        this.graph_data.datasets = [];
+        this.graph_data.labels = [];
 
         var datum = [];
         for( var i = 0 ; i < rows[0].length ; i++ )
@@ -390,4 +415,3 @@ export default {
     });
   }
 };
-
