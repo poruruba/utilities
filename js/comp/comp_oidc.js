@@ -161,6 +161,7 @@ export default {
       var params = {
           grant_type: this.oidc_grant_type,
           client_id: this.oidc_client_id,
+          scope: this.oidc_scope,
           redirect_uri: this.oidc_redirect_uri,
           code: this.oidc_code,
       };
@@ -316,3 +317,4 @@ function do_post_urlencoded_basic(url, params, client_id, client_secret){
       return response.json();
   })
 }
+
