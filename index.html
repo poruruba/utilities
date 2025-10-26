@@ -67,7 +67,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js" async></script>
     <script src="https://cdn.jsdelivr.net/npm/csv@6.3.11/dist/umd/sync.min.js" async></script>
-	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/otpauth/9.4.1/otpauth.umd.min.js" integrity="sha512-IqeYQB64l+zM1qCkq5vR3GbyDQ19+04nnhzbeS687ENsjTeomAbq49yoPABzp8UZEq1TWFGrfbhAdCXnJIaqjw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <title>便利ツール</title>
 </head>
 <body>
@@ -318,6 +319,13 @@
                 <comp_graph></comp_graph>
             </div>
 
+            <!--
+                グラフ
+            -->
+            <div id="totp" class="tab-pane fade">
+                <comp_totp></comp_totp>
+            </div>
+            
             <!--
                 ヘルプ
             -->
