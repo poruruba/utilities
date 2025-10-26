@@ -10,6 +10,7 @@ const TAB_LIST = [
 	{ id: 'string', name: '文字列' },
 	{ id: 'uuid', name: 'UUID' },
 	{ id: 'passwd', name: 'パスワード' },
+	{ id: 'totp', name: 'TOTP' },
 	{ id: 'image', name: '画像ファイル' },
 	{ id: 'color', name: 'カラー' },
 	{ id: 'crypto', name: '暗号化' },
@@ -133,6 +134,7 @@ import comp_map from './comp/comp_map.js';
 import comp_geocode from './comp/comp_geocode.js';
 import comp_bits from './comp/comp_bits.js';
 import comp_graph from './comp/comp_graph.js';
+import comp_totp from './comp/comp_totp.js';
 vue_add_component(vue_options, "comp_arrange", comp_arrange);
 vue_add_component(vue_options, "comp_blecent", comp_blecent);
 vue_add_component(vue_options, "comp_uuid", comp_uuid);
@@ -163,5 +165,6 @@ vue_add_component(vue_options, "comp_map", comp_map);
 vue_add_component(vue_options, "comp_geocode", comp_geocode);
 vue_add_component(vue_options, "comp_bits", comp_bits);
 vue_add_component(vue_options, "comp_graph", comp_graph);
+vue_add_component(vue_options, "comp_totp", comp_totp);
 
 window.vue = new Vue( vue_options );
